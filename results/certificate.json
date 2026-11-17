@@ -1,6 +1,6 @@
 {
   "repository": "aska-physical/optifab",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "inputs": {
     "vendored": {
       "aska-physical/funi-frame/certificate.json": "92e7bbcea389274d2967e463ec3881ec9311db7786c5e74559defcd936dfb9fa",
@@ -373,6 +373,159 @@
     "funi_frame_pue_overhead_cut_pct": 80.5,
     "funi_frame_evidence": "claimed"
   },
+  "improvement_loop": {
+    "scenario": {
+      "outage_min": 20,
+      "outages_per_year": 12,
+      "low_demand_fraction_ppm": 30000,
+      "low_demand_hours": 2000
+    },
+    "limit_ppm": 1000000,
+    "proposer_reserve_ppm": 950000,
+    "genes": {
+      "hardware": [
+        "pcm_kwh",
+        "capture_ppm",
+        "wall_u_mw"
+      ],
+      "software": [
+        "floor_kw",
+        "shed_ppm"
+      ],
+      "proposer": [
+        "step_ppm"
+      ]
+    },
+    "margins_in_the_vector": 14,
+    "decisions": 50,
+    "admitted": 45,
+    "refused": {
+      "distance": 5
+    },
+    "admitted_hardware_changes": 30,
+    "admitted_software_changes": 15,
+    "budget_start": 64,
+    "budget_left": 19,
+    "eta_start_ppm": 914228,
+    "eta_final_ppm": 919009,
+    "eta_never_fell": true,
+    "worst_margin_ever_admitted_ppm": 949058,
+    "every_admitted_state_within_limit": true,
+    "start_genome": {
+      "pcm_kwh": 2500,
+      "capture_ppm": 850000,
+      "wall_u_mw": 132,
+      "floor_kw": 600,
+      "shed_ppm": 300000,
+      "step_ppm": 1000000
+    },
+    "final_genome": {
+      "pcm_kwh": 4350,
+      "capture_ppm": 950000,
+      "wall_u_mw": 100,
+      "floor_kw": 413,
+      "shed_ppm": 0,
+      "step_ppm": 125000
+    },
+    "largest_step_scale_ppm": 8000000,
+    "chain_intact": true,
+    "final_hash": "20e492cea1606034f0e6917df14ccb774a219c00748fae8104429939cfbc9532",
+    "final_margins_ppm": {
+      "rack_vibration": 179100,
+      "storey_drift": 563000,
+      "roof_crown_compression": 387879,
+      "roof_tornado_uplift_factored": 588180,
+      "roof_service_deflection_mm": 176100,
+      "floor_punching_collar": 801052,
+      "floor_walking_vibration": 616000,
+      "floor_crown_compression": 607511,
+      "floor_fire_120min_thrust": 300275,
+      "floor_duct_hole_shear": 496948,
+      "sensor_power_at_airflow_turndown": 769564,
+      "sorption_drive_heat": 120734,
+      "load_floor": 948407,
+      "outage_ride_through": 766284
+    },
+    "float_gate_on_the_same_decisions": {
+      "decisions": 50,
+      "agree": 50,
+      "within_1e-9_of_boundary_skipped": 0
+    },
+    "variants": {
+      "proposer_without_reserve": {
+        "decisions": 186,
+        "admitted": 60,
+        "refused": {
+          "distance": 126
+        },
+        "budget_left": 4,
+        "eta_final_ppm": 916009,
+        "worst_margin_ever_admitted_ppm": 998923
+      },
+      "budget_of_three": {
+        "decisions": 3,
+        "admitted": 3,
+        "refused": {},
+        "budget_left": 0,
+        "eta_final_ppm": 914355,
+        "worst_margin_ever_admitted_ppm": 938172
+      },
+      "start_with_a_margin_exactly_at_its_limit": {
+        "decisions": 14,
+        "admitted": 0,
+        "refused": {
+          "distance": 14
+        },
+        "budget_left": 64,
+        "eta_final_ppm": 914230,
+        "worst_margin_ever_admitted_ppm": 1000000
+      },
+      "scheduler_floor_below_the_plant_floor": {
+        "objective_gain_ppm": 2547,
+        "load_floor_margin_ppm": 1128418,
+        "verdict": "distance"
+      }
+    }
+  },
+  "formal": {
+    "present": true,
+    "lean": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+    "theorems": [
+      "PlantGate.Spec.gate_ok_sound",
+      "PlantGate.Spec.gate_complete",
+      "PlantGate.Spec.refusal_spends_nothing",
+      "PlantGate.Spec.budget_never_grows",
+      "PlantGate.Spec.no_margin_rises_past_radius",
+      "PlantGate.Spec.accepted_stays_within",
+      "PlantGate.Spec.run_safe",
+      "PlantGate.Spec.run_bounded"
+    ],
+    "comparator": {
+      "command": "lake comparator --paranoid",
+      "accepted": true,
+      "kernels": [
+        "Lean default",
+        "Lean paranoid",
+        "con-leche",
+        "con-ron",
+        "lean4lean",
+        "nanoda"
+      ]
+    },
+    "replay": {
+      "decisions": 50,
+      "mismatches": 0
+    },
+    "differential_tests": {
+      "inputs": 300000,
+      "seed": 20261117,
+      "failures": 0,
+      "passed": true
+    },
+    "bar": "Proven Commons bar check: items 2 to 6 pass; item 1 is open (no reviewer has approved the specification). See formal/BAR-REPORT.md.",
+    "matches_current_lean_sources": true,
+    "matches_current_ledger": true
+  },
   "loop_timing": {
     "slow_latency_ms": 15.0,
     "fast_latency_ms": 0.5,
@@ -671,7 +824,12 @@
     "must_fail_16_certified_design_point_fills_a_frame_without_a_recooling_temperature": true,
     "must_fail_17_frame_past_a_limit_or_below_the_floor_passes_the_contract": true,
     "must_fail_18_repository_left_out_of_the_unit_goes_unnoticed": true,
-    "must_fail_19_gate_with_a_different_rounding_passes_the_differential_test": true
+    "must_fail_19_gate_with_a_different_rounding_passes_the_differential_test": true,
+    "must_fail_20_loop_admits_a_state_past_a_limit": true,
+    "must_fail_21_loop_makes_more_changes_than_its_budget": true,
+    "must_fail_22_design_with_a_margin_at_its_limit_can_still_change": true,
+    "must_fail_23_edited_ledger_entry_keeps_the_chain": true,
+    "must_fail_24_formal_record_is_stale_or_missing": true
   },
-  "controls_passed": "19/19"
+  "controls_passed": "24/24"
 }

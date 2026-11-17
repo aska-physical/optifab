@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic verifier for aska-physical/optifab v0.1.0.
+"""Deterministic verifier for aska-physical/optifab v0.2.0.
 
 optifab models one reference data-centre campus as a checked stack and states the contract between
 the physical plant and the digital workload. It adds no new measurement. Every number is derived
@@ -29,12 +29,19 @@ from pathlib import Path
 
 import sympy as sp
 
+import loop
+
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
 CERT_PATH = ROOT / "results" / "certificate.json"
+LEDGER_PATH = ROOT / "results" / "ledger.json"
+FORMAL_PATH = ROOT / "results" / "formal.json"
+FORMAL_DIR = ROOT / "formal"
+FORMAL_SOURCES = ["PlantGate.lean", "PlantGate/Spec.lean", "PlantGate/Proofs.lean", "Main.lean", "comparator.json",
+                  "lakefile.toml", "lean-toolchain", "tests/oracle.py", "tests/run_tests.py"]
 KELVIN = 273.15
 PSF_TO_KPA = 0.04788026
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 
 
 # --------------------------------------------------------------------------- inputs
@@ -707,6 +714,140 @@ def check_unit(unit: dict, graph: dict) -> dict:
     }
 
 
+# --------------------------------------------------------------------------- the improvement loop
+LOOP_START = {"pcm_kwh": 2500, "capture_ppm": 850000, "wall_u_mw": 132, "floor_kw": 600, "shed_ppm": 300000,
+              "step_ppm": 1000000}
+LOOP_BUDGET = 64
+
+
+def loop_plant(inp: dict, env: dict, margins: list[dict]) -> dict:
+    """The pinned upstream values the loop's plant model needs."""
+    ff, pins = inp["ff"], inp["pins"]
+    cp = pins["ff.cooling_power"]["value"]
+    return {
+        "p_it_kw": ff["domain_5_6_three_tier_tes_and_closed_loop_cooling"]["P_it_MW"] * 1000.0,
+        "cop_ads": pin_value(pins, "ff.cop_ads", "cop_ads"),
+        "ua_roof_w_k": ff["domain_1_funicular_radiative_roof"]["U_roof_W_m2K"] * pin_value(pins, "ff.floor_mass", "floor_area_m2"),
+        "wall_area_m2": pin_value(pins, "ff.geometry", "perimeter_m") * ff["domain_4_top_down_seismic_cellular_frame"]["total_building_height_m"],
+        "design_dt_k": env["minimum_load"]["design_temperature_difference_K"],
+        "other_kw": env["minimum_load"]["other_overhead_MW"] * 1000.0,
+        "passive_kw": env["pue_reproduction"]["passive_sinks_MW"] * 1000.0,
+        "loop_cop": cp["ates_cop"], "aux_kw": cp["funi_aux_MW"] * 1000.0,
+        # the certified margins no gene of the loop can move
+        "fixed_margins_ppm": {m["limit_state"]: math.ceil(m["utilisation"] * 1e6 - 1e-9) for m in margins
+                              if m["limit_state"] != "sorption_drive_heat"},
+    }
+
+
+def formal_sources_hash() -> str:
+    return sha256_bytes(b"".join((FORMAL_DIR / f).read_bytes() for f in FORMAL_SOURCES))
+
+
+def float_gate_agreement(ledger: dict) -> dict:
+    """The floating-point gate against the exact one on every decision of the ledger."""
+    agree = skipped = 0
+    for e in ledger["entries"]:
+        base, cand = [x / 1e6 for x in e["base_ppm"]], [x / 1e6 for x in e["cand_ppm"]]
+        exact_dist = math.sqrt(oracle_dist_sq(e["base_ppm"], e["cand_ppm"])) / 1e6
+        if abs(exact_dist - e["radius_ppm"] / 1e6) < 1e-9:
+            skipped += 1  # too close to the boundary for floating point to be trusted either way
+            continue
+        ok = plant_gate(base, cand, e["radius_ppm"] / 1e6, float(e["budget_before"]), float(e["cost"]))[0]
+        agree += ok == (e["verdict"] == "ok")
+    return {"decisions": len(ledger["entries"]), "agree": agree, "within_1e-9_of_boundary_skipped": skipped}
+
+
+def oracle_dist_sq(base: list[int], cand: list[int]) -> int:
+    return loop.oracle.dist_sq(base, cand)
+
+
+def improvement_loop(inp: dict, env: dict, margins: list[dict]) -> tuple[dict, dict]:
+    """Run the loop, and three variants that show what the gate and the proposer each contribute."""
+    plant = loop_plant(inp, env, margins)
+    ledger = loop.run_loop(plant, LOOP_START, LOOP_BUDGET)
+    main = loop.summary(ledger)
+    reserve = loop.RESERVE
+    loop.RESERVE = loop.LIMIT  # a proposer with no caution of its own
+    try:
+        naive = loop.summary(loop.run_loop(plant, LOOP_START, LOOP_BUDGET))
+    finally:
+        loop.RESERVE = reserve
+    small = loop.summary(loop.run_loop(plant, LOOP_START, 3))
+    frozen_start = dict(LOOP_START, shed_ppm=250000)  # the outage margin sits exactly on its limit
+    frozen = loop.summary(loop.run_loop(plant, frozen_start, LOOP_BUDGET))
+    below = dict(LOOP_START, floor_kw=500)  # a scheduler floor under the load floor of the plant
+    base_m, below_m = loop.model(LOOP_START, plant), loop.model(below, plant)
+    refused = loop.oracle.gate(base_m["vector"], below_m["vector"], loop.oracle.headroom(loop.LIMIT, base_m["vector"]), LOOP_BUDGET, 1)
+    keep = ("decisions", "admitted", "refused", "budget_left", "eta_final_ppm", "worst_margin_ever_admitted_ppm")
+    report = {
+        "scenario": loop.SCENARIO, "limit_ppm": loop.LIMIT, "proposer_reserve_ppm": reserve,
+        "genes": {"hardware": list(loop.HARDWARE), "software": list(loop.SOFTWARE), "proposer": list(loop.META)},
+        "margins_in_the_vector": len(base_m["vector"]),
+        **main,
+        "final_margins_ppm": ledger["final_margins_ppm"],
+        "float_gate_on_the_same_decisions": float_gate_agreement(ledger),
+        "variants": {
+            "proposer_without_reserve": {k: naive[k] for k in keep},
+            "budget_of_three": {k: small[k] for k in keep},
+            "start_with_a_margin_exactly_at_its_limit": {k: frozen[k] for k in keep},
+            "scheduler_floor_below_the_plant_floor": {"objective_gain_ppm": below_m["eta_ppm"] - base_m["eta_ppm"],
+                                                      "load_floor_margin_ppm": below_m["margins"]["load_floor"],
+                                                      "verdict": refused[0]},
+        },
+    }
+    return ledger, report
+
+
+def formal_record(ledger: dict) -> dict:
+    """What the committed formal record must say about the current ledger and Lean sources."""
+    if not FORMAL_PATH.exists():
+        return {"present": False}
+    rec = read_json(FORMAL_PATH)
+    return {"present": True, "lean": rec["lean"], "theorems": rec["theorems"], "comparator": rec["comparator"],
+            "replay": rec["replay"], "differential_tests": rec["differential_tests"], "bar": rec["bar"],
+            "matches_current_lean_sources": rec["sources_sha256"] == formal_sources_hash(),
+            "matches_current_ledger": rec["ledger_hash"] == ledger["final_hash"]}
+
+
+def run_formal(ledger: dict) -> int:
+    """Rebuild the proofs, run the comparator and the differential tests, and replay the ledger in Lean."""
+    def sh(cmd, **kw):
+        return subprocess.run(cmd, cwd=FORMAL_DIR, capture_output=True, text=True, **kw)
+
+    build = sh(["lake", "build"])
+    if build.returncode:
+        print(build.stdout[-2000:] + build.stderr[-2000:], file=sys.stderr)
+        return 1
+    comparator = sh(["lake", "comparator", "--paranoid"])
+    accepted = comparator.returncode == 0 and "Your solution is okay!" in comparator.stdout
+    kernels = sorted(set(re.findall(r"^(.+?) kernel accepts the solution$", comparator.stdout, flags=re.M)))
+    tests = sh([sys.executable, "tests/run_tests.py"])
+    results = (FORMAL_DIR / "tests" / "TEST-RESULTS.md").read_text(encoding="utf-8")
+    field = lambda name: re.search(rf"^- {name}: (.+)$", results, flags=re.M).group(1)
+    lines = loop.replay_lines(ledger)
+    out = sh([str(FORMAL_DIR / ".lake" / "build" / "bin" / "plantgate")], input="\n".join(lines) + "\n").stdout.split("\n")
+    mismatches = [e["generation"] for e, got in zip(ledger["entries"], out)
+                  if got != f"{e['verdict']} {e['budget_after']}"]
+    lean = sh(["lake", "env", "lean", "--version"]).stdout.strip()
+    record = {
+        "schema": "optifab-formal/1", "lean": lean,
+        "theorems": read_json(FORMAL_DIR / "comparator.json")["theorem_names"],
+        "comparator": {"command": "lake comparator --paranoid", "accepted": accepted, "kernels": kernels},
+        "differential_tests": {"inputs": int(field("Inputs")), "seed": int(field("Seed")), "failures": int(field("Failures")),
+                               "passed": tests.returncode == 0},
+        "replay": {"decisions": len(lines), "mismatches": len(mismatches)},
+        "bar": "Proven Commons bar check: items 2 to 6 pass; item 1 is open (no reviewer has approved the specification). See formal/BAR-REPORT.md.",
+        "sources_sha256": formal_sources_hash(), "ledger_hash": ledger["final_hash"],
+    }
+    ok = accepted and tests.returncode == 0 and not mismatches and int(field("Failures")) == 0
+    if ok:
+        FORMAL_PATH.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"[FORMAL] comparator {'accepts' if accepted else 'REJECTS'} {len(record['theorems'])} theorems under {len(kernels)} kernels; "
+          f"{record['differential_tests']['inputs']} differential tests, {record['differential_tests']['failures']} failures; "
+          f"ledger replay {len(lines)} decisions, {len(mismatches)} mismatches")
+    return 0 if ok else 1
+
+
 # --------------------------------------------------------------------------- cross-certificate interfaces
 def interface_checks(inp: dict, floor_mass_override: float | None = None) -> list[dict]:
     """Values one repository copied by hand from another. Each is compared with its source."""
@@ -844,7 +985,7 @@ def _rejects(fn) -> bool:
 
 
 def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, rank: dict, max_depth: int,
-                       timing: dict, frames: dict) -> dict:
+                       timing: dict, frames: dict, ledger: dict, evolution: dict, formal: dict) -> dict:
     pins, graph, sources = inp["pins"], inp["graph"], inp["sources"]
     sub, sl, ml = env["substation"], env["second_law"], env["minimum_load"]
     cop = pin_value(pins, "ff.cop_ads", "cop_ads")
@@ -905,6 +1046,9 @@ def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, 
         check_unit(u, graph)
 
     cc = frames["contract_check"]
+    variants = evolution["variants"]
+    edited = copy.deepcopy(ledger)
+    edited["entries"][0]["verdict"] = "ok" if edited["entries"][0]["verdict"] != "ok" else "distance"
     flipped = copy.deepcopy(inp["weft_vectors"])
     flipped["weight_update_vectors"][1]["expected_accepted"] = False
     drift = interface_checks(inp, floor_mass_override=200.0)
@@ -951,12 +1095,28 @@ def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, 
         "must_fail_18_repository_left_out_of_the_unit_goes_unnoticed": _rejects(unit_gap),
         "must_fail_19_gate_with_a_different_rounding_passes_the_differential_test":
             differential_test(oracle_source, cases=20000, gate=hypot_gate)["mismatches"] > 0,
+        "must_fail_20_loop_admits_a_state_past_a_limit":
+            evolution["every_admitted_state_within_limit"] and evolution["admitted"] > 0
+            and variants["proposer_without_reserve"]["worst_margin_ever_admitted_ppm"] <= loop.LIMIT
+            and variants["scheduler_floor_below_the_plant_floor"]["objective_gain_ppm"] > 0
+            and variants["scheduler_floor_below_the_plant_floor"]["verdict"] == "distance",
+        "must_fail_21_loop_makes_more_changes_than_its_budget":
+            variants["budget_of_three"]["admitted"] == 3 and variants["budget_of_three"]["budget_left"] == 0
+            and evolution["admitted"] + evolution["budget_left"] == evolution["budget_start"],
+        "must_fail_22_design_with_a_margin_at_its_limit_can_still_change":
+            variants["start_with_a_margin_exactly_at_its_limit"]["admitted"] == 0
+            and variants["start_with_a_margin_exactly_at_its_limit"]["decisions"] > 0,
+        "must_fail_23_edited_ledger_entry_keeps_the_chain": loop.check_chain(ledger) and not loop.check_chain(edited),
+        "must_fail_24_formal_record_is_stale_or_missing":
+            formal.get("present", False) and formal["matches_current_lean_sources"] and formal["matches_current_ledger"]
+            and formal["comparator"]["accepted"] and formal["replay"]["mismatches"] == 0
+            and formal["replay"]["decisions"] == evolution["decisions"],
     }
     return controls
 
 
 # --------------------------------------------------------------------------- certificate
-def build_certificate() -> dict:
+def build_certificate(with_ledger: bool = False):
     inp = load_inputs()
     pins = inp["pins"]
     rank = pins["f0.evidence_rank"]["value"]
@@ -975,7 +1135,9 @@ def build_certificate() -> dict:
     timing = loop_timing(inp, env)
     frames = plant_frame_checks(inp, margins, radius["plant_radius"], env)
     unit = check_unit(inp["unit"], inp["graph"])
-    controls = must_fail_controls(inp, env, margins, radius, rank, max_depth, timing, frames)
+    ledger, evolution = improvement_loop(inp, env, margins)
+    formal = formal_record(ledger)
+    controls = must_fail_controls(inp, env, margins, radius, rank, max_depth, timing, frames, ledger, evolution, formal)
 
     assert env["pue_reproduction"]["liquid_plus_air_equals_it_load"] and env["pue_reproduction"]["matches_certificate"]
     assert not env["second_law"]["certificate_has_a_recooling_field"], "funi-frame now carries a recooling field: revisit finding 2"
@@ -991,7 +1153,7 @@ def build_certificate() -> dict:
 
     overhead_cut = (ts["PUE_conventional"] - ts["PUE_funi_frame"]) / (ts["PUE_conventional"] - 1.0) * 100.0
     data_files = ["pins.json", "graph.json", "sources.json", "unit.json", "upstream/MANIFEST.json"]
-    return {
+    cert = {
         "repository": "aska-physical/optifab", "version": VERSION,
         "inputs": {
             "vendored": {f["file"]: f["sha256"] for f in inp["manifest"]["files"]},
@@ -1012,6 +1174,8 @@ def build_certificate() -> dict:
             "funi_frame_pue_overhead_cut_pct": round(overhead_cut, 1),
             "funi_frame_evidence": "claimed",
         },
+        "improvement_loop": evolution,
+        "formal": formal,
         "loop_timing": timing,
         "plant_frame": frames,
         "unit": unit,
@@ -1019,6 +1183,7 @@ def build_certificate() -> dict:
         "must_fail_controls": controls,
         "controls_passed": f"{sum(controls.values())}/{len(controls)}",
     }
+    return (cert, ledger) if with_ledger else cert
 
 
 # --------------------------------------------------------------------------- upstream re-check
@@ -1121,17 +1286,29 @@ def main() -> int:
     ap.add_argument("--write", action="store_true", help="rewrite results/certificate.json")
     ap.add_argument("--upstream", type=Path, help="root holding clones as <owner>/<repo>")
     ap.add_argument("--repin", action="store_true", help="with --upstream: refresh commits, hashes and line numbers")
+    ap.add_argument("--formal", action="store_true",
+                    help="rebuild the Lean proofs, run the comparator and the differential tests, replay the ledger "
+                         "in Lean and rewrite results/formal.json (needs elan and bubblewrap)")
     args = ap.parse_args()
     if args.upstream:
         status = upstream_check(args.upstream.resolve(), args.repin)
         if status or args.repin:
             return status
-    cert = build_certificate()
+    if args.formal:
+        inp = load_inputs()
+        env, margins = plant_envelope(inp), margin_vector(inp)
+        if run_formal(improvement_loop(inp, env, margins)[0]):
+            return 1
+    cert, ledger = build_certificate(with_ledger=True)
     if args.write:
         CERT_PATH.parent.mkdir(parents=True, exist_ok=True)
         CERT_PATH.write_text(json.dumps(cert, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        LEDGER_PATH.write_text(json.dumps(ledger, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     if not CERT_PATH.exists() or read_json(CERT_PATH) != cert:
         print("ERROR: results/certificate.json does not match verify.py. Run with --write after a deliberate change.", file=sys.stderr)
+        return 1
+    if not LEDGER_PATH.exists() or read_json(LEDGER_PATH) != ledger:
+        print("ERROR: results/ledger.json does not match the loop. Run with --write after a deliberate change.", file=sys.stderr)
         return 1
     g, m, p = cert["graph"], cert["margins"], cert["plant"]
     print(f"[PASS] optifab v{VERSION}: {cert['controls_passed']} controls, "
@@ -1141,8 +1318,10 @@ def main() -> int:
           f"extra IT {p['substation']['extra_it_if_all_overhead_scales_MW']} to {p['substation']['extra_it_if_auxiliaries_are_fixed_MW']} MW, "
           f"recooling limit {p['second_law']['max_recooling_C_at_chilled_18C']} C, "
           f"lineage depth {g['optifab_lineage_depth']} of {g['lineage_depth_bound']}, "
+          f"loop {cert['improvement_loop']['admitted']} changes admitted of {cert['improvement_loop']['decisions']} proposed, "
+          f"Lean replay {cert['formal']['replay']['mismatches']} mismatches, "
           f"unit {cert['unit']['repositories_placed']} repositories placed, "
-          f"loop {cert['unit']['loop_interfaces_by_status'].get('checked', 0)} of {cert['unit']['loop_interfaces']} interfaces checked")
+          f"{cert['unit']['loop_interfaces_by_status'].get('checked', 0)} of {cert['unit']['loop_interfaces']} interfaces checked")
     return 0
 
 
