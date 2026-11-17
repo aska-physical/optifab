@@ -1,0 +1,51 @@
+{
+  "schema": "optifab-manifest/1",
+  "note": "Byte-exact copies of upstream inputs. verify.py refuses to run if a hash differs. invariants.py is Weft's own gate, used only as the oracle of a differential test.",
+  "files": [
+    {
+      "id": "funi-frame",
+      "repo": "aska-physical/funi-frame",
+      "commit": "97b326d237de5e03a2a227a02f32121005109fb8",
+      "path": "results/certificate.json",
+      "file": "aska-physical/funi-frame/certificate.json",
+      "sha256": "92e7bbcea389274d2967e463ec3881ec9311db7786c5e74559defcd936dfb9fa",
+      "licence": "No licence file upstream. Same organisation."
+    },
+    {
+      "id": "funi-floors",
+      "repo": "aska-physical/funi-floors",
+      "commit": "00eba18ceea0adf69f7dc12ca47d151622faa32a",
+      "path": "results/certificate.json",
+      "file": "aska-physical/funi-floors/certificate.json",
+      "sha256": "85878c416fed3c290c1321ec0dc27af5a152d8ca4d264b8f802add2e5995d186",
+      "licence": "No licence file upstream. Same organisation."
+    },
+    {
+      "id": "venturi-collars",
+      "repo": "aska-physical/venturi-collars",
+      "commit": "d53f85a35d17a7bd46d0b5320c8879fc9f381978",
+      "path": "results/certificate.json",
+      "file": "aska-physical/venturi-collars/certificate.json",
+      "sha256": "c93eb98b2431b2b733cb1702594c5dc1e00a77fc811d663cea561f20cb0c0170",
+      "licence": "No licence file upstream. Same organisation."
+    },
+    {
+      "id": "weft-vectors",
+      "repo": "Moissanite-Labs/weft",
+      "commit": "df4f9fa45640d7ee840f4529025a9a556d98684c",
+      "path": "weft/runtime/invariants/vectors.json",
+      "file": "Moissanite-Labs/weft/vectors.json",
+      "sha256": "bdc25776f32b0ed0cdaab4e413bed4a906f20193536724e60a7fba09c9965bcf",
+      "licence": "Apache-2.0. Copyright 2026 Moissanite Labs and the Weft contributors. See NOTICE."
+    },
+    {
+      "id": "weft-gate-oracle",
+      "repo": "Moissanite-Labs/weft",
+      "commit": "df4f9fa45640d7ee840f4529025a9a556d98684c",
+      "path": "weft/runtime/invariants/invariants.py",
+      "file": "Moissanite-Labs/weft/invariants.py",
+      "sha256": "1064b0f8170c7b4dd2099a9412df2b50f301da003d61a5b07f842f26646612e4",
+      "licence": "Apache-2.0. Copyright 2026 Moissanite Labs and the Weft contributors. See NOTICE."
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+optifab
+aska-physical
+
+This repository redistributes two third-party files, unmodified:
+
+  data/upstream/Moissanite-Labs/weft/vectors.json
+  data/upstream/Moissanite-Labs/weft/invariants.py
+    from Moissanite-Labs/weft, weft/runtime/invariants/,
+    commit df4f9fa45640d7ee840f4529025a9a556d98684c.
+    Copyright 2026 Moissanite Labs and the Weft contributors.
+    Licensed under the Apache License, Version 2.0:
+    https://www.apache.org/licenses/LICENSE-2.0
+    "ML Weft", "Weft" and "Moissanite Labs" are names of Moissanite Labs. They are used here only to
+    say where the file comes from.
+
+The function plant_gate in verify.py implements the predicate of Weft interface I3. It was written from
+Weft's interface note, its conformance vectors and its reference implementation, and its arithmetic
+follows the reference so that the two agree exactly. No Weft code is imported or copied into it. The
+vendored invariants.py is run only as the oracle of a differential test.
+
+The other files under data/upstream/ are certificates from aska-physical repositories
+(funi-frame, funi-floors, venturi-collars), copied unmodified. data/upstream/MANIFEST.json records the
+source commit and SHA-256 of each file.
+
+Short quotations from other repositories appear in data/pins.json, data/graph.json and the documents as
+the text of citations. Each names its repository, commit, file and line.
+
+Passages quoted from the Weft corpus (Moissanite-Labs/weft-corpus, commit
+5cf1e447102bba55d7d1d8010ea2bdda1f2eddf1) are used under the Creative Commons Attribution 4.0
+International License. Attribution: "Weft corpus, Moissanite Labs,
+https://github.com/Moissanite-Labs/weft-corpus". The corpus is source material: it narrates actions that
+did not happen, and nothing quoted from it is used here as evidence.

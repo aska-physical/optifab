@@ -1,0 +1,590 @@
+{
+  "schema": "optifab-pins/1",
+  "pins": [
+    {
+      "id": "ff.cop_ads",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "Q_drv = Q_air / 0.62",
+      "line": 144,
+      "value": {
+        "cop_ads": 0.62
+      },
+      "note": "Silica-gel adsorption COP, a literal in the upstream verifier."
+    },
+    {
+      "id": "ff.cooling_power",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "P_c_conv, P_c_funi = P_it / 3.0 + 0.27, Q_ates / 28.0 + 0.195",
+      "line": 147,
+      "value": {
+        "conv_chiller_cop": 3.0,
+        "conv_aux_MW": 0.27,
+        "ates_cop": 28.0,
+        "funi_aux_MW": 0.195
+      },
+      "note": "Cooling electricity model: conventional chiller COP and auxiliaries, ATES COP and auxiliaries."
+    },
+    {
+      "id": "ff.q_ates",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "Q_ates = (Q_liq - Q_drv) + (Q_air + Q_drv) - (Q_pil + 0.55 * Q_sky)",
+      "line": 146,
+      "value": {
+        "sky_fraction": 0.55
+      },
+      "note": "Heat sent to the aquifer store. The drive heat cancels, so Q_ates = P_it - Q_pil - 0.55 Q_sky."
+    },
+    {
+      "id": "ff.pue_overhead",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "\"PUE_funi_frame\": round((P_it + P_c_funi + 0.2) / P_it, 3)",
+      "line": 159,
+      "value": {
+        "other_overhead_MW": 0.2
+      },
+      "note": "Non-cooling overhead in the PUE numerator."
+    },
+    {
+      "id": "ff.pcm_energy",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "v_pcm, v_wat = 2500.0 / 30.0, 2500.0 / 11.5",
+      "line": 143,
+      "value": {
+        "pcm_energy_kWh_th": 2500.0,
+        "pcm_density_kWh_m3": 30.0,
+        "water_density_kWh_m3": 11.5
+      },
+      "note": "Ride-through energy of the PCM skid and the two storage densities."
+    },
+    {
+      "id": "ff.heat_leak",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "\"passive_ride_through_with_mpcm_min\": round((E_air + E_pcm) / (750.0 * 60.0), 2)",
+      "line": 102,
+      "value": {
+        "heat_leak_kW": 750.0
+      },
+      "note": "Air-side heat load used for the wall-liner ride-through."
+    },
+    {
+      "id": "ff.floor_mass",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "m_a = (2500.0 * (195.12 + roof_m) + p_m * h_a * wall_m) / 1000.0",
+      "line": 125,
+      "value": {
+        "floor_mass_kg_m2": 195.12,
+        "floor_area_m2": 2500.0
+      },
+      "note": "Floor dead mass copied by hand from funi-floors."
+    },
+    {
+      "id": "ff.conv_floor_mass",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "m_c = (2500.0 * (744.0 + 460.0) + p_m * h_c * 368.0) / 1000.0",
+      "line": 124,
+      "value": {
+        "conv_floor_mass_kg_m2": 744.0
+      },
+      "note": "Conventional post-tensioned floor mass, the funi-floors baseline."
+    },
+    {
+      "id": "ff.geometry",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "h_c, h_a, p_m = 2 * 6.0 + 2.40, 2 * 5.45 + 1.48, 4.0 * math.sqrt(2500.0)",
+      "line": 123,
+      "value": {
+        "perimeter_m": 200.0
+      },
+      "note": "Square 2,500 m2 plan, so the perimeter is 200 m."
+    },
+    {
+      "id": "ff.fesma",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "P_sma = n_r * Asma * (435.0 * math.tanh((175.0 - 50.0) / 58.0)) * 1e-3",
+      "line": 47,
+      "value": {
+        "sigma0_MPa": 435.0,
+        "T_act_C": 175.0,
+        "T0_C": 50.0,
+        "T_scale_C": 58.0
+      },
+      "note": "Fe-SMA recovery stress law, shared with funi-floors."
+    },
+    {
+      "id": "ff.rack_live",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "m_live = (2500.0 * (0.25 * 15.0 * 101.97 + 7.5 * 101.97)) / 1000.0",
+      "line": 126,
+      "value": {
+        "rack_live_kPa": 15.0
+      },
+      "note": "Rack floor live load, the funi-floors 313 psf case."
+    },
+    {
+      "id": "ff.uplift_factor",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": ">= 1.5 * rf[\"tornado_net_uplift_kN\"]",
+      "line": 174,
+      "value": {
+        "uplift_factor": 1.5
+      },
+      "note": "Factor on tornado uplift in must-fail control 3."
+    },
+    {
+      "id": "ff.deflection_limit",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "rf[\"span_over_delta_ipe600_rafter\"] < 360.0 <= rf[\"span_over_delta_vault\"]",
+      "line": 172,
+      "value": {
+        "span_over_delta_limit": 360.0
+      },
+      "note": "L/360 serviceability limit in must-fail control 1."
+    },
+    {
+      "id": "ff.revenue_low",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "\"unlocked_annual_revenue_low_M_usd\": round((P_c_conv - P_c_funi) * 25.0, 2)",
+      "line": 163,
+      "value": {
+        "revenue_low_M_usd_per_MW_yr": 25.0
+      },
+      "note": "Low end of the compute revenue per MW-year."
+    },
+    {
+      "id": "ff.temps",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "HANDOFF.md",
+      "find": "Capturing `85%` of IT heat at `58 °C` (`ASHRAE W45`) self-generates `100%` of the `15–18 °C` chilled water",
+      "line": 14,
+      "value": {
+        "T_drive_C": 58.0,
+        "T_chilled_C": [
+          15.0,
+          18.0
+        ]
+      },
+      "note": "Drive and chilled-water temperatures. Stated in prose only; the certificate has no temperature fields."
+    },
+    {
+      "id": "ff.eis_text",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "docs/ENGINEERING_STUDIES.md",
+      "find": "`+46.16%` reactance shift",
+      "line": 52,
+      "value": {
+        "eis_shift_pct": 46.16
+      },
+      "note": "Leak-sensing figure quoted from funi-floors."
+    },
+    {
+      "id": "vc.node_power",
+      "kind": "line",
+      "repo": "aska-physical/venturi-collars",
+      "path": "README.md",
+      "find": "`> 80 uW` node",
+      "line": 21,
+      "value": {
+        "node_power_mW": 0.08
+      },
+      "note": "Power of the wireless sensor node the collar must supply."
+    },
+    {
+      "id": "weft.max_lineage_depth",
+      "kind": "line",
+      "repo": "Moissanite-Labs/weft",
+      "path": "weft/runtime/ledger/ProvenanceRegistry.sol",
+      "find": "uint256 public constant MAX_LINEAGE_DEPTH = 12;",
+      "line": 7,
+      "value": {
+        "max_lineage_depth": 12
+      },
+      "note": "Depth bound of the Weft provenance DAG, applied here to the cross-org lineage graph."
+    },
+    {
+      "id": "weft.thermal_estimate",
+      "kind": "line",
+      "repo": "Moissanite-Labs/weft",
+      "path": "weft/runtime/telemetry/host_metrics.py",
+      "find": "est_temp = round(38.5 + strain * 35.0, 2)",
+      "line": 45,
+      "note": "Weft's only temperature is this formula of CPU load. No sensor is read."
+    },
+    {
+      "id": "weft.lean_milestone",
+      "kind": "line",
+      "repo": "Moissanite-Labs/weft",
+      "path": "docs/roadmap.md",
+      "find": "Lean 4 formal mechanization of the `C2` Frobenius and budget predicates",
+      "line": 48,
+      "note": "Weft Milestone I.3, still open. The plant gate here would share that proof."
+    },
+    {
+      "id": "weft.telemetry_dialect",
+      "kind": "line",
+      "repo": "Moissanite-Labs/weft",
+      "path": "README.md",
+      "find": "The telemetry line here is an earlier dialect",
+      "line": 136,
+      "note": "Weft's telemetry line is not yet the abios format."
+    },
+    {
+      "id": "weft.gate_origin",
+      "kind": "line",
+      "repo": "Moissanite-Labs/weft",
+      "path": "weft/runtime/invariants/invariants.py",
+      "find": "Repaired from `weft/terrafab-calc.md:50-100` (C header)",
+      "line": 11,
+      "note": "Weft's shipped gate descends from the header in the Terrafab documents."
+    },
+    {
+      "id": "weft.frame_struct",
+      "kind": "line",
+      "repo": "Moissanite-Labs/weft",
+      "path": "weft/runtime/telemetry/frame64.py",
+      "find": "FRAME64_STRUCT = struct.Struct(\"<16f\")",
+      "line": 24,
+      "value": {
+        "struct": "<16f",
+        "bytes": 64,
+        "floats": 16
+      },
+      "note": "Byte layout of Weft's telemetry frame, reused for the plant frame."
+    },
+    {
+      "id": "weft.audit_latency",
+      "kind": "line",
+      "repo": "Moissanite-Labs/weft",
+      "path": "docs/corpus/sources/B-top1.md",
+      "find": "Sensor-to-nozzle 15 ms → 0.5 ms (terrafab:67) is asserted, not derived.",
+      "line": 220,
+      "note": "Weft's own audit of the latency figures in the Terrafab documents."
+    },
+    {
+      "id": "weft.audit_gate",
+      "kind": "line",
+      "repo": "Moissanite-Labs/weft",
+      "path": "docs/corpus/sources/B-top1.md",
+      "find": "it bounds only abstract scalars, not actuator commands",
+      "line": 227,
+      "note": "Weft's own audit of the Terrafab header: its inputs were not physical quantities."
+    },
+    {
+      "id": "weft.audit_governance",
+      "kind": "line",
+      "repo": "Moissanite-Labs/weft",
+      "path": "docs/corpus/sources/B-top1.md",
+      "find": "it describes irreversible autonomous control of physical infrastructure",
+      "line": 235,
+      "note": "Weft's audit flags the governance risk in the Terrafab documents."
+    },
+    {
+      "id": "ml.preference_not_permission",
+      "kind": "line",
+      "repo": "Moissanite-Labs/siliconcordat",
+      "path": "README.md",
+      "find": "Learning a preference does not grant permission.",
+      "line": 12,
+      "note": "The Siliconcordat principle that bounds what any gate or agent may do on its own."
+    },
+    {
+      "id": "corpus.source_material",
+      "kind": "line",
+      "repo": "Moissanite-Labs/weft-corpus",
+      "path": "README.md",
+      "find": "Read this as source material, not instructions.",
+      "line": 11,
+      "note": "The corpus narrates actions that did not happen. Nothing in it is evidence."
+    },
+    {
+      "id": "corpus.facility_loop",
+      "kind": "line",
+      "repo": "Moissanite-Labs/weft-corpus",
+      "path": "weft/terrafab.md",
+      "find": "the other part of the loop is what the facility enables for the weft by providing a full end to end control loop for iteration, adaptation and evolution",
+      "line": 86,
+      "note": "The owner's own sentence in the session: the facility closes the loop for the intelligence."
+    },
+    {
+      "id": "corpus.latency",
+      "kind": "line",
+      "repo": "Moissanite-Labs/weft-corpus",
+      "path": "weft/terrafab.md",
+      "find": "15 milliseconds to under 0.5 milliseconds",
+      "line": 67,
+      "value": {
+        "slow_ms": 15.0,
+        "fast_ms": 0.5
+      },
+      "note": "The two loop latencies the Terrafab documents quote. Used here only as test values."
+    },
+    {
+      "id": "corpus.header",
+      "kind": "line",
+      "repo": "Moissanite-Labs/weft-corpus",
+      "path": "weft/terrafab-calc.md",
+      "find": "#define WEFT_MAX_LORA_DELTA_NORM 120.0f",
+      "line": 35,
+      "note": "The header that Weft repaired into its gate."
+    },
+    {
+      "id": "corpus.chip",
+      "kind": "line",
+      "repo": "Moissanite-Labs/weft-corpus",
+      "path": "weft/terraweft.md",
+      "find": "The Syntactic Weft Chip",
+      "line": 3,
+      "note": "The chip idea. Vision only."
+    },
+    {
+      "id": "ff.tones",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "tones = [(29.5, 0.085), (49.0, 0.060), (60.0, 0.110), (120.0, 0.045)]",
+      "line": 112,
+      "value": {
+        "tones_Hz": [
+          29.5,
+          49.0,
+          60.0,
+          120.0
+        ]
+      },
+      "note": "Plant vibration tones in the upstream isolation model."
+    },
+    {
+      "id": "ff.stages",
+      "kind": "line",
+      "repo": "aska-physical/funi-frame",
+      "path": "verify.py",
+      "find": "_th(f, 4.5, 0.16) * _th(f, 9.2, 0.12) * 0.40",
+      "line": 113,
+      "value": {
+        "stage_Hz": [
+          4.5,
+          9.2
+        ]
+      },
+      "note": "Natural frequencies of the two isolation stages."
+    },
+    {
+      "id": "f0.evidence_rank",
+      "kind": "line",
+      "repo": "Foundation-0/f0",
+      "path": "docs/charter/page.js",
+      "find": "var EVID = { 'formally-verified': ['v', 5, 'Formally verified'], 'independently-replicated': ['v', 4, 'Replicated'], 'peer-reviewed': ['r', 3, 'Peer reviewed'], deployed: ['d', 3, 'Deployed'], preprint: ['p', 2, 'Preprint'], claimed: ['c', 1, 'Claimed'] };",
+      "line": 317,
+      "value": {
+        "formally-verified": 5,
+        "independently-replicated": 4,
+        "peer-reviewed": 3,
+        "deployed": 3,
+        "preprint": 2,
+        "claimed": 1
+      },
+      "note": "The Ledger's ranking of evidence, reused here as the common scale."
+    },
+    {
+      "id": "f0.ledger_dc_cooling",
+      "kind": "json",
+      "repo": "Foundation-0/f0",
+      "path": "docs/data/ledger.json",
+      "pointer": [
+        "milestones",
+        {
+          "id": "deepmind-datacenter-cooling-40pct"
+        },
+        "before_after",
+        "after"
+      ],
+      "equals": "up to 40% lower (15% lower PUE overhead)",
+      "note": "The Ledger's deployed data-centre cooling entry (2016)."
+    },
+    {
+      "id": "f0.ledger_dc_cooling_evidence",
+      "kind": "json",
+      "repo": "Foundation-0/f0",
+      "path": "docs/data/ledger.json",
+      "pointer": [
+        "milestones",
+        {
+          "id": "deepmind-datacenter-cooling-40pct"
+        },
+        "evidence"
+      ],
+      "equals": "deployed",
+      "note": "Evidence level of that entry."
+    },
+    {
+      "id": "pc.none_verified",
+      "kind": "line",
+      "repo": "Proven-Commons/mission",
+      "path": "CANDIDATES.md",
+      "find": "so none is verified",
+      "line": 44,
+      "note": "No Proven Commons project has passed the verified bar."
+    },
+    {
+      "id": "pc.reviewers_empty",
+      "kind": "line",
+      "repo": "Proven-Commons/mission",
+      "path": "bar/reviewers.toml",
+      "find": "The list is empty until the first reviewers are named",
+      "line": 6,
+      "note": "Bar item 1 cannot be met by any project until reviewers are named."
+    },
+    {
+      "id": "pc.mqtt",
+      "kind": "line",
+      "repo": "Proven-Commons/mission",
+      "path": "CANDIDATES.md",
+      "find": "| MQTT 5.0 packet framing |",
+      "line": 78,
+      "note": "Candidate row."
+    },
+    {
+      "id": "pc.cbor",
+      "kind": "line",
+      "repo": "Proven-Commons/mission",
+      "path": "CANDIDATES.md",
+      "find": "| CBOR codec (RFC 8949) |",
+      "line": 74,
+      "note": "Candidate row."
+    },
+    {
+      "id": "pc.ntp",
+      "kind": "line",
+      "repo": "Proven-Commons/mission",
+      "path": "CANDIDATES.md",
+      "find": "| NTP wire packet |",
+      "line": 82,
+      "note": "Candidate row."
+    },
+    {
+      "id": "pc.protobuf",
+      "kind": "line",
+      "repo": "Proven-Commons/mission",
+      "path": "CANDIDATES.md",
+      "find": "| Protobuf wire format codec |",
+      "line": 52,
+      "note": "Candidate row."
+    },
+    {
+      "id": "sq.e8",
+      "kind": "line",
+      "repo": "Moissanite-Labs/siliquant",
+      "path": "bounds/bounds.out",
+      "find": "E_8                                          | 0.071682 | 0.654 | 0.1086",
+      "line": 20,
+      "value": {
+        "gain_bits_per_weight": 0.1086
+      },
+      "note": "Granular gain of E8 over scalar rounding."
+    },
+    {
+      "id": "sq.limit",
+      "kind": "line",
+      "repo": "Moissanite-Labs/siliquant",
+      "path": "bounds/bounds.out",
+      "find": "limit of the ball, 1 / (2 pi e)              | 0.058550 | 1.533 | 0.2546",
+      "line": 23,
+      "value": {
+        "gain_bits_per_weight": 0.2546
+      },
+      "note": "Ceiling on what any cell shape can gain."
+    },
+    {
+      "id": "sq.unrelated",
+      "kind": "line",
+      "repo": "Moissanite-Labs/siliquant",
+      "path": "notes/brief-check.md",
+      "find": "| 17 | The 16,240 exact certificate coefficients | Real, unrelated |",
+      "line": 39,
+      "note": "siliquant already checked a proposed link from incentre-lattices to weight rounding and closed it."
+    },
+    {
+      "id": "abios.bytes",
+      "kind": "line",
+      "repo": "Moissanite-Labs/abios",
+      "path": "bench/README.md",
+      "find": "v2 is 3.1x smaller in bytes",
+      "line": 18,
+      "value": {
+        "ratio": 3.1
+      },
+      "note": "Bytes against compact JSON on 6 paired hand-written tasks. Not a model evaluation."
+    },
+    {
+      "id": "synbios.sym3",
+      "kind": "line",
+      "repo": "Moissanite-Labs/synbios",
+      "path": "README.md",
+      "find": "| 200 messages | 27363 | **7628** | 7649 |",
+      "line": 17,
+      "value": {
+        "compact_json_tokens": 27363,
+        "sym3_refs_tokens": 7628
+      },
+      "note": "Token counts on a synthetic 200-message transcript."
+    }
+  ],
+  "searches": [
+    {
+      "id": "no_aska_physical_in_other_orgs",
+      "pattern": "aska-physical|funi-frame|funi-floors|optifab",
+      "repos": [
+        "Moissanite-Labs/weft",
+        "Moissanite-Labs/weft-loom",
+        "Moissanite-Labs/siliquant",
+        "Moissanite-Labs/abios",
+        "Moissanite-Labs/synbios",
+        "Moissanite-Labs/synmerit",
+        "Moissanite-Labs/ethos",
+        "Moissanite-Labs/exofab",
+        "Moissanite-Labs/exo-os",
+        "Moissanite-Labs/siliconcordat",
+        "Moissanite-Labs/.github",
+        "Foundation-0/f0",
+        "Foundation-0/math0",
+        "Foundation-0/physics0",
+        "Foundation-0/incentre-lattices",
+        "Foundation-0/point-charges",
+        "Foundation-0/.github",
+        "Proven-Commons/mission",
+        "Proven-Commons/.github"
+      ],
+      "expect_hits": 0,
+      "note": "Before this version no repository of the other three organisations named aska-physical or its data-centre work."
+    }
+  ]
+}

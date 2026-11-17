@@ -1,0 +1,247 @@
+{
+  "schema": "optifab-sources/1",
+  "repos": {
+    "aska-physical/.github": {
+      "commit": "0289ce8afa209f7ee8679622e2129fe8ace3746f",
+      "files": {
+        "ETHOS.md": "ce8efe133fa6a73ad33e79bea96188805a9c8ae64fb948476d7bb5f5f8a167e7",
+        "profile/README.md": "a7b39fd11109b67d3c422eaa4106fb986b7f6c51b3952bca7e87fde10d853cb8"
+      }
+    },
+    "aska-physical/cfrp-masts": {
+      "commit": "a12b665f2baf32a8d6499ef39c296ef9fe78f630",
+      "files": {
+        "results/certificate.json": "ff354f780e58999254b87eaf5ac6af3a387a662b320af714764c0b95718d664a"
+      }
+    },
+    "aska-physical/cfrp-strengthening": {
+      "commit": "3f68cccf19556574b7652311be1b0dc0daa93144",
+      "files": {
+        "docs/review-ledger.md": "23dda130ce887eb2ba9973f4de1375f39ee31f0f3a354a70c15029274dd8bea6"
+      }
+    },
+    "aska-physical/cfrp-truss": {
+      "commit": "3c11631e223b71227531d10286abd71bc04d67b7",
+      "files": {
+        "README.md": "e8a599dd2d2601c15be5e0913bd1c5fe0fa99dbed8bf9bf895fe6b1274f26041"
+      }
+    },
+    "aska-physical/dock": {
+      "commit": "ce4135b88139fb63372279015cecc77c6b89f364",
+      "files": {
+        "index.html": "9773a0b7ce03b0ec67b325a8a0789b83719e400db721284cefa32eb662148fc1"
+      }
+    },
+    "aska-physical/fibral-rigidity": {
+      "commit": "06520520dff2e956715f18cfa3ba10e7ee83487b",
+      "files": {
+        "README.md": "9db8550b115c4d14dc845ce81c047e1c6bfda5f183efb6a149385ada8a6c0958"
+      }
+    },
+    "aska-physical/funi-floors": {
+      "commit": "00eba18ceea0adf69f7dc12ca47d151622faa32a",
+      "files": {
+        "README.md": "4095c8469e15bdf88ecfbfea351743440095ccfb1068674a8cb24cfb6d56cff0",
+        "results/certificate.json": "85878c416fed3c290c1321ec0dc27af5a152d8ca4d264b8f802add2e5995d186"
+      }
+    },
+    "aska-physical/funi-frame": {
+      "commit": "97b326d237de5e03a2a227a02f32121005109fb8",
+      "files": {
+        "HANDOFF.md": "07beab173fbe1b0863dc368115ec004f12719cf8e8ef2ee5a077e6e9f1c914cf",
+        "README.md": "2e759144d262be6e0be47b18709a05ca4ec1ff84bbd06244f155f7eb65d825ff",
+        "docs/ENGINEERING_STUDIES.md": "b7205b630444b1f5cf453a0deee4ebe470d5d855e52d678bd8e67a246276bbf7",
+        "results/certificate.json": "92e7bbcea389274d2967e463ec3881ec9311db7786c5e74559defcd936dfb9fa",
+        "verify.py": "cef9e47da460add38618b46fe4478855f80551f2c722dc73c64808375625a57e"
+      }
+    },
+    "aska-physical/graph-fab": {
+      "commit": "d669f233212ee0f2a7d59e60b0f3bdc9781f8a99",
+      "files": {
+        "README.md": "0c963eef2c803d3c815ee5545ca2371d2759dd1e454542109dfa302c2a418228"
+      }
+    },
+    "aska-physical/impedence-analyzers": {
+      "commit": "ed0a5e10e87e231262af697cb183aa8aa570ca83",
+      "files": {
+        "README.md": "83d0736f55d529634b485d2163910bcfd2bf8307db622baabf25c188c5c8e451"
+      }
+    },
+    "aska-physical/venturi-collars": {
+      "commit": "d53f85a35d17a7bd46d0b5320c8879fc9f381978",
+      "files": {
+        "README.md": "f5ad663e8c0a3436c4c5b382606b7f910d5ad47b51e6d495cfb3334c8726cbc5",
+        "results/certificate.json": "c93eb98b2431b2b733cb1702594c5dc1e00a77fc811d663cea561f20cb0c0170"
+      }
+    },
+    "Foundation-0/.github": {
+      "commit": "81f83c38918382b4ca142b81debd3cc5ccf61d3a",
+      "files": {
+        "REPO-STANDARD.md": "5da1c2d1b843a0d2553ef5c00ef2f0d29b35ea1cb6e8e9c5fc999940a64ef633"
+      }
+    },
+    "Foundation-0/ductricity": {
+      "commit": "0a178a01209b6b583408a861b2476e2308e1f053",
+      "files": {
+        "README.md": "6428af38c4fd8178a27377748c333617511c92e663e291e6da6679c37ca89877"
+      }
+    },
+    "Foundation-0/f0": {
+      "commit": "9a37134750174339c53121939838ce62ab8af630",
+      "files": {
+        "README.md": "fdcf48a9af2516be0993c003e7a6fbe6a6162c00224b90cff4f1b8e9ededd2be",
+        "docs/charter/page.js": "713a8ee7a0af6d7954852684304cc1393fc6fd9844c2298df5ca53b9282a534f",
+        "docs/data/ledger.json": "614e324e7f9cfd2fb686473c6fc3b17f083f0690403e197879f88c0104194998",
+        "docs/data/projects.json": "89d7a2b899a47309afeb924fc9e9f2ea520527092071c783b9af32a14512d118"
+      }
+    },
+    "Foundation-0/incentre-lattices": {
+      "commit": "2d374fff2a59cc9331566733043a4bb25c1040bf",
+      "files": {
+        "README.md": "38b87aad99378cc9de6d80f2a603b89402bdf11147356020a5c9f14b7bb3e1a4"
+      }
+    },
+    "Foundation-0/math0": {
+      "commit": "e649250ca32249affe52873a45d22e8bd5562624",
+      "files": {
+        "README.md": "36946626ad88ba7a395d855f917f442d9c9c133ab9a27695e0703ed92f2540d1",
+        "studies/integer-mult/carbon-2026-11-13/base-math-convergence/research/conservation-quotient-bounds/PROOF.md": "003338add42876488acee256825e20ff1ac41f07c294c24b77c29750bf23dc6d"
+      }
+    },
+    "Foundation-0/nhanes-bioimpedance": {
+      "commit": "efb3395b70e32ae96779a73454b2333b7e86c4d1",
+      "files": {
+        "README.md": "912abd9a650ec4be263758ba43f9058fdf63544aa97979b5b698f707019aee0f"
+      }
+    },
+    "Foundation-0/physics0": {
+      "commit": "913468f093f82d869dc58b404039ea0a416cfb80",
+      "files": {
+        "AREAS.md": "7c590dffe6a796c61a2e1c52e16b0ad1fcb982a19bb13ea136c4530b46fce61e"
+      }
+    },
+    "Foundation-0/point-charges": {
+      "commit": "a2fd159bccb24d2922a127ad83f28b9f44e2ceba",
+      "files": {
+        "NOTE.md": "8730c9a298643931e34010f114907fef52c93b8244e2e73b29bbaf1750e26589"
+      }
+    },
+    "Foundation-0/project-asma": {
+      "commit": "48178217a88066212ec798a7e8031e6fc652493e",
+      "files": {
+        "README.md": "fad26b3f171f679866e022f49000ed126a4b072b0d7b4a209e35df95bf837da2"
+      }
+    },
+    "Foundation-0/rigid-realizations": {
+      "commit": "298926c5e7a03683bb83165931ac38a94260166f",
+      "files": {
+        "README.md": "05fc65990df941206904799655d2762b4f561dc74d338a62fd0a3b5ee5bfb548"
+      }
+    },
+    "Foundation-0/thermal-capture": {
+      "commit": "5fa678e94d2e6b1ace56d2cc7e4e0b0eae0a91af",
+      "files": {
+        "README.md": "4a3b5fcad91b46cfcb656cbd0d9a7dca8d6a709ed55f9ed0d14149619eab7aaa"
+      }
+    },
+    "Moissanite-Labs/.github": {
+      "commit": "23b1282b6c6aae05774471eacd79ba5a6ae767f9",
+      "files": {
+        "profile/README.md": "cbe6c0026d27636c433dddb71d0744c257059e92a24fa866dadbe9a751ab81ba"
+      }
+    },
+    "Moissanite-Labs/abios": {
+      "commit": "21154fdc2fe925047560134fdedea5d0c073ca25",
+      "files": {
+        "bench/README.md": "a1dc41067dff44a086fa02423ad600a054c79531d0f1f64b245a8d706a1cfcd0"
+      }
+    },
+    "Moissanite-Labs/ethos": {
+      "commit": "afdb3a4af912a13358f2e1d67673dfd175ed39be",
+      "files": {
+        "pyproject.toml": "21a96d319792e008b81f29dbd9e4c34d9d7a4b6eb85530fd76425124371bc4c1"
+      }
+    },
+    "Moissanite-Labs/exo-os": {
+      "commit": "bf489013a217b99aa8a0d238fbfb398b78354685",
+      "files": {
+        "docs/BANKAI.md": "bb8067dced717c82527f2368440d4b39627ff7df8a5622f453a462d5c55f8954",
+        "research/04-small-hardware.md": "b8cf231471fa1a6cab82ab9452649c4db22007bc175bf79bcff296150dc08821"
+      }
+    },
+    "Moissanite-Labs/exofab": {
+      "commit": "1e103c7394ef904c166c83b4529410e815a8c5a1",
+      "files": {
+        "README.md": "5fb844e72e1ba1877c20baaf76921ea48ca21ac43566eb8b945d2247f436866a"
+      }
+    },
+    "Moissanite-Labs/siliconcordat": {
+      "commit": "28d3238a0a5a635137efe3872e1648c03ed8edd0",
+      "files": {
+        "README.md": "061d49ba280314ff856a492c921496dc0dc202976d487da0cec0f3dcac256f3b"
+      }
+    },
+    "Moissanite-Labs/siliquant": {
+      "commit": "ba3a7333e9ccb99e35a74655b8d08699600adecd",
+      "files": {
+        "README.md": "7061045a88d237fb5f34544f94acd587ab4c06e11f38eec367c776612c7931b1",
+        "bounds/bounds.out": "282aaa9e8b03a96a5ab7c24543ed0b3c7ea68b5969c2bc9e6511133045af3502",
+        "notes/brief-check.md": "f1ff75da0e0ce0d06e5fec2894eeb7226632fb27286c23111b7da121ff53531c"
+      }
+    },
+    "Moissanite-Labs/synbios": {
+      "commit": "85583494aa5868cc9219aa0d914c27714b05a52e",
+      "files": {
+        "README.md": "c1d866c51288d9b26e828ae41c35dcb16e23f38d5793133e09a6b1f233859d43"
+      }
+    },
+    "Moissanite-Labs/synmerit": {
+      "commit": "4b1a9e1c98aa7e41fc4636f59a36be0c7d4f58fa",
+      "files": {
+        "package.json": "e643c12d3419f1e942ab7d39568aeea8642bfb3c6e26fa5f51f11e3211ac87c8"
+      }
+    },
+    "Moissanite-Labs/weft": {
+      "commit": "df4f9fa45640d7ee840f4529025a9a556d98684c",
+      "files": {
+        "README.md": "d32ef59cfb8ab2343b0839409c3c33f7d2b9864b709d567b57fff26131e64010",
+        "docs/corpus/sources/B-top1.md": "7f2baf0582b540f0c2dae51a1b2ab71372bd35114bc6a7388840068f6a5fa2e8",
+        "docs/roadmap.md": "194e1baee11536ee270ae45de435c48e2ffb222660c35a696c58ae219fc6c2f3",
+        "tools/flex_burn_hardened/run_all_55_flex_burn_v2.py": "fa1287632e4edfd4b56625baab7fe4ef4b0d64ac8db4536d1e36433a4f252871",
+        "weft/runtime/invariants/invariants.py": "1064b0f8170c7b4dd2099a9412df2b50f301da003d61a5b07f842f26646612e4",
+        "weft/runtime/invariants/vectors.json": "bdc25776f32b0ed0cdaab4e413bed4a906f20193536724e60a7fba09c9965bcf",
+        "weft/runtime/ledger/ProvenanceRegistry.sol": "d5c5156556dc4728eeb1ca9db19c2ff16d16bc8ba0aeaf900e300b0b8f7f0f1f",
+        "weft/runtime/plasm/identifiability_gate.py": "9e2bc8c7a8c0e2783cd8f7544f6267704ac5fae1d25da8c54af8e29243e5cc29",
+        "weft/runtime/telemetry/frame64.py": "b7c6152a0603b47e993a0e699584312efd819e39e5c58ea5a52e37365eedc7ae",
+        "weft/runtime/telemetry/host_metrics.py": "08b66a6b50c47bd61eec9bd227a3dea299194e3b518fedb9b47a0ee8f2f2db2d"
+      }
+    },
+    "Moissanite-Labs/weft-corpus": {
+      "commit": "5cf1e447102bba55d7d1d8010ea2bdda1f2eddf1",
+      "files": {
+        "README.md": "3c18d2976c1c60ccd8519ac81b8b6fa0e74ebdbd9e219a3a23480d553abfcf95",
+        "weft/terrafab-calc.md": "9c8dc4da177e89ab360d1b73133dcb27457aaad8277aeb855b03601c655c6158",
+        "weft/terrafab.md": "eaa16517934cf619b8599e90c649c1d07cbe9c6d15b5f5b528af71f097e1908d",
+        "weft/terraweft.md": "d7433f1443529ecf45d550bef9b6cc109f27bd62d6714275f6892459829e104b"
+      }
+    },
+    "Moissanite-Labs/weft-loom": {
+      "commit": "b250e13982edec5df9fbfd2f0dee49e11972215d",
+      "files": {
+        "notes/horizon-ii-ideas-backlog.md": "4d4bb313b641055cbe456f1b6b035f45aaa13becdbfb5b8c46d0a9ecbec2b218"
+      }
+    },
+    "Proven-Commons/.github": {
+      "commit": "60521aa4efdefc94f17fd864c1981a6ab517df5d",
+      "files": {}
+    },
+    "Proven-Commons/mission": {
+      "commit": "7b22e542f0db0f3013ab1439cf5d1947676a5083",
+      "files": {
+        "CANDIDATES.md": "0eabd163a8a1e67caaffe140abe4c62d8b12806af3c41d1bffd702ae63dbd5a4",
+        "README.md": "22abf4959d7b5db3d544231126b4cab7acf0690c93363ff2d4c9aeab9197940d",
+        "bar/reviewers.toml": "0b2ba6d07b900adb943c8b32106eba71a8d3deadd98c2915a541e25a2002cdba"
+      }
+    }
+  }
+}

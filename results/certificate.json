@@ -1,0 +1,677 @@
+{
+  "repository": "aska-physical/optifab",
+  "version": "0.1.0",
+  "inputs": {
+    "vendored": {
+      "aska-physical/funi-frame/certificate.json": "92e7bbcea389274d2967e463ec3881ec9311db7786c5e74559defcd936dfb9fa",
+      "aska-physical/funi-floors/certificate.json": "85878c416fed3c290c1321ec0dc27af5a152d8ca4d264b8f802add2e5995d186",
+      "aska-physical/venturi-collars/certificate.json": "c93eb98b2431b2b733cb1702594c5dc1e00a77fc811d663cea561f20cb0c0170",
+      "Moissanite-Labs/weft/vectors.json": "bdc25776f32b0ed0cdaab4e413bed4a906f20193536724e60a7fba09c9965bcf",
+      "Moissanite-Labs/weft/invariants.py": "1064b0f8170c7b4dd2099a9412df2b50f301da003d61a5b07f842f26646612e4"
+    },
+    "data": {
+      "pins.json": "acb6db126f4fdf3901c6f9f64a9b2d03ee4edc48ec863ccfb170d14604e96d54",
+      "graph.json": "3c0a2dd368a0f223c6aea43b621e131461037425001eb6bceaa7742b25034966",
+      "sources.json": "0ec0cfd7d8aa05ab7a51fb77ac8e91fb06dc44ce66ee6333ed965f7368ecc2d6",
+      "unit.json": "e642a76e7b89b439fdc2e3ba422e564fc9d58db2d6f4ce360cba3eb6e400a666",
+      "upstream/MANIFEST.json": "9dd0e7efbb39fb37bc542f86751becb3a6dc46fd348737e2b040a24598238541"
+    },
+    "pinned_repositories": 36,
+    "pinned_lines": 46
+  },
+  "symbolic_theorems": {
+    "substation_constrained_compute": "dP_IT = (freed utility power)/PUE_f if every overhead grows with load; (freed utility power)/(1 + 1/COP_loop) if only the cooling loop does",
+    "tri_thermal_recooling_limit": "COP <= (T_c/(T_a - T_c))*((T_h - T_a)/T_h)  <=>  T_a <= T_c*T_h*(1 + COP)/(COP*T_h + T_c)",
+    "minimum_load_for_self_cooling": "P_min = q_fix/((1 + COP)*alpha - 1); q_fix = 0 gives alpha* = 1/(1 + COP)",
+    "shed_fraction_for_outage": "s_min = 1 - B/(P*T) for a cooling outage of length T on thermal budget B",
+    "delayed_cancellation_residual": "|1 - exp(-i*phi)| = 2*|sin(phi/2)| with phi = 2*pi*f*tau; below 1 within the cycle only if f*tau < 1/6"
+  },
+  "plant": {
+    "pue_reproduction": {
+      "liquid_plus_air_equals_it_load": true,
+      "Q_ates_MW": 9.6224,
+      "passive_sinks_MW": 0.3776,
+      "PUE_funi_reproduced": 1.07387,
+      "PUE_conventional_reproduced": 1.38033,
+      "matches_certificate": true,
+      "annual_heat_to_aquifer_GWh_th": 84.29
+    },
+    "substation": {
+      "freed_utility_power_MW": 3.065,
+      "certificate_freed_substation_power_MW": 3.06,
+      "extra_it_if_all_overhead_scales_MW": 2.854,
+      "extra_it_if_auxiliaries_are_fixed_MW": 2.959,
+      "one_over_PUE_funi": 0.9312,
+      "marginal_PUE_with_fixed_auxiliaries": 1.0357,
+      "certificate_revenue_low_M_usd": 76.62,
+      "revenue_low_on_extra_it_M_usd": [
+        71.35,
+        73.97
+      ],
+      "revenue_overstatement_pct": [
+        3.6,
+        7.4
+      ]
+    },
+    "second_law": {
+      "T_drive_C": 58.0,
+      "T_chilled_C": [
+        15.0,
+        18.0
+      ],
+      "COP_ads_claimed": 0.62,
+      "max_recooling_C_at_chilled_15C": 40.11,
+      "max_recooling_C_at_chilled_18C": 41.46,
+      "reversible_COP_by_recooling_C": {
+        "chilled_15C": {
+          "25": 2.871,
+          "30": 1.624,
+          "35": 1.001,
+          "40": 0.627,
+          "45": 0.377
+        },
+        "chilled_18C": {
+          "25": 4.145,
+          "30": 2.051,
+          "35": 1.19,
+          "40": 0.719,
+          "45": 0.423
+        }
+      },
+      "second_law_efficiency_at_30C_recooling": [
+        0.302,
+        0.382
+      ],
+      "certificate_has_a_recooling_field": false
+    },
+    "minimum_load": {
+      "liquid_capture_fraction": 0.85,
+      "threshold_capture_fraction_no_fixed_load": 0.6173,
+      "design_temperature_difference_K": 20.0,
+      "envelope_gain_MW": 0.01269,
+      "envelope_gain_steel_pinned_wall_MW": 0.12041,
+      "other_overhead_MW": 0.2,
+      "P_min_envelope_only_MW": 0.0337,
+      "P_min_envelope_plus_overhead_MW": 0.5642,
+      "P_min_as_pct_of_nameplate": 5.64,
+      "P_min_steel_pinned_wall_MW": 0.8499,
+      "floor_rise_with_steel_pinned_wall_pct": 50.6,
+      "required_capture_fraction_by_utilisation": {
+        "1.0": 0.6304,
+        "0.5": 0.6435,
+        "0.25": 0.6698,
+        "0.1": 0.7486
+      },
+      "drive_heat_with_fixed_load_MW": 2.762,
+      "drive_heat_available_MW": 8.5
+    },
+    "thermal_budget": {
+      "pcm_budget_kWh_th": 2500.0,
+      "wall_liner_budget_kWh_th": 353.75,
+      "full_load_ride_through_min": 15.0,
+      "ride_through_min_by_shed_fraction": {
+        "0.0": 15.0,
+        "0.25": 20.0,
+        "0.5": 30.0,
+        "0.75": 60.0
+      },
+      "shed_fraction_to_bridge_outage_min": {
+        "10": 0.0,
+        "15": 0.0,
+        "30": 0.5,
+        "60": 0.75
+      },
+      "burst_hours_at_10pct_over_cooling_capacity": 2.5
+    }
+  },
+  "margins": {
+    "vector": [
+      {
+        "limit_state": "rack_vibration",
+        "source": "funi-frame",
+        "demand": 9e-05,
+        "capacity": 0.0005,
+        "utilisation": 0.1791,
+        "basis": "certified"
+      },
+      {
+        "limit_state": "storey_drift",
+        "source": "funi-frame",
+        "demand": 0.563,
+        "capacity": 1.0,
+        "utilisation": 0.563,
+        "basis": "certified"
+      },
+      {
+        "limit_state": "roof_crown_compression",
+        "source": "funi-frame",
+        "demand": 9.6,
+        "capacity": 24.75,
+        "utilisation": 0.387879,
+        "basis": "certified"
+      },
+      {
+        "limit_state": "roof_tornado_uplift_factored",
+        "source": "funi-frame",
+        "demand": 460.545,
+        "capacity": 783.0,
+        "utilisation": 0.58818,
+        "basis": "certified"
+      },
+      {
+        "limit_state": "roof_service_deflection_mm",
+        "source": "funi-frame",
+        "demand": 11.74,
+        "capacity": 66.666667,
+        "utilisation": 0.1761,
+        "basis": "certified"
+      },
+      {
+        "limit_state": "sorption_drive_heat",
+        "source": "funi-frame",
+        "demand": 2.419,
+        "capacity": 8.5,
+        "utilisation": 0.284588,
+        "basis": "certified"
+      },
+      {
+        "limit_state": "floor_punching_collar",
+        "source": "funi-floors",
+        "demand": 2208.02,
+        "capacity": 2756.4,
+        "utilisation": 0.801052,
+        "basis": "certified"
+      },
+      {
+        "limit_state": "floor_walking_vibration",
+        "source": "funi-floors",
+        "demand": 0.308,
+        "capacity": 0.5,
+        "utilisation": 0.616,
+        "basis": "certified"
+      },
+      {
+        "limit_state": "floor_crown_compression",
+        "source": "funi-floors",
+        "demand": 13.669,
+        "capacity": 22.5,
+        "utilisation": 0.607511,
+        "basis": "certified"
+      },
+      {
+        "limit_state": "floor_fire_120min_thrust",
+        "source": "funi-floors",
+        "demand": 1171.96,
+        "capacity": 3902.95,
+        "utilisation": 0.300275,
+        "basis": "certified"
+      },
+      {
+        "limit_state": "floor_duct_hole_shear",
+        "source": "funi-floors",
+        "demand": 185.6,
+        "capacity": 373.48,
+        "utilisation": 0.496948,
+        "basis": "certified"
+      },
+      {
+        "limit_state": "sensor_power_at_airflow_turndown",
+        "source": "venturi-collars",
+        "demand": 0.080035,
+        "capacity": 0.104,
+        "utilisation": 0.769564,
+        "basis": "derived here"
+      }
+    ],
+    "plant_radius": 0.1989,
+    "binding_limit_state": "floor_punching_collar",
+    "binding_source": "funi-floors",
+    "second_tightest": "sensor_power_at_airflow_turndown",
+    "second_tightest_utilisation": 0.769564,
+    "ball_in_box": {
+      "samples": 20000,
+      "max_coordinate_at_axis_points": 0.999952,
+      "max_coordinate_sampled": 0.945071,
+      "all_within_limits": true,
+      "fails_if_radius_grows_by_0.001": true
+    },
+    "sensor_with_larger_node": {
+      "larger_node_mW": 0.15,
+      "harvest_at_turndown_mW": 0.104,
+      "utilisation_with_larger_node": 1.4423
+    }
+  },
+  "gate": {
+    "weft_conformance": {
+      "schema": "WEFT-INVARIANTS/1.0",
+      "weight_update_vectors": 15,
+      "passed": 15,
+      "failed": [],
+      "tension_and_royalty_vectors_out_of_scope": 12
+    },
+    "differential_test": {
+      "oracle": "Moissanite-Labs/weft weft/runtime/invariants/invariants.py: verify_weight_update_safety_ex",
+      "cases": 100000,
+      "seed": 20261117,
+      "mismatches": 0,
+      "first_mismatches": [],
+      "agreed_by_reason": {
+        "baseline_distance_exceeded": 18444,
+        "insufficient_metabolic_budget": 3902,
+        "non_finite_parameters": 8277,
+        "non_finite_weights": 9369,
+        "non_positive_budget_or_cost": 9936,
+        "ok": 41772,
+        "shape_mismatch": 4836
+      },
+      "both_raised_the_same_error": 3464
+    },
+    "worked_admissions": [
+      {
+        "case": "cooling outage, 10 min at full load",
+        "accepted": true,
+        "reason": "ok",
+        "distance": 0.0,
+        "cost_kWh_th": 1666.7,
+        "remaining_kWh_th": 833.3
+      },
+      {
+        "case": "second 10 min outage before recharge, full load",
+        "accepted": false,
+        "reason": "insufficient_metabolic_budget",
+        "distance": null,
+        "cost_kWh_th": 1666.7,
+        "remaining_kWh_th": -833.3
+      },
+      {
+        "case": "same outage after shedding 60 percent of load",
+        "accepted": true,
+        "reason": "ok",
+        "distance": 0.0,
+        "cost_kWh_th": 666.7,
+        "remaining_kWh_th": 166.7
+      },
+      {
+        "case": "floor punching demand up 20 percent, 5 min outage",
+        "accepted": true,
+        "reason": "ok",
+        "distance": 0.1602,
+        "cost_kWh_th": 833.3,
+        "remaining_kWh_th": 1666.7
+      },
+      {
+        "case": "floor punching demand up 26 percent, 5 min outage",
+        "accepted": false,
+        "reason": "baseline_distance_exceeded",
+        "distance": 0.2083,
+        "cost_kWh_th": 833.3,
+        "remaining_kWh_th": 2500.0
+      }
+    ]
+  },
+  "interfaces": [
+    {
+      "quantity": "floor dead mass, kg/m2",
+      "downstream_value": 195.12,
+      "upstream_value": 195.12,
+      "tolerance": 0.005,
+      "downstream": "funi-frame verify.py",
+      "upstream": "funi-floors certificate",
+      "agrees": true
+    },
+    {
+      "quantity": "conventional floor mass, kg/m2",
+      "downstream_value": 744.0,
+      "upstream_value": 743.8811,
+      "tolerance": 0.5,
+      "downstream": "funi-frame verify.py",
+      "upstream": "funi-floors certificate (mass and reduction)",
+      "agrees": true
+    },
+    {
+      "quantity": "Fe-SMA recovery stress, MPa",
+      "downstream_value": 423.4717,
+      "upstream_value": 423.47,
+      "tolerance": 0.005,
+      "downstream": "funi-frame verify.py",
+      "upstream": "funi-floors certificate",
+      "agrees": true
+    },
+    {
+      "quantity": "rack live load, kPa",
+      "downstream_value": 15.0,
+      "upstream_value": 14.9865,
+      "tolerance": 0.05,
+      "downstream": "funi-frame verify.py",
+      "upstream": "funi-floors 313 psf case",
+      "agrees": true
+    },
+    {
+      "quantity": "leak-sensor reactance shift, %",
+      "downstream_value": 46.16,
+      "upstream_value": 46.16,
+      "tolerance": 0.005,
+      "downstream": "funi-frame ENGINEERING_STUDIES.md",
+      "upstream": "funi-floors certificate",
+      "agrees": true
+    },
+    {
+      "quantity": "sensor node power, mW",
+      "downstream_value": 0.08,
+      "upstream_value": 0.08,
+      "tolerance": 0.0005,
+      "downstream": "venturi-collars README.md",
+      "upstream": "venturi-collars certificate (harvest over margin)",
+      "agrees": true
+    }
+  ],
+  "ledger_context": {
+    "ledger_entry": "deepmind-datacenter-cooling-40pct",
+    "ledger_evidence": "deployed",
+    "ledger_result": "up to 40% lower (15% lower PUE overhead)",
+    "funi_frame_cooling_electricity_cut_pct": 85.05,
+    "funi_frame_pue_overhead_cut_pct": 80.5,
+    "funi_frame_evidence": "claimed"
+  },
+  "loop_timing": {
+    "slow_latency_ms": 15.0,
+    "fast_latency_ms": 0.5,
+    "plant_tones": [
+      {
+        "tone_Hz": 29.5,
+        "cycles_of_delay_slow": 0.4425,
+        "residual_slow": 1.967,
+        "change_dB_slow": 5.9,
+        "cycles_of_delay_fast": 0.0148,
+        "residual_fast": 0.093,
+        "change_dB_fast": -20.7,
+        "longest_delay_that_helps_within_the_cycle_ms": 5.65
+      },
+      {
+        "tone_Hz": 49.0,
+        "cycles_of_delay_slow": 0.735,
+        "residual_slow": 1.479,
+        "change_dB_slow": 3.4,
+        "cycles_of_delay_fast": 0.0245,
+        "residual_fast": 0.154,
+        "change_dB_fast": -16.3,
+        "longest_delay_that_helps_within_the_cycle_ms": 3.4
+      },
+      {
+        "tone_Hz": 60.0,
+        "cycles_of_delay_slow": 0.9,
+        "residual_slow": 0.618,
+        "change_dB_slow": -4.2,
+        "cycles_of_delay_fast": 0.03,
+        "residual_fast": 0.188,
+        "change_dB_fast": -14.5,
+        "longest_delay_that_helps_within_the_cycle_ms": 2.78
+      },
+      {
+        "tone_Hz": 120.0,
+        "cycles_of_delay_slow": 1.8,
+        "residual_slow": 1.176,
+        "change_dB_slow": 1.4,
+        "cycles_of_delay_fast": 0.06,
+        "residual_fast": 0.375,
+        "change_dB_fast": -8.5,
+        "longest_delay_that_helps_within_the_cycle_ms": 1.39
+      }
+    ],
+    "tones_countered_within_cycle_slow": 0,
+    "tones_countered_within_cycle_fast": 4,
+    "tones_amplified_slow": 3,
+    "highest_frequency_countered_within_cycle_slow_Hz": 11.11,
+    "highest_frequency_countered_within_cycle_fast_Hz": 333.33,
+    "other_structural_frequencies_Hz": {
+      "isolation_stage_1": 4.5,
+      "isolation_stage_2": 9.2,
+      "floor_cassette": 8.624,
+      "sensor_reed_flutter": 5.32
+    },
+    "contract_timescales_s": {
+      "thermal_budget_at_full_load": 900.0,
+      "wall_liner_ride_through": 1698.0
+    },
+    "slow_latency_as_fraction_of_thermal_budget_time": 1.67e-05
+  },
+  "plant_frame": {
+    "layout": "<16f",
+    "bytes": 64,
+    "floats": 16,
+    "matches_weft_frame_layout": true,
+    "slots": [
+      "rack_vibration",
+      "storey_drift",
+      "roof_crown_compression",
+      "roof_tornado_uplift_factored",
+      "roof_service_deflection_mm",
+      "sorption_drive_heat",
+      "floor_punching_collar",
+      "floor_walking_vibration",
+      "floor_crown_compression",
+      "floor_fire_120min_thrust",
+      "floor_duct_hole_shear",
+      "sensor_power_at_airflow_turndown",
+      "thermal_budget_kWh_th",
+      "it_load_MW",
+      "recooling_C",
+      "time_s"
+    ],
+    "round_trip_max_error": 2.7e-08,
+    "design_frame_sha256": "f55b63b5f5ff447e6e99e2e0e14033fab0dbeeb1da6024d9763418a22b617b17",
+    "contract_check": {
+      "design point, recooling at 30 C": [],
+      "design point as certified, no recooling temperature": [
+        "recooling_not_measured"
+      ],
+      "idle campus at 0.3 MW": [
+        "below_load_floor"
+      ],
+      "recooling at 42 C": [
+        "recooling_above_limit"
+      ],
+      "floor punching demand up 26 percent": [
+        "limit_exceeded"
+      ],
+      "thermal budget spent": [
+        "thermal_budget_exhausted"
+      ]
+    },
+    "gate_from_frame": {
+      "design point": "ok",
+      "floor punching demand up 26 percent": "baseline_distance_exceeded"
+    }
+  },
+  "unit": {
+    "elements": 29,
+    "elements_by_status": {
+      "checked": 8,
+      "designed": 6,
+      "idea": 2,
+      "in_progress": 1,
+      "missing": 3,
+      "research": 1,
+      "rule": 3,
+      "specified": 2,
+      "tested_code": 3
+    },
+    "elements_with_no_repository": [
+      "N3",
+      "N4"
+    ],
+    "repositories_placed": 32,
+    "repositories_placed_by_org": {
+      "Foundation-0": 7,
+      "Moissanite-Labs": 11,
+      "Proven-Commons": 5,
+      "aska-physical": 9
+    },
+    "repositories_not_placed": 9,
+    "loop_interfaces": 9,
+    "loop_interfaces_by_status": {
+      "checked": 3,
+      "designed": 2,
+      "idea": 1,
+      "missing": 2,
+      "proposed": 1
+    },
+    "loop_closed": false
+  },
+  "graph": {
+    "nodes": 41,
+    "edges": 43,
+    "nodes_by_org": {
+      "Foundation-0": 11,
+      "Moissanite-Labs": 13,
+      "Proven-Commons": 5,
+      "aska-physical": 12
+    },
+    "nodes_by_layer": {
+      "L0": 9,
+      "L1": 6,
+      "L2": 2,
+      "L3": 2,
+      "L4": 6,
+      "L5": 6,
+      "L6": 10
+    },
+    "lineage_edges": 30,
+    "lineage_acyclic": true,
+    "lineage_depth": 5,
+    "lineage_depth_bound": 12,
+    "optifab_lineage_depth": 5,
+    "stack_size": 13,
+    "stack_by_evidence": {
+      "claimed": 10,
+      "no result claimed": 2,
+      "preprint": 1
+    },
+    "strongest_evidence_rank_in_stack": 2,
+    "stack": [
+      {
+        "node": "Foundation-0/incentre-lattices",
+        "evidence": "preprint",
+        "rank": 2,
+        "downstream_in_stack": 6,
+        "assigned_by": "source"
+      },
+      {
+        "node": "Foundation-0/nhanes-bioimpedance",
+        "evidence": "claimed",
+        "rank": 1,
+        "downstream_in_stack": 5,
+        "assigned_by": "source"
+      },
+      {
+        "node": "Foundation-0/ductricity",
+        "evidence": "no result claimed",
+        "rank": 0,
+        "downstream_in_stack": 4
+      },
+      {
+        "node": "Foundation-0/point-charges",
+        "evidence": "claimed",
+        "rank": 1,
+        "downstream_in_stack": 4,
+        "assigned_by": "source"
+      },
+      {
+        "node": "Foundation-0/thermal-capture",
+        "evidence": "no result claimed",
+        "rank": 0,
+        "downstream_in_stack": 4
+      },
+      {
+        "node": "aska-physical/cfrp-strengthening",
+        "evidence": "claimed",
+        "rank": 1,
+        "downstream_in_stack": 4,
+        "assigned_by": "optifab"
+      },
+      {
+        "node": "aska-physical/fibral-rigidity",
+        "evidence": "claimed",
+        "rank": 1,
+        "downstream_in_stack": 4,
+        "assigned_by": "optifab"
+      },
+      {
+        "node": "aska-physical/cfrp-truss",
+        "evidence": "claimed",
+        "rank": 1,
+        "downstream_in_stack": 3,
+        "assigned_by": "optifab"
+      },
+      {
+        "node": "aska-physical/impedence-analyzers",
+        "evidence": "claimed",
+        "rank": 1,
+        "downstream_in_stack": 3,
+        "assigned_by": "optifab"
+      },
+      {
+        "node": "aska-physical/venturi-collars",
+        "evidence": "claimed",
+        "rank": 1,
+        "downstream_in_stack": 3,
+        "assigned_by": "optifab"
+      },
+      {
+        "node": "aska-physical/funi-floors",
+        "evidence": "claimed",
+        "rank": 1,
+        "downstream_in_stack": 2,
+        "assigned_by": "optifab"
+      },
+      {
+        "node": "aska-physical/funi-frame",
+        "evidence": "claimed",
+        "rank": 1,
+        "downstream_in_stack": 1,
+        "assigned_by": "optifab"
+      },
+      {
+        "node": "aska-physical/optifab",
+        "evidence": "claimed",
+        "rank": 1,
+        "downstream_in_stack": 0,
+        "assigned_by": "optifab"
+      }
+    ],
+    "cross_org_links_before": {
+      "Foundation-0 <-> Moissanite-Labs": 7,
+      "Foundation-0 <-> Proven-Commons": 1,
+      "Foundation-0 <-> aska-physical": 11
+    },
+    "cross_org_links_added": {
+      "Foundation-0 <-> aska-physical": 1,
+      "Moissanite-Labs <-> aska-physical": 2
+    },
+    "aska_physical_to_moissanite_links_before": 0,
+    "aska_physical_to_moissanite_links_added": 2,
+    "checked_and_closed_links": 1
+  },
+  "must_fail_controls": {
+    "must_fail_01_upstream_revenue_is_computed_on_it_power": true,
+    "must_fail_02_recooling_at_45C_keeps_the_claimed_cop_within_the_second_law": true,
+    "must_fail_03_capture_below_the_threshold_self_cools_at_some_load": true,
+    "must_fail_04_capture_one_point_above_the_threshold_self_cools_at_nameplate": true,
+    "must_fail_05_steel_pinned_wall_keeps_the_same_load_floor": true,
+    "must_fail_06_full_load_30min_outage_fits_the_pcm_budget": true,
+    "must_fail_07_negative_cost_recharges_the_budget": true,
+    "must_fail_08_step_past_the_tightest_margin_is_admitted": true,
+    "must_fail_09_tampered_vendored_input_is_accepted": true,
+    "must_fail_10_lineage_cycle_is_accepted": true,
+    "must_fail_11_lineage_at_the_weft_depth_bound_is_accepted": true,
+    "must_fail_12_link_without_citation_is_accepted": true,
+    "must_fail_13_corrupted_weft_vector_goes_unnoticed": true,
+    "must_fail_14_drift_in_a_hand_copied_constant_goes_unnoticed": true,
+    "must_fail_15_slow_loop_counters_a_plant_tone_within_its_cycle": true,
+    "must_fail_16_certified_design_point_fills_a_frame_without_a_recooling_temperature": true,
+    "must_fail_17_frame_past_a_limit_or_below_the_floor_passes_the_contract": true,
+    "must_fail_18_repository_left_out_of_the_unit_goes_unnoticed": true,
+    "must_fail_19_gate_with_a_different_rounding_passes_the_differential_test": true
+  },
+  "controls_passed": "19/19"
+}

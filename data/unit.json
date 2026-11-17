@@ -1,0 +1,467 @@
+{
+  "schema": "optifab-unit/1",
+  "statuses": {
+    "checked": "A verifier, here or upstream, computes it, and optifab uses the result.",
+    "designed": "An upstream certificate or design covers it. Its role in the unit is not checked.",
+    "tested_code": "Code that runs and is tested upstream. Not connected to a plant.",
+    "research": "Studies with recorded results. No link to the plant yet.",
+    "specified": "A specification or schema exists. Nothing is connected.",
+    "in_progress": "Work is under way upstream and is not finished.",
+    "rule": "A rule or scale in force that the unit follows.",
+    "idea": "Vision or idea only. Nothing runnable or certified.",
+    "missing": "Nothing exists yet."
+  },
+  "organs": [
+    "Ground and stores",
+    "Skeleton",
+    "Heat and power",
+    "Nerves",
+    "Signals",
+    "Reflex",
+    "Mind",
+    "Hands",
+    "Record and rules"
+  ],
+  "elements": [
+    {
+      "id": "G1",
+      "organ": "Ground and stores",
+      "element": "Thermal budget: PCM skids holding 2,500 kWh_th",
+      "where": "plant yard",
+      "repos": [
+        "aska-physical/funi-frame"
+      ],
+      "status": "checked",
+      "note": "The budget the gate spends."
+    },
+    {
+      "id": "G2",
+      "organ": "Ground and stores",
+      "element": "Heat sinks: aquifer loop, 200 energy piles, sky-cooling roof",
+      "where": "below and above the halls",
+      "repos": [
+        "aska-physical/funi-frame"
+      ],
+      "status": "designed",
+      "note": "The certificate gives their heat flows but no recooling temperature, which finding 2 needs."
+    },
+    {
+      "id": "G3",
+      "organ": "Ground and stores",
+      "element": "High-temperature store: crushed-basalt beds, 20 MWh_th",
+      "where": "plant yard",
+      "repos": [
+        "aska-physical/funi-frame"
+      ],
+      "status": "designed",
+      "note": "Sized by literals in the upstream verifier. The contract does not use it."
+    },
+    {
+      "id": "S1",
+      "organ": "Skeleton",
+      "element": "Floors: funicular cassettes for 313 psf racks",
+      "where": "both storeys",
+      "repos": [
+        "aska-physical/funi-floors"
+      ],
+      "status": "checked",
+      "note": "Five limit states in the margin vector, including the tightest."
+    },
+    {
+      "id": "S2",
+      "organ": "Skeleton",
+      "element": "Shell: roof vault, sandwich walls, seismic frame, isolation plinths",
+      "where": "envelope and plant bases",
+      "repos": [
+        "aska-physical/funi-frame"
+      ],
+      "status": "checked",
+      "note": "Five limit states in the margin vector."
+    },
+    {
+      "id": "S3",
+      "organ": "Skeleton",
+      "element": "CFRP truss ties and the strengthening baseline",
+      "where": "roof ties and column tie-downs",
+      "repos": [
+        "aska-physical/cfrp-truss",
+        "aska-physical/cfrp-strengthening"
+      ],
+      "status": "designed",
+      "note": "funi-frame names them. Their certificates cover a beam example, not this roof."
+    },
+    {
+      "id": "S4",
+      "organ": "Skeleton",
+      "element": "Lattice theory that proportions the members",
+      "where": "in the geometry",
+      "repos": [
+        "aska-physical/fibral-rigidity",
+        "Foundation-0/incentre-lattices"
+      ],
+      "status": "designed",
+      "note": "A preprint and a claimed extension. Nothing downstream re-checks them."
+    },
+    {
+      "id": "H1",
+      "organ": "Heat and power",
+      "element": "Liquid loop and sorption chiller",
+      "where": "halls and plant yard",
+      "repos": [
+        "aska-physical/funi-frame"
+      ],
+      "status": "checked",
+      "note": "The load floor and the recooling limit are derived here."
+    },
+    {
+      "id": "H2",
+      "organ": "Heat and power",
+      "element": "Racks: 10 MW of IT load",
+      "where": "halls",
+      "repos": [
+        "aska-physical/funi-frame"
+      ],
+      "status": "designed",
+      "note": "A design basis. No rack, chip or power train is modelled."
+    },
+    {
+      "id": "N1",
+      "organ": "Nerves",
+      "element": "Airflow sensing that powers itself",
+      "where": "supply ducts",
+      "repos": [
+        "aska-physical/venturi-collars",
+        "Foundation-0/ductricity",
+        "Foundation-0/thermal-capture"
+      ],
+      "status": "checked",
+      "note": "Its power margin at low airflow is in the margin vector."
+    },
+    {
+      "id": "N2",
+      "organ": "Nerves",
+      "element": "Leak and bondline sensing by impedance",
+      "where": "floor ribs, beside the liquid headers",
+      "repos": [
+        "aska-physical/impedence-analyzers",
+        "Foundation-0/nhanes-bioimpedance",
+        "Foundation-0/point-charges"
+      ],
+      "status": "designed",
+      "note": "funi-floors certifies the reactance shift on a leak. Nothing reads it into a frame."
+    },
+    {
+      "id": "N3",
+      "organ": "Nerves",
+      "element": "Rack vibration sensing",
+      "where": "racks",
+      "repos": [],
+      "status": "missing",
+      "note": "The limit is certified at 0.0005 g. No sensor is designed."
+    },
+    {
+      "id": "N4",
+      "organ": "Nerves",
+      "element": "Coolant and recooling temperature sensing",
+      "where": "liquid loop and heat sinks",
+      "repos": [],
+      "status": "missing",
+      "note": "The plant model carries no temperature, and Weft's only temperature is a formula of CPU load."
+    },
+    {
+      "id": "W1",
+      "organ": "Signals",
+      "element": "Plant frame: 16 floats in 64 bytes",
+      "where": "between sensors and gate",
+      "repos": [
+        "Moissanite-Labs/weft"
+      ],
+      "status": "checked",
+      "note": "The byte layout of Weft's telemetry frame. Round trip tested here. The slot meanings are a proposal."
+    },
+    {
+      "id": "W2",
+      "organ": "Signals",
+      "element": "Agent messages",
+      "where": "between agents and a scheduler",
+      "repos": [
+        "Moissanite-Labs/abios",
+        "Moissanite-Labs/synbios"
+      ],
+      "status": "tested_code",
+      "note": "Compact formats with validators. Not connected to a plant."
+    },
+    {
+      "id": "W3",
+      "organ": "Signals",
+      "element": "Parsers on the telemetry path",
+      "where": "every network boundary",
+      "repos": [
+        "Proven-Commons/mqtt",
+        "Proven-Commons/cbor",
+        "Proven-Commons/ntp",
+        "Proven-Commons/protobuf"
+      ],
+      "status": "in_progress",
+      "note": "Candidates at Proven Commons. None is verified."
+    },
+    {
+      "id": "R1",
+      "organ": "Reflex",
+      "element": "The gate",
+      "where": "at each controller and in the scheduler",
+      "repos": [
+        "Moissanite-Labs/weft",
+        "Moissanite-Labs/weft-corpus"
+      ],
+      "status": "checked",
+      "note": "Weft's predicate, first written in the Terrafab documents as a fence for machines. It passes Weft's 15 vectors and runs here on plant numbers."
+    },
+    {
+      "id": "R2",
+      "organ": "Reflex",
+      "element": "A machine-checked proof of the gate",
+      "where": "with the gate",
+      "repos": [
+        "Proven-Commons/mission"
+      ],
+      "status": "missing",
+      "note": "Weft's Milestone I.3 is open, and the verified bar has no reviewers yet."
+    },
+    {
+      "id": "M1",
+      "organ": "Mind",
+      "element": "Adaptive models",
+      "where": "racks",
+      "repos": [
+        "Moissanite-Labs/weft",
+        "Moissanite-Labs/weft-loom"
+      ],
+      "status": "tested_code",
+      "note": "Runs and is tested. No power or energy has been measured."
+    },
+    {
+      "id": "M2",
+      "organ": "Mind",
+      "element": "Agents that use and operate the campus",
+      "where": "racks and operator consoles",
+      "repos": [
+        "Moissanite-Labs/exo",
+        "Moissanite-Labs/exo-os"
+      ],
+      "status": "tested_code",
+      "note": "Exo itself was not read in this pass."
+    },
+    {
+      "id": "M3",
+      "organ": "Mind",
+      "element": "Model weights stored at a few bits each",
+      "where": "racks",
+      "repos": [
+        "Moissanite-Labs/siliquant"
+      ],
+      "status": "research",
+      "note": "Fewer bits per weight means less memory per model. No energy figure ties it to the plant."
+    },
+    {
+      "id": "M4",
+      "organ": "Mind",
+      "element": "A chip that runs the net directly",
+      "where": "racks",
+      "repos": [
+        "Moissanite-Labs/weft-corpus"
+      ],
+      "status": "idea",
+      "note": "The chip of the Terrafab documents. Weft's audit calls it not testable as stated."
+    },
+    {
+      "id": "F1",
+      "organ": "Hands",
+      "element": "Machines that make the structure's own parts under the gate",
+      "where": "fabrication bay",
+      "repos": [
+        "Moissanite-Labs/weft-corpus"
+      ],
+      "status": "idea",
+      "note": "The Terrafab loop. No machine is modelled. Process limits in the certificates, such as the Fe-SMA activation energy in funi-floors, could be its gate inputs."
+    },
+    {
+      "id": "K1",
+      "organ": "Record and rules",
+      "element": "Certificates, pins and the lineage graph",
+      "where": "this repository",
+      "repos": [
+        "aska-physical/optifab"
+      ],
+      "status": "checked",
+      "note": "Every input is pinned to a commit, file and line."
+    },
+    {
+      "id": "K2",
+      "organ": "Record and rules",
+      "element": "Signed commands and contributions",
+      "where": "command channel",
+      "repos": [
+        "Moissanite-Labs/synmerit"
+      ],
+      "status": "specified",
+      "note": "Needed before any scheduler may command a plant. Weft's telemetry hash is unkeyed."
+    },
+    {
+      "id": "K3",
+      "organ": "Record and rules",
+      "element": "Preferences are not permissions",
+      "where": "operator interface",
+      "repos": [
+        "Moissanite-Labs/ethos",
+        "Moissanite-Labs/siliconcordat"
+      ],
+      "status": "specified",
+      "note": "The gate can refuse a step. Only a person can authorise one."
+    },
+    {
+      "id": "K4",
+      "organ": "Record and rules",
+      "element": "The evidence scale, and the rule that a person signs",
+      "where": "every claim",
+      "repos": [
+        "Foundation-0/f0",
+        "Foundation-0/.github"
+      ],
+      "status": "rule",
+      "note": "Used for every status in this repository."
+    },
+    {
+      "id": "K5",
+      "organ": "Record and rules",
+      "element": "The bar for calling software verified",
+      "where": "the gate and the parsers",
+      "repos": [
+        "Proven-Commons/mission"
+      ],
+      "status": "rule",
+      "note": "The target for elements R2 and W3."
+    },
+    {
+      "id": "K6",
+      "organ": "Record and rules",
+      "element": "The group ethos: capture the work and pass it on",
+      "where": "every handoff",
+      "repos": [
+        "aska-physical/.github"
+      ],
+      "status": "rule",
+      "note": "The reason for HANDOFF.md."
+    }
+  ],
+  "interfaces": [
+    {
+      "id": "L1",
+      "from": "structure and plant",
+      "to": "sensors",
+      "status": "designed",
+      "note": "Designed for airflow and leaks. Missing for vibration and temperature."
+    },
+    {
+      "id": "L2",
+      "from": "sensors",
+      "to": "plant frame",
+      "status": "missing",
+      "note": "No firmware reads a sensor into a frame."
+    },
+    {
+      "id": "L3",
+      "from": "plant frame",
+      "to": "gate",
+      "status": "checked",
+      "note": "A decoded frame drives plant_gate and the contract check in verify.py."
+    },
+    {
+      "id": "L4",
+      "from": "gate",
+      "to": "scheduler",
+      "status": "proposed",
+      "note": "The contract in the README. No scheduler exists."
+    },
+    {
+      "id": "L5",
+      "from": "scheduler",
+      "to": "compute load",
+      "status": "missing",
+      "note": "Neither Weft nor Exo offers a way to shed or defer load, and neither measures energy."
+    },
+    {
+      "id": "L6",
+      "from": "compute load",
+      "to": "heat, stores and sinks",
+      "status": "checked",
+      "note": "The load floor and the thermal budget, in steady state."
+    },
+    {
+      "id": "L7",
+      "from": "stores and structure",
+      "to": "margins",
+      "status": "checked",
+      "note": "The margin vector from the certificates. It is static: no transient is modelled."
+    },
+    {
+      "id": "L8",
+      "from": "gate",
+      "to": "fabrication machines",
+      "status": "idea",
+      "note": "In the Terrafab documents only."
+    },
+    {
+      "id": "L9",
+      "from": "every step",
+      "to": "the record",
+      "status": "designed",
+      "note": "Certificates and pins are checked. Signed records are not connected."
+    }
+  ],
+  "interface_statuses": [
+    "checked",
+    "designed",
+    "proposed",
+    "idea",
+    "missing"
+  ],
+  "not_placed": [
+    {
+      "repo": "aska-physical/cfrp-masts",
+      "why": "Masts and booms. No role in the reference campus."
+    },
+    {
+      "repo": "Foundation-0/rigid-realizations",
+      "why": "Feeds cfrp-masts only."
+    },
+    {
+      "repo": "aska-physical/graph-fab",
+      "why": "A README with no stated role yet."
+    },
+    {
+      "repo": "Foundation-0/project-asma",
+      "why": "Feeds Weft's identifiability gate, which the unit does not use."
+    },
+    {
+      "repo": "Foundation-0/math0",
+      "why": "A hub. It directs work and is not part of the structure."
+    },
+    {
+      "repo": "Foundation-0/physics0",
+      "why": "A hub. It directs work and is not part of the structure."
+    },
+    {
+      "repo": "aska-physical/dock",
+      "why": "The organisation's hub page."
+    },
+    {
+      "repo": "Moissanite-Labs/exofab",
+      "why": "A hub for forming teams, outside the structure."
+    },
+    {
+      "repo": "Moissanite-Labs/.github",
+      "why": "The organisation's profile."
+    }
+  ]
+}
