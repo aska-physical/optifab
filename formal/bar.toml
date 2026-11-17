@@ -1,0 +1,43 @@
+# Read by bar/check.py in Proven-Commons/mission.
+# See playbook/verified-bar.md there for what each field means.
+
+[project]
+name = "plantgate"
+# "in-progress" until every bar item passes, then "verified".
+status = "in-progress"
+# The public project page.
+page = "README.md"
+# Everyone who wrote the specification. It was written by an AI agent
+# working for the owner of aska-physical; no person wrote it.
+spec_authors = ["claude-for-abu-aska"]
+# The programs people run. The reviewer checks that they call the proved
+# functions, so a change to them voids the approval.
+entry_points = ["Main.lean"]
+
+[spec]
+# What a reviewer approves, together with the whole page named above.
+# PlantGate/Spec.lean is the challenge module named in comparator.json.
+files = ["SPEC.md", "PlantGate/Spec.lean"]
+# The code under proof: the definitions the statements are about.
+code = [
+  "PlantGate.distSq",
+  "PlantGate.headroom",
+  "PlantGate.Verdict",
+  "PlantGate.Verdict.ok",
+  "PlantGate.Outcome",
+  "PlantGate.Outcome.verdict",
+  "PlantGate.Outcome.remaining",
+  "PlantGate.gate",
+  "PlantGate.evolve",
+  "PlantGate.run",
+  "PlantGate.acceptedCount",
+]
+
+# No approval is recorded. The Proven Commons reviewer list is empty, so
+# none can be yet.
+
+[tests]
+results = "tests/TEST-RESULTS.md"
+command = "python3 tests/run_tests.py"
+# The test generator and the oracle. A change to either voids the approval.
+files = ["tests/run_tests.py", "tests/oracle.py"]

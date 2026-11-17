@@ -1,0 +1,15 @@
+{
+  "challenge_module": "PlantGate.Spec",
+  "solution_module": "PlantGate.Proofs",
+  "theorem_names": [
+    "PlantGate.Spec.gate_ok_sound",
+    "PlantGate.Spec.gate_complete",
+    "PlantGate.Spec.refusal_spends_nothing",
+    "PlantGate.Spec.budget_never_grows",
+    "PlantGate.Spec.no_margin_rises_past_radius",
+    "PlantGate.Spec.accepted_stays_within",
+    "PlantGate.Spec.run_safe",
+    "PlantGate.Spec.run_bounded"
+  ],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+}

@@ -1,0 +1,28 @@
+name: verify
+
+# Reruns the verifier and fails if the committed certificate differs.
+# A green run shows that the certificate follows from the pinned inputs.
+# It does not show that the upstream models describe a real building.
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install sympy==1.14.0
+      - run: python3 verify.py
+      - name: The generated documents are up to date
+        run: |
+          python3 tools/render_map.py
+          git diff --exit-code -- docs

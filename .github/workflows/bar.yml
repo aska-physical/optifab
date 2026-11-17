@@ -1,0 +1,23 @@
+name: verified bar
+
+# Runs the Proven Commons bar check on the Lean project in formal/.
+# The workflow and the checker are both pinned to one commit of
+# Proven-Commons/mission.
+
+on:
+  push:
+  pull_request:
+  # Rerun when a spec reviewer approves, or an approval is dismissed.
+  pull_request_review:
+    types: [submitted, dismissed]
+
+jobs:
+  bar:
+    # pull-requests: read lets the check confirm a spec approval on GitHub.
+    permissions:
+      contents: read
+      pull-requests: read
+    uses: Proven-Commons/mission/.github/workflows/verified-bar.yml@7b22e542f0db0f3013ab1439cf5d1947676a5083
+    with:
+      project-dir: formal
+      bar-ref: 7b22e542f0db0f3013ab1439cf5d1947676a5083
