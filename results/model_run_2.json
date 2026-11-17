@@ -10,6 +10,17 @@
   "floor_kw": 600,
   "shed_ppm": 300000
  },
- "proposals": [],
+ "proposals": [
+  {
+   "set": {
+    "pcm_kwh": 3672,
+    "capture_ppm": 864000,
+    "wall_u_mw": 100,
+    "floor_kw": 582,
+    "shed_ppm": 0
+   },
+   "why": "I expect the load floor and outage margins to fall to about 908000 each and the sorption margin to about 293000. That is a move of about 52000 against a radius of 59652, and it should grow the radius to about 92000. I rely on the three margin formulas in the earlier notes and on the note that only floor and shedding move the objective, so the lower floor and zero shedding should add about 470 ppm."
+  }
+ ],
  "lessons_file": "results/model_lessons.md"
 }
