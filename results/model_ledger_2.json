@@ -1,0 +1,371 @@
+{
+ "head": {
+  "start_genome": {
+   "pcm_kwh": 2500,
+   "capture_ppm": 850000,
+   "wall_u_mw": 132,
+   "floor_kw": 600,
+   "shed_ppm": 300000
+  },
+  "start_margins_ppm": {
+   "rack_vibration": 179100,
+   "storey_drift": 563000,
+   "roof_crown_compression": 387879,
+   "roof_tornado_uplift_factored": 588180,
+   "roof_service_deflection_mm": 176100,
+   "floor_punching_collar": 801052,
+   "floor_walking_vibration": 616000,
+   "floor_crown_compression": 607511,
+   "floor_fire_120min_thrust": 300275,
+   "floor_duct_hole_shear": 496948,
+   "sensor_power_at_airflow_turndown": 769564,
+   "sorption_drive_heat": 324992,
+   "load_floor": 940348,
+   "outage_ride_through": 933334
+  },
+  "start_eta_ppm": 914228,
+  "budget": 64,
+  "limit": 1000000,
+  "scenario": {
+   "outage_min": 20,
+   "outages_per_year": 12,
+   "low_demand_fraction_ppm": 30000,
+   "low_demand_hours": 2000,
+   "hours_per_year": 8760
+  },
+  "plant": {
+   "p_it_w": 10000000,
+   "cop_ppm": 620000,
+   "ua_roof_mw_k": 308500,
+   "wall_area_m2": 2476,
+   "dt_mk": 20000,
+   "other_w": 200000,
+   "passive_w": 377600,
+   "aux_w": 195000,
+   "loop_cop_milli": 28000,
+   "fixed": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564
+   ],
+   "fixed_names": [
+    "rack_vibration",
+    "storey_drift",
+    "roof_crown_compression",
+    "roof_tornado_uplift_factored",
+    "roof_service_deflection_mm",
+    "floor_punching_collar",
+    "floor_walking_vibration",
+    "floor_crown_compression",
+    "floor_fire_120min_thrust",
+    "floor_duct_hole_shear",
+    "sensor_power_at_airflow_turndown"
+   ],
+   "lo": {
+    "pcm_kwh": 500,
+    "capture_ppm": 620000,
+    "wall_u_mw": 100,
+    "floor_kw": 0,
+    "shed_ppm": 0
+   },
+   "hi": {
+    "pcm_kwh": 5000,
+    "capture_ppm": 950000,
+    "wall_u_mw": 2400,
+    "floor_kw": 10000,
+    "shed_ppm": 1000000
+   }
+  }
+ },
+ "entries": [
+  {
+   "turn": 0,
+   "kind": "hardware+software",
+   "set": {
+    "pcm_kwh": 3672,
+    "capture_ppm": 864000,
+    "wall_u_mw": 100,
+    "floor_kw": 582,
+    "shed_ppm": 0
+   },
+   "held": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 850000,
+    "wall_u_mw": 132,
+    "floor_kw": 600,
+    "shed_ppm": 300000
+   },
+   "proposed": {
+    "pcm_kwh": 3672,
+    "capture_ppm": 864000,
+    "wall_u_mw": 100,
+    "floor_kw": 582,
+    "shed_ppm": 0
+   },
+   "base_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    324992,
+    940348,
+    933334
+   ],
+   "cand_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    293295,
+    907608,
+    907771
+   ],
+   "radius_ppm": 59652,
+   "eta_before_ppm": 914228,
+   "eta_after_ppm": 914694,
+   "budget_before": 64,
+   "cost": 1,
+   "verdict": "ok",
+   "budget_after": 63,
+   "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+   "hash": "d26b78c9a97aa0c2b8b73a086a5662c4bf04cf01c58f6dec1d28d150b478a85b"
+  },
+  {
+   "turn": 1,
+   "kind": "hardware+software",
+   "set": {
+    "pcm_kwh": 3800,
+    "capture_ppm": 896000,
+    "floor_kw": 533
+   },
+   "held": {
+    "pcm_kwh": 3672,
+    "capture_ppm": 864000,
+    "wall_u_mw": 100,
+    "floor_kw": 582,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 3800,
+    "capture_ppm": 896000,
+    "wall_u_mw": 100,
+    "floor_kw": 533,
+    "shed_ppm": 0
+   },
+   "base_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    293295,
+    907608,
+    907771
+   ],
+   "cand_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    225217,
+    877262,
+    877193
+   ],
+   "radius_ppm": 92229,
+   "eta_before_ppm": 914694,
+   "eta_after_ppm": 915941,
+   "budget_before": 63,
+   "cost": 1,
+   "verdict": "ok",
+   "budget_after": 62,
+   "prev": "d26b78c9a97aa0c2b8b73a086a5662c4bf04cf01c58f6dec1d28d150b478a85b",
+   "hash": "dd9001ed5205e66fc1273ef260229166596033200c2e6cfef132bfd93e237a97"
+  },
+  {
+   "turn": 2,
+   "kind": "hardware+software",
+   "set": {
+    "capture_ppm": 950000,
+    "floor_kw": 446
+   },
+   "held": {
+    "pcm_kwh": 3800,
+    "capture_ppm": 896000,
+    "wall_u_mw": 100,
+    "floor_kw": 533,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 3800,
+    "capture_ppm": 950000,
+    "wall_u_mw": 100,
+    "floor_kw": 446,
+    "shed_ppm": 0
+   },
+   "base_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    225217,
+    877262,
+    877193
+   ],
+   "cand_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    120734,
+    878234,
+    877193
+   ],
+   "radius_ppm": 122738,
+   "eta_before_ppm": 915941,
+   "eta_after_ppm": 918163,
+   "budget_before": 62,
+   "cost": 1,
+   "verdict": "ok",
+   "budget_after": 61,
+   "prev": "dd9001ed5205e66fc1273ef260229166596033200c2e6cfef132bfd93e237a97",
+   "hash": "f90cf0f2b5d8a3758182095f92c27eb630d239af546b3fc75b69bc1e36c46bc6"
+  },
+  {
+   "turn": 3,
+   "kind": "software",
+   "set": {
+    "floor_kw": 392
+   },
+   "held": {
+    "pcm_kwh": 3800,
+    "capture_ppm": 950000,
+    "wall_u_mw": 100,
+    "floor_kw": 446,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 3800,
+    "capture_ppm": 950000,
+    "wall_u_mw": 100,
+    "floor_kw": 392,
+    "shed_ppm": 0
+   },
+   "base_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    120734,
+    878234,
+    877193
+   ],
+   "cand_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    120734,
+    999215,
+    877193
+   ],
+   "radius_ppm": 121766,
+   "eta_before_ppm": 918163,
+   "eta_after_ppm": 919548,
+   "budget_before": 61,
+   "cost": 1,
+   "verdict": "ok",
+   "budget_after": 60,
+   "prev": "f90cf0f2b5d8a3758182095f92c27eb630d239af546b3fc75b69bc1e36c46bc6",
+   "hash": "280bf4d6d94659e3b2327f090e981942b0b430e969feee1be11b9b09e11f129f"
+  }
+ ],
+ "final_genome": {
+  "pcm_kwh": 3800,
+  "capture_ppm": 950000,
+  "wall_u_mw": 100,
+  "floor_kw": 392,
+  "shed_ppm": 0
+ },
+ "final_margins_ppm": {
+  "rack_vibration": 179100,
+  "storey_drift": 563000,
+  "roof_crown_compression": 387879,
+  "roof_tornado_uplift_factored": 588180,
+  "roof_service_deflection_mm": 176100,
+  "floor_punching_collar": 801052,
+  "floor_walking_vibration": 616000,
+  "floor_crown_compression": 607511,
+  "floor_fire_120min_thrust": 300275,
+  "floor_duct_hole_shear": 496948,
+  "sensor_power_at_airflow_turndown": 769564,
+  "sorption_drive_heat": 120734,
+  "load_floor": 999215,
+  "outage_ride_through": 877193
+ },
+ "final_eta_ppm": 919548,
+ "final_budget": 60,
+ "final_hash": "280bf4d6d94659e3b2327f090e981942b0b430e969feee1be11b9b09e11f129f"
+}

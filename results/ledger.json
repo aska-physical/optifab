@@ -31,7 +31,59 @@
    "outage_min": 20,
    "outages_per_year": 12,
    "low_demand_fraction_ppm": 30000,
-   "low_demand_hours": 2000
+   "low_demand_hours": 2000,
+   "hours_per_year": 8760
+  },
+  "plant": {
+   "p_it_w": 10000000,
+   "cop_ppm": 620000,
+   "ua_roof_mw_k": 308500,
+   "wall_area_m2": 2476,
+   "dt_mk": 20000,
+   "other_w": 200000,
+   "passive_w": 377600,
+   "aux_w": 195000,
+   "loop_cop_milli": 28000,
+   "fixed": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564
+   ],
+   "fixed_names": [
+    "rack_vibration",
+    "storey_drift",
+    "roof_crown_compression",
+    "roof_tornado_uplift_factored",
+    "roof_service_deflection_mm",
+    "floor_punching_collar",
+    "floor_walking_vibration",
+    "floor_crown_compression",
+    "floor_fire_120min_thrust",
+    "floor_duct_hole_shear",
+    "sensor_power_at_airflow_turndown"
+   ],
+   "lo": {
+    "pcm_kwh": 500,
+    "capture_ppm": 620000,
+    "wall_u_mw": 100,
+    "floor_kw": 0,
+    "shed_ppm": 0
+   },
+   "hi": {
+    "pcm_kwh": 5000,
+    "capture_ppm": 950000,
+    "wall_u_mw": 2400,
+    "floor_kw": 10000,
+    "shed_ppm": 1000000
+   }
   },
   "seed": 20261117
  },
@@ -42,6 +94,20 @@
    "kind": "hardware",
    "delta": 2500,
    "step_ppm": 500000,
+   "held": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 850000,
+    "wall_u_mw": 132,
+    "floor_kw": 600,
+    "shed_ppm": 300000
+   },
+   "proposed": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 852500,
+    "wall_u_mw": 132,
+    "floor_kw": 600,
+    "shed_ppm": 300000
+   },
    "base_ppm": [
     179100,
     563000,
@@ -82,7 +148,7 @@
    "verdict": "ok",
    "budget_after": 63,
    "prev": "0000000000000000000000000000000000000000000000000000000000000000",
-   "hash": "441d2da3e81c6777264d463c7d22a8ef9d9dff50a49e1dd5302045718d15281b"
+   "hash": "5a6489450fab931ee4a2696cfd5bf7d0f863f794643dcefaff7c1d28d14d3978"
   },
   {
    "generation": 4,
@@ -90,6 +156,20 @@
    "kind": "software",
    "delta": -5,
    "step_ppm": 250000,
+   "held": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 852500,
+    "wall_u_mw": 132,
+    "floor_kw": 600,
+    "shed_ppm": 300000
+   },
+   "proposed": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 852500,
+    "wall_u_mw": 132,
+    "floor_kw": 595,
+    "shed_ppm": 300000
+   },
    "base_ppm": [
     179100,
     563000,
@@ -129,8 +209,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 62,
-   "prev": "441d2da3e81c6777264d463c7d22a8ef9d9dff50a49e1dd5302045718d15281b",
-   "hash": "1a56e7cc2d76e26f2cd3939e3cb7a2b2ed73e5ba4af631169af30fda0c8eac37"
+   "prev": "5a6489450fab931ee4a2696cfd5bf7d0f863f794643dcefaff7c1d28d14d3978",
+   "hash": "9da71fcdae3bed3578e0f616f1e3e57cca29d2d1d68cec9e61a0c4998271ac7e"
   },
   {
    "generation": 5,
@@ -138,6 +218,20 @@
    "kind": "hardware",
    "delta": 2500,
    "step_ppm": 500000,
+   "held": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 852500,
+    "wall_u_mw": 132,
+    "floor_kw": 595,
+    "shed_ppm": 300000
+   },
+   "proposed": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 855000,
+    "wall_u_mw": 132,
+    "floor_kw": 595,
+    "shed_ppm": 300000
+   },
    "base_ppm": [
     179100,
     563000,
@@ -177,8 +271,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 61,
-   "prev": "1a56e7cc2d76e26f2cd3939e3cb7a2b2ed73e5ba4af631169af30fda0c8eac37",
-   "hash": "0bad3a3aec0f415c6a7cf9d2ca90769c2b792c336cba573009c716b0df77da66"
+   "prev": "9da71fcdae3bed3578e0f616f1e3e57cca29d2d1d68cec9e61a0c4998271ac7e",
+   "hash": "e3c2cab37fc4bfbed2b60eb7885893b641a6e3c9bc277042d1933cde52c96a36"
   },
   {
    "generation": 8,
@@ -186,6 +280,20 @@
    "kind": "software",
    "delta": -5,
    "step_ppm": 250000,
+   "held": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 855000,
+    "wall_u_mw": 132,
+    "floor_kw": 595,
+    "shed_ppm": 300000
+   },
+   "proposed": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 855000,
+    "wall_u_mw": 132,
+    "floor_kw": 590,
+    "shed_ppm": 300000
+   },
    "base_ppm": [
     179100,
     563000,
@@ -225,8 +333,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 60,
-   "prev": "0bad3a3aec0f415c6a7cf9d2ca90769c2b792c336cba573009c716b0df77da66",
-   "hash": "368365f2a4ec6b5f0bbfb5aa358e18fb0c1c13641cf01faeaed737c83f3cf618"
+   "prev": "e3c2cab37fc4bfbed2b60eb7885893b641a6e3c9bc277042d1933cde52c96a36",
+   "hash": "01342dbf4819c55e58a2c6973b28c1b09d714e1ddeea34d740739ebf5dc9039d"
   },
   {
    "generation": 9,
@@ -234,6 +342,20 @@
    "kind": "hardware",
    "delta": 2500,
    "step_ppm": 500000,
+   "held": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 855000,
+    "wall_u_mw": 132,
+    "floor_kw": 590,
+    "shed_ppm": 300000
+   },
+   "proposed": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 857500,
+    "wall_u_mw": 132,
+    "floor_kw": 590,
+    "shed_ppm": 300000
+   },
    "base_ppm": [
     179100,
     563000,
@@ -273,8 +395,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 59,
-   "prev": "368365f2a4ec6b5f0bbfb5aa358e18fb0c1c13641cf01faeaed737c83f3cf618",
-   "hash": "41282de1ab9fd11341711155a687565c013294e983dcaaecdf47b58fead6b90a"
+   "prev": "01342dbf4819c55e58a2c6973b28c1b09d714e1ddeea34d740739ebf5dc9039d",
+   "hash": "a91dbc85258fd55d5edb10ec6aa63f27ae0368a6d709c9e7c54b54d94eabfbe2"
   },
   {
    "generation": 12,
@@ -282,6 +404,20 @@
    "kind": "software",
    "delta": -6250,
    "step_ppm": 250000,
+   "held": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 857500,
+    "wall_u_mw": 132,
+    "floor_kw": 590,
+    "shed_ppm": 300000
+   },
+   "proposed": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 857500,
+    "wall_u_mw": 132,
+    "floor_kw": 590,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -321,8 +457,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 58,
-   "prev": "41282de1ab9fd11341711155a687565c013294e983dcaaecdf47b58fead6b90a",
-   "hash": "05ad892137d3aa28db10cd3fa96485cf0236ac6f98bebc0ff15d8b6c96b4e587"
+   "prev": "a91dbc85258fd55d5edb10ec6aa63f27ae0368a6d709c9e7c54b54d94eabfbe2",
+   "hash": "0a1aeede2d7d317b314af10b055be51d7881af83296235f3f02f3d087a776e09"
   },
   {
    "generation": 13,
@@ -330,6 +466,20 @@
    "kind": "hardware",
    "delta": 50,
    "step_ppm": 500000,
+   "held": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 857500,
+    "wall_u_mw": 132,
+    "floor_kw": 590,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2550,
+    "capture_ppm": 857500,
+    "wall_u_mw": 132,
+    "floor_kw": 590,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -369,8 +519,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 57,
-   "prev": "05ad892137d3aa28db10cd3fa96485cf0236ac6f98bebc0ff15d8b6c96b4e587",
-   "hash": "cf32e2ae4393882a698b5a3dfda4508543a30d815b6db31a7b68f99c629b3dc7"
+   "prev": "0a1aeede2d7d317b314af10b055be51d7881af83296235f3f02f3d087a776e09",
+   "hash": "b1ea16008da23490842d28a16406aee3ea00f3f015cabd93fbf820b6e2ce6b59"
   },
   {
    "generation": 15,
@@ -378,6 +528,20 @@
    "kind": "hardware",
    "delta": 2500,
    "step_ppm": 500000,
+   "held": {
+    "pcm_kwh": 2550,
+    "capture_ppm": 857500,
+    "wall_u_mw": 132,
+    "floor_kw": 590,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2550,
+    "capture_ppm": 860000,
+    "wall_u_mw": 132,
+    "floor_kw": 590,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -417,8 +581,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 56,
-   "prev": "cf32e2ae4393882a698b5a3dfda4508543a30d815b6db31a7b68f99c629b3dc7",
-   "hash": "e940a4a62ef2efbf80fbe9427a84da2f5b8f1efad29dfe8e51dc599492c3091f"
+   "prev": "b1ea16008da23490842d28a16406aee3ea00f3f015cabd93fbf820b6e2ce6b59",
+   "hash": "68e274a6a4d95dcdf0f7204c465924a1d55ab27b321f553e4bc01840c4faf13d"
   },
   {
    "generation": 16,
@@ -426,6 +590,20 @@
    "kind": "software",
    "delta": -20,
    "step_ppm": 1000000,
+   "held": {
+    "pcm_kwh": 2550,
+    "capture_ppm": 860000,
+    "wall_u_mw": 132,
+    "floor_kw": 590,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2550,
+    "capture_ppm": 860000,
+    "wall_u_mw": 132,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -465,8 +643,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 55,
-   "prev": "e940a4a62ef2efbf80fbe9427a84da2f5b8f1efad29dfe8e51dc599492c3091f",
-   "hash": "9677377895e8ccf5c77688dd069b90e75172697729439690df1dcf8d5ea9ff61"
+   "prev": "68e274a6a4d95dcdf0f7204c465924a1d55ab27b321f553e4bc01840c4faf13d",
+   "hash": "d915f2670bec969e44c3606bc5b1580d942f10e707197b8dfe3bb9227e0dc164"
   },
   {
    "generation": 17,
@@ -474,6 +652,20 @@
    "kind": "hardware",
    "delta": 10000,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 2550,
+    "capture_ppm": 860000,
+    "wall_u_mw": 132,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2550,
+    "capture_ppm": 870000,
+    "wall_u_mw": 132,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -513,8 +705,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 54,
-   "prev": "9677377895e8ccf5c77688dd069b90e75172697729439690df1dcf8d5ea9ff61",
-   "hash": "1927a67c84e161e6b158d72398b1caa8ca29e718e03ad5f6979c91d4ace0715a"
+   "prev": "d915f2670bec969e44c3606bc5b1580d942f10e707197b8dfe3bb9227e0dc164",
+   "hash": "e4a73960b1c53bb3f31b5affa722d810605c1ffaab219e7ea3567f2c1d12d857"
   },
   {
    "generation": 19,
@@ -522,6 +714,20 @@
    "kind": "hardware",
    "delta": 200,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 2550,
+    "capture_ppm": 870000,
+    "wall_u_mw": 132,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2750,
+    "capture_ppm": 870000,
+    "wall_u_mw": 132,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -561,8 +767,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 53,
-   "prev": "1927a67c84e161e6b158d72398b1caa8ca29e718e03ad5f6979c91d4ace0715a",
-   "hash": "a2f36abc4996ab5a0f25427f4aa589b1864bae2966372fb2c43c229794c448e9"
+   "prev": "e4a73960b1c53bb3f31b5affa722d810605c1ffaab219e7ea3567f2c1d12d857",
+   "hash": "44d7d149b33e59f7f6aaa880b7d9b02fcd11e516911f63dc758c907ea8a8e5be"
   },
   {
    "generation": 21,
@@ -570,6 +776,20 @@
    "kind": "hardware",
    "delta": -8,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 2750,
+    "capture_ppm": 870000,
+    "wall_u_mw": 132,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2750,
+    "capture_ppm": 870000,
+    "wall_u_mw": 124,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -609,8 +829,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 52,
-   "prev": "a2f36abc4996ab5a0f25427f4aa589b1864bae2966372fb2c43c229794c448e9",
-   "hash": "363d059846a476f9eb78053c8d249e70c63edd3c76e3f3f6cede42409491c754"
+   "prev": "44d7d149b33e59f7f6aaa880b7d9b02fcd11e516911f63dc758c907ea8a8e5be",
+   "hash": "dbbb989130ff874cc17653a75cc37daabaaef1caee9b0614003c2e2ef77b30d5"
   },
   {
    "generation": 23,
@@ -618,6 +838,20 @@
    "kind": "hardware",
    "delta": 10000,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 2750,
+    "capture_ppm": 870000,
+    "wall_u_mw": 124,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2750,
+    "capture_ppm": 880000,
+    "wall_u_mw": 124,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -657,8 +891,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 51,
-   "prev": "363d059846a476f9eb78053c8d249e70c63edd3c76e3f3f6cede42409491c754",
-   "hash": "fa3f56287f53ad565c5e0a5d69dcc5d044651b148371307a47ae52aa9a205e9a"
+   "prev": "dbbb989130ff874cc17653a75cc37daabaaef1caee9b0614003c2e2ef77b30d5",
+   "hash": "16aa25229e6c7b5d4939534ad2b8c70a01138aea6c9a3f90c5e6573b0eddd095"
   },
   {
    "generation": 25,
@@ -666,6 +900,20 @@
    "kind": "hardware",
    "delta": 10000,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 2750,
+    "capture_ppm": 880000,
+    "wall_u_mw": 124,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2750,
+    "capture_ppm": 890000,
+    "wall_u_mw": 124,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -705,8 +953,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 50,
-   "prev": "fa3f56287f53ad565c5e0a5d69dcc5d044651b148371307a47ae52aa9a205e9a",
-   "hash": "0b5e951863a11967a7724b27c01e9e9c2a2cfb53c2695d29e177b73fa4d89e88"
+   "prev": "16aa25229e6c7b5d4939534ad2b8c70a01138aea6c9a3f90c5e6573b0eddd095",
+   "hash": "80b025d1038cedeb51c60bf2f8c361eca5c4d282017c698addbf9c9513a9cd59"
   },
   {
    "generation": 27,
@@ -714,6 +962,20 @@
    "kind": "hardware",
    "delta": 200,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 2750,
+    "capture_ppm": 890000,
+    "wall_u_mw": 124,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 890000,
+    "wall_u_mw": 124,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -753,8 +1015,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 49,
-   "prev": "0b5e951863a11967a7724b27c01e9e9c2a2cfb53c2695d29e177b73fa4d89e88",
-   "hash": "84ee31028ae19cf91ffadb101725551d52b5cf3fa1a39d8212d34beb52bf5a0f"
+   "prev": "80b025d1038cedeb51c60bf2f8c361eca5c4d282017c698addbf9c9513a9cd59",
+   "hash": "92e99d1f7a79e4671da83586918ab2722ea95763c587ad1477bab97c63fb76cf"
   },
   {
    "generation": 29,
@@ -762,6 +1024,20 @@
    "kind": "hardware",
    "delta": 10000,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 890000,
+    "wall_u_mw": 124,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 900000,
+    "wall_u_mw": 124,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -801,8 +1077,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 48,
-   "prev": "84ee31028ae19cf91ffadb101725551d52b5cf3fa1a39d8212d34beb52bf5a0f",
-   "hash": "911b41d2e1d2c18bc943cf97df6d7a7a747cd57587e28a8a6b2ac4b4d57063f5"
+   "prev": "92e99d1f7a79e4671da83586918ab2722ea95763c587ad1477bab97c63fb76cf",
+   "hash": "60b162cff6e4fac458e719b7364d11b290c54164c27586c73e5262947ade1bb6"
   },
   {
    "generation": 30,
@@ -810,6 +1086,20 @@
    "kind": "software",
    "delta": -80,
    "step_ppm": 4000000,
+   "held": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 900000,
+    "wall_u_mw": 124,
+    "floor_kw": 570,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 900000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -849,8 +1139,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 47,
-   "prev": "911b41d2e1d2c18bc943cf97df6d7a7a747cd57587e28a8a6b2ac4b4d57063f5",
-   "hash": "78ea4f3d631fac86f8668600dbf8d41ae2f2fce570728fd66c51009e607cef5e"
+   "prev": "60b162cff6e4fac458e719b7364d11b290c54164c27586c73e5262947ade1bb6",
+   "hash": "edcbf9dc9a0f2644c90f00bd1213424580ffcb3a7d67fe9bb7e76a0f7b93a1ce"
   },
   {
    "generation": 31,
@@ -858,6 +1148,20 @@
    "kind": "hardware",
    "delta": 40000,
    "step_ppm": 8000000,
+   "held": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 900000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 940000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -897,8 +1201,8 @@
    "cost": 1,
    "verdict": "distance",
    "budget_after": 47,
-   "prev": "78ea4f3d631fac86f8668600dbf8d41ae2f2fce570728fd66c51009e607cef5e",
-   "hash": "a805aacb6463b5d0e0d63faa605f66890c94fae1bbdb2f11d359402baac3f256"
+   "prev": "edcbf9dc9a0f2644c90f00bd1213424580ffcb3a7d67fe9bb7e76a0f7b93a1ce",
+   "hash": "89681a60dabcfb3d20f3fe9c70b7ce0a7ebbe4e092f4579e398bc7c27b217abb"
   },
   {
    "generation": 32,
@@ -906,6 +1210,20 @@
    "kind": "software",
    "delta": -100000,
    "step_ppm": 4000000,
+   "held": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 900000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 900000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 193750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -945,8 +1263,8 @@
    "cost": 1,
    "verdict": "distance",
    "budget_after": 47,
-   "prev": "a805aacb6463b5d0e0d63faa605f66890c94fae1bbdb2f11d359402baac3f256",
-   "hash": "daabeedc74ee8bdae32fd8e8dbb4d7c0f67cd428a03a09917a8089b68717e393"
+   "prev": "89681a60dabcfb3d20f3fe9c70b7ce0a7ebbe4e092f4579e398bc7c27b217abb",
+   "hash": "7ea4271c859a587bc7b2d455d54856b71879fac5d2a7df7b06e71641da031a22"
   },
   {
    "generation": 33,
@@ -954,6 +1272,20 @@
    "kind": "hardware",
    "delta": 10000,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 900000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 910000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -993,8 +1325,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 46,
-   "prev": "daabeedc74ee8bdae32fd8e8dbb4d7c0f67cd428a03a09917a8089b68717e393",
-   "hash": "29cf8ae111d7537037471537a54dd23a2c85f3d792d1d0d103ba9e82c4dda6b5"
+   "prev": "7ea4271c859a587bc7b2d455d54856b71879fac5d2a7df7b06e71641da031a22",
+   "hash": "70786d2b1303db2b29da20e82266132cdce5441d3ba59072b15e372e60b7635d"
   },
   {
    "generation": 34,
@@ -1002,6 +1334,20 @@
    "kind": "software",
    "delta": -100000,
    "step_ppm": 4000000,
+   "held": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 910000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 910000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 193750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1041,8 +1387,8 @@
    "cost": 1,
    "verdict": "distance",
    "budget_after": 46,
-   "prev": "29cf8ae111d7537037471537a54dd23a2c85f3d792d1d0d103ba9e82c4dda6b5",
-   "hash": "c3027fe0b3a19a4487a119f840d330af9a4e583248e46497c2aa02230f33b2b9"
+   "prev": "70786d2b1303db2b29da20e82266132cdce5441d3ba59072b15e372e60b7635d",
+   "hash": "9e750d258987c02e5c84a14bdc7e4003ed88262da223b7185722944bc9b7ec96"
   },
   {
    "generation": 35,
@@ -1050,6 +1396,20 @@
    "kind": "hardware",
    "delta": 10000,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 910000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 920000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 293750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1089,8 +1449,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 45,
-   "prev": "c3027fe0b3a19a4487a119f840d330af9a4e583248e46497c2aa02230f33b2b9",
-   "hash": "ce63985c490eee54e3576c30033208ca2da6932531ea8efa6ad2f4345c7d4187"
+   "prev": "9e750d258987c02e5c84a14bdc7e4003ed88262da223b7185722944bc9b7ec96",
+   "hash": "5ddf29f25cce51a418bff7b1fca6935811edd7238f35355b288262374942d3c2"
   },
   {
    "generation": 36,
@@ -1098,6 +1458,20 @@
    "kind": "software",
    "delta": -100000,
    "step_ppm": 4000000,
+   "held": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 920000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 293750
+   },
+   "proposed": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 920000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 193750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1137,8 +1511,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 44,
-   "prev": "ce63985c490eee54e3576c30033208ca2da6932531ea8efa6ad2f4345c7d4187",
-   "hash": "1b5e95e9e409dbe172542813c153b8904f26f4e5db0830820266b8535cbac5ba"
+   "prev": "5ddf29f25cce51a418bff7b1fca6935811edd7238f35355b288262374942d3c2",
+   "hash": "95a628c4a147b20977f9f0df4a4074ac5b292cad2f8a38e0cd0d25372716992e"
   },
   {
    "generation": 39,
@@ -1146,6 +1520,20 @@
    "kind": "hardware",
    "delta": 200,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 2950,
+    "capture_ppm": 920000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 193750
+   },
+   "proposed": {
+    "pcm_kwh": 3150,
+    "capture_ppm": 920000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 193750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1185,8 +1573,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 43,
-   "prev": "1b5e95e9e409dbe172542813c153b8904f26f4e5db0830820266b8535cbac5ba",
-   "hash": "750e9b6364b4376691d6c8727d9acbea7740235a6c1e9aa8c2c7386b87c3293f"
+   "prev": "95a628c4a147b20977f9f0df4a4074ac5b292cad2f8a38e0cd0d25372716992e",
+   "hash": "3b7fee49fcb50712641f75faa335646c3e6935423c87bfbe121ca6dc2df4bf60"
   },
   {
    "generation": 41,
@@ -1194,6 +1582,20 @@
    "kind": "hardware",
    "delta": -8,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 3150,
+    "capture_ppm": 920000,
+    "wall_u_mw": 124,
+    "floor_kw": 490,
+    "shed_ppm": 193750
+   },
+   "proposed": {
+    "pcm_kwh": 3150,
+    "capture_ppm": 920000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 193750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1233,8 +1635,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 42,
-   "prev": "750e9b6364b4376691d6c8727d9acbea7740235a6c1e9aa8c2c7386b87c3293f",
-   "hash": "d2b98dc4f66960c65831ea8b1546fc316a899d22690cd472e7f0124570d1e918"
+   "prev": "3b7fee49fcb50712641f75faa335646c3e6935423c87bfbe121ca6dc2df4bf60",
+   "hash": "0e963d9720a0e05cedb7e617441947a9103366533e93282b49f1d46069da2265"
   },
   {
    "generation": 43,
@@ -1242,6 +1644,20 @@
    "kind": "hardware",
    "delta": 10000,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 3150,
+    "capture_ppm": 920000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 193750
+   },
+   "proposed": {
+    "pcm_kwh": 3150,
+    "capture_ppm": 930000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 193750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1281,8 +1697,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 41,
-   "prev": "d2b98dc4f66960c65831ea8b1546fc316a899d22690cd472e7f0124570d1e918",
-   "hash": "e6b731f9c95418e2d2d0684259a293594c634534a26cd60a0440003e5cbbcad0"
+   "prev": "0e963d9720a0e05cedb7e617441947a9103366533e93282b49f1d46069da2265",
+   "hash": "0d95b078809cf2b6ea2f42cdf149049380d1adce34c462fa1bf22104c79ab893"
   },
   {
    "generation": 45,
@@ -1290,6 +1706,20 @@
    "kind": "hardware",
    "delta": 10000,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 3150,
+    "capture_ppm": 930000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 193750
+   },
+   "proposed": {
+    "pcm_kwh": 3150,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 193750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1329,8 +1759,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 40,
-   "prev": "e6b731f9c95418e2d2d0684259a293594c634534a26cd60a0440003e5cbbcad0",
-   "hash": "5a2d0058cf5f1721d361db3fac5a8993298639779d6dd99d3b20d202fc498abd"
+   "prev": "0d95b078809cf2b6ea2f42cdf149049380d1adce34c462fa1bf22104c79ab893",
+   "hash": "5331b0a2ce6d51938e8077afafa4eb05ade3af362b66a20338931c65e3a96d94"
   },
   {
    "generation": 47,
@@ -1338,6 +1768,20 @@
    "kind": "hardware",
    "delta": 200,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 3150,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 193750
+   },
+   "proposed": {
+    "pcm_kwh": 3350,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 193750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1377,8 +1821,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 39,
-   "prev": "5a2d0058cf5f1721d361db3fac5a8993298639779d6dd99d3b20d202fc498abd",
-   "hash": "cff409f12327160638a36ab26f8e8d5dbe7e73317d47740298c9973225664a59"
+   "prev": "5331b0a2ce6d51938e8077afafa4eb05ade3af362b66a20338931c65e3a96d94",
+   "hash": "abbc8b10ed4652188ce45269e6091368eb37d374d1394decb5f0c3ab85be78ca"
   },
   {
    "generation": 48,
@@ -1386,6 +1830,20 @@
    "kind": "software",
    "delta": -100000,
    "step_ppm": 4000000,
+   "held": {
+    "pcm_kwh": 3350,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 193750
+   },
+   "proposed": {
+    "pcm_kwh": 3350,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 93750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1425,8 +1883,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 38,
-   "prev": "cff409f12327160638a36ab26f8e8d5dbe7e73317d47740298c9973225664a59",
-   "hash": "170a4b0ada5398d3e6b50eecb1f2c44dd77e509fdfff521fada5ce3eb670d940"
+   "prev": "abbc8b10ed4652188ce45269e6091368eb37d374d1394decb5f0c3ab85be78ca",
+   "hash": "735f13a785642f089f3a1b24f881c46f246b6f8e504f32d921265e0215575dcc"
   },
   {
    "generation": 49,
@@ -1434,6 +1892,20 @@
    "kind": "hardware",
    "delta": 800,
    "step_ppm": 8000000,
+   "held": {
+    "pcm_kwh": 3350,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 93750
+   },
+   "proposed": {
+    "pcm_kwh": 4150,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 93750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1473,8 +1945,8 @@
    "cost": 1,
    "verdict": "distance",
    "budget_after": 38,
-   "prev": "170a4b0ada5398d3e6b50eecb1f2c44dd77e509fdfff521fada5ce3eb670d940",
-   "hash": "e9965a195c7ca6855198b074e5378d98f570409498cdf359d2b6cb47b5e08e21"
+   "prev": "735f13a785642f089f3a1b24f881c46f246b6f8e504f32d921265e0215575dcc",
+   "hash": "ddc319267dc2a74686ef99ddeec283141356a0423b05144bea10da83d88c91a7"
   },
   {
    "generation": 51,
@@ -1482,6 +1954,20 @@
    "kind": "hardware",
    "delta": 200,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 3350,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 93750
+   },
+   "proposed": {
+    "pcm_kwh": 3550,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 93750
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1521,8 +2007,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 37,
-   "prev": "e9965a195c7ca6855198b074e5378d98f570409498cdf359d2b6cb47b5e08e21",
-   "hash": "e2705b1576ac9e44a8b62f62e4b1f530df294eaa0289060793488eab145193d5"
+   "prev": "ddc319267dc2a74686ef99ddeec283141356a0423b05144bea10da83d88c91a7",
+   "hash": "a09c63b00cffe3687db6abd9f9ae118b774b3e3753ec353e9e2fd17369e8d3e4"
   },
   {
    "generation": 52,
@@ -1530,6 +2016,20 @@
    "kind": "software",
    "delta": -93750,
    "step_ppm": 4000000,
+   "held": {
+    "pcm_kwh": 3550,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 93750
+   },
+   "proposed": {
+    "pcm_kwh": 3550,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1569,8 +2069,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 36,
-   "prev": "e2705b1576ac9e44a8b62f62e4b1f530df294eaa0289060793488eab145193d5",
-   "hash": "cf3792c5ba02641ece5577313a104ceae0cd55146487780c6ce2279b95348d37"
+   "prev": "a09c63b00cffe3687db6abd9f9ae118b774b3e3753ec353e9e2fd17369e8d3e4",
+   "hash": "cab096860b2f105d0b07e35e8b9128f27fa2b1d3a06a8e29aee9aba9605cb12b"
   },
   {
    "generation": 53,
@@ -1578,6 +2078,20 @@
    "kind": "hardware",
    "delta": 800,
    "step_ppm": 8000000,
+   "held": {
+    "pcm_kwh": 3550,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1617,8 +2131,8 @@
    "cost": 1,
    "verdict": "distance",
    "budget_after": 36,
-   "prev": "cf3792c5ba02641ece5577313a104ceae0cd55146487780c6ce2279b95348d37",
-   "hash": "7499cadafef44435e72df36bb32e518fbc26977b92d65f970d7b748592f3e823"
+   "prev": "cab096860b2f105d0b07e35e8b9128f27fa2b1d3a06a8e29aee9aba9605cb12b",
+   "hash": "bb67f3d69ff3cd24903d0a212b3df49aa45a3165a2ee4b387450332b72cc7b42"
   },
   {
    "generation": 55,
@@ -1626,6 +2140,20 @@
    "kind": "hardware",
    "delta": 200,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 3550,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 3750,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1665,8 +2193,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 35,
-   "prev": "7499cadafef44435e72df36bb32e518fbc26977b92d65f970d7b748592f3e823",
-   "hash": "effbbad2e20fe3afc0ea6561829d141b62930aed55bd0861081dd98d4d218127"
+   "prev": "bb67f3d69ff3cd24903d0a212b3df49aa45a3165a2ee4b387450332b72cc7b42",
+   "hash": "4244fe5562fefa37831975bd4b6f96300148942276e7eed7e5148c983051c23e"
   },
   {
    "generation": 57,
@@ -1674,6 +2202,20 @@
    "kind": "hardware",
    "delta": 200,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 3750,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 3950,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1713,8 +2255,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 34,
-   "prev": "effbbad2e20fe3afc0ea6561829d141b62930aed55bd0861081dd98d4d218127",
-   "hash": "19b5bb344fe9d2eba4900cbd404889e0892ffffd863efbe3d7479cac32d758ff"
+   "prev": "4244fe5562fefa37831975bd4b6f96300148942276e7eed7e5148c983051c23e",
+   "hash": "25774439e06796abb31d7854f85d5ee5a3589fbad910a0b71515c042d2dd117a"
   },
   {
    "generation": 59,
@@ -1722,6 +2264,20 @@
    "kind": "hardware",
    "delta": 200,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 3950,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4150,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1761,8 +2317,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 33,
-   "prev": "19b5bb344fe9d2eba4900cbd404889e0892ffffd863efbe3d7479cac32d758ff",
-   "hash": "f596597e13765af2b593c885c27fd29accf8e428792df3ddca754af58f2533a2"
+   "prev": "25774439e06796abb31d7854f85d5ee5a3589fbad910a0b71515c042d2dd117a",
+   "hash": "571685e3a31ca24da522de5b09255b3ab6b86466b7523f7f9baecde0d49f29b9"
   },
   {
    "generation": 61,
@@ -1770,6 +2326,20 @@
    "kind": "hardware",
    "delta": 10000,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 4150,
+    "capture_ppm": 940000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4150,
+    "capture_ppm": 950000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1809,8 +2379,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 32,
-   "prev": "f596597e13765af2b593c885c27fd29accf8e428792df3ddca754af58f2533a2",
-   "hash": "5aa954bfee79b9fdf1e95db7460d172467b9721ea9e054e68a2154d36b0528dc"
+   "prev": "571685e3a31ca24da522de5b09255b3ab6b86466b7523f7f9baecde0d49f29b9",
+   "hash": "9c504de814547cc8f4979fea59e7ba77e84737599a675348ebacc6163a4dcdb2"
   },
   {
    "generation": 63,
@@ -1818,6 +2388,20 @@
    "kind": "hardware",
    "delta": 200,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 4150,
+    "capture_ppm": 950000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1857,8 +2441,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 31,
-   "prev": "5aa954bfee79b9fdf1e95db7460d172467b9721ea9e054e68a2154d36b0528dc",
-   "hash": "944f37016b5c3e5887919b5b95237dd18acdb07e172ff0f93e93a9d6bb257400"
+   "prev": "9c504de814547cc8f4979fea59e7ba77e84737599a675348ebacc6163a4dcdb2",
+   "hash": "1c3a552810001dc2c1b867998cf4e393f02bc9c3e3967bca42be5a2f79796081"
   },
   {
    "generation": 69,
@@ -1866,6 +2450,20 @@
    "kind": "hardware",
    "delta": -1,
    "step_ppm": 125000,
+   "held": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 116,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 115,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1905,8 +2503,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 30,
-   "prev": "944f37016b5c3e5887919b5b95237dd18acdb07e172ff0f93e93a9d6bb257400",
-   "hash": "41d260b2e81a50268aa239a945728410fbe92963e008eafd85b4549e0b67da58"
+   "prev": "1c3a552810001dc2c1b867998cf4e393f02bc9c3e3967bca42be5a2f79796081",
+   "hash": "b582534f266bab8b1918b5688e26930fe8bcc7c3101ecc5122c40ab8e9719b47"
   },
   {
    "generation": 71,
@@ -1914,6 +2512,20 @@
    "kind": "hardware",
    "delta": -1,
    "step_ppm": 125000,
+   "held": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 115,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 114,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -1953,8 +2565,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 29,
-   "prev": "41d260b2e81a50268aa239a945728410fbe92963e008eafd85b4549e0b67da58",
-   "hash": "536bc6cb357be12601f27e197d0ff9492e3b278751a37446d1cdb2fee491af37"
+   "prev": "b582534f266bab8b1918b5688e26930fe8bcc7c3101ecc5122c40ab8e9719b47",
+   "hash": "c20684d6169fc3bfa07cb79e150e41bc6a5e69fb97c2af5126d15f3506979121"
   },
   {
    "generation": 72,
@@ -1962,6 +2574,20 @@
    "kind": "software",
    "delta": -5,
    "step_ppm": 250000,
+   "held": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 114,
+    "floor_kw": 490,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 114,
+    "floor_kw": 485,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -2001,8 +2627,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 28,
-   "prev": "536bc6cb357be12601f27e197d0ff9492e3b278751a37446d1cdb2fee491af37",
-   "hash": "c97f7e722cc27335210c1bf8275b62a557947a6e36c587f28214fd228a24e850"
+   "prev": "c20684d6169fc3bfa07cb79e150e41bc6a5e69fb97c2af5126d15f3506979121",
+   "hash": "7bfba299d3cacc8bbd82f6d84db9f9a787f0b31f947319d10ce3206c486d03a1"
   },
   {
    "generation": 74,
@@ -2010,6 +2636,20 @@
    "kind": "software",
    "delta": -5,
    "step_ppm": 250000,
+   "held": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 114,
+    "floor_kw": 485,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 114,
+    "floor_kw": 480,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -2049,8 +2689,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 27,
-   "prev": "c97f7e722cc27335210c1bf8275b62a557947a6e36c587f28214fd228a24e850",
-   "hash": "d724e23800fb9ca8067c2994458f42802431eb17166ffd1a3e82f56792083dc5"
+   "prev": "7bfba299d3cacc8bbd82f6d84db9f9a787f0b31f947319d10ce3206c486d03a1",
+   "hash": "e6aa5e20eafdfbe91bfe070daf01c5aec085c908f30a542f24edb4a8d2e325ff"
   },
   {
    "generation": 75,
@@ -2058,6 +2698,20 @@
    "kind": "hardware",
    "delta": -2,
    "step_ppm": 500000,
+   "held": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 114,
+    "floor_kw": 480,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 112,
+    "floor_kw": 480,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -2097,8 +2751,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 26,
-   "prev": "d724e23800fb9ca8067c2994458f42802431eb17166ffd1a3e82f56792083dc5",
-   "hash": "d219425b38c8277fbffa56b55d6131b56b6435155ff9895a64db831a6395a642"
+   "prev": "e6aa5e20eafdfbe91bfe070daf01c5aec085c908f30a542f24edb4a8d2e325ff",
+   "hash": "0825b8f3dee1301c8b95e77218652c779d63281e67350c90164d21182f4c7d6e"
   },
   {
    "generation": 76,
@@ -2106,6 +2760,20 @@
    "kind": "software",
    "delta": -20,
    "step_ppm": 1000000,
+   "held": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 112,
+    "floor_kw": 480,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 112,
+    "floor_kw": 460,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -2145,8 +2813,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 25,
-   "prev": "d219425b38c8277fbffa56b55d6131b56b6435155ff9895a64db831a6395a642",
-   "hash": "afd62c47bce0e20dc74464343c010f65cbab6ebcbc48c1cf2fe8d983adb7a1bb"
+   "prev": "0825b8f3dee1301c8b95e77218652c779d63281e67350c90164d21182f4c7d6e",
+   "hash": "9c5882f81e42ee6e6fab534a963c64c4c554e5563f1c64b3d772fd01251a6bf7"
   },
   {
    "generation": 78,
@@ -2154,6 +2822,20 @@
    "kind": "software",
    "delta": -20,
    "step_ppm": 1000000,
+   "held": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 112,
+    "floor_kw": 460,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 112,
+    "floor_kw": 440,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -2193,8 +2875,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 24,
-   "prev": "afd62c47bce0e20dc74464343c010f65cbab6ebcbc48c1cf2fe8d983adb7a1bb",
-   "hash": "d8745f4a8d9949a59f27cb36c657079f6cc00bea56b0bf1ca8353b7ff3f21ef6"
+   "prev": "9c5882f81e42ee6e6fab534a963c64c4c554e5563f1c64b3d772fd01251a6bf7",
+   "hash": "66287f90f8f041c5808bf8cc55eb15b3ca3216419863fc673406171686e9b102"
   },
   {
    "generation": 79,
@@ -2202,6 +2884,20 @@
    "kind": "hardware",
    "delta": -8,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 112,
+    "floor_kw": 440,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 104,
+    "floor_kw": 440,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -2241,8 +2937,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 23,
-   "prev": "d8745f4a8d9949a59f27cb36c657079f6cc00bea56b0bf1ca8353b7ff3f21ef6",
-   "hash": "5ee63683affbacf99167a1d59d2404a4230bde4fd76bae88caa2dfc6e63e7943"
+   "prev": "66287f90f8f041c5808bf8cc55eb15b3ca3216419863fc673406171686e9b102",
+   "hash": "cf23ac7f209b44a5a5d84a0e2224ac12e880d4bd5f7041e7331e2b9a8f5a268e"
   },
   {
    "generation": 81,
@@ -2250,6 +2946,20 @@
    "kind": "hardware",
    "delta": -4,
    "step_ppm": 2000000,
+   "held": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 104,
+    "floor_kw": 440,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 100,
+    "floor_kw": 440,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -2289,8 +2999,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 22,
-   "prev": "5ee63683affbacf99167a1d59d2404a4230bde4fd76bae88caa2dfc6e63e7943",
-   "hash": "0d9e8c3c9123b03691f99ad288e5ad70675c610820d542d3dad1ad677773932f"
+   "prev": "cf23ac7f209b44a5a5d84a0e2224ac12e880d4bd5f7041e7331e2b9a8f5a268e",
+   "hash": "8a13eb2a71b75f76e3cbee6855028d262cc4a62fa517d0d37e99a9e69f7d86d5"
   },
   {
    "generation": 84,
@@ -2298,6 +3008,20 @@
    "kind": "software",
    "delta": -20,
    "step_ppm": 1000000,
+   "held": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 100,
+    "floor_kw": 440,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 100,
+    "floor_kw": 420,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -2337,8 +3061,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 21,
-   "prev": "0d9e8c3c9123b03691f99ad288e5ad70675c610820d542d3dad1ad677773932f",
-   "hash": "c5b75f02fa5edb363cc05b350828a86e71b1b400d397aa0f34d46616a01ad78a"
+   "prev": "8a13eb2a71b75f76e3cbee6855028d262cc4a62fa517d0d37e99a9e69f7d86d5",
+   "hash": "1daacda9c79be55b2c7f955aaae5c47b4ca436efc916e39ef94b9d79ead2d490"
   },
   {
    "generation": 88,
@@ -2346,6 +3070,20 @@
    "kind": "software",
    "delta": -5,
    "step_ppm": 250000,
+   "held": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 100,
+    "floor_kw": 420,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 100,
+    "floor_kw": 415,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -2385,8 +3123,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 20,
-   "prev": "c5b75f02fa5edb363cc05b350828a86e71b1b400d397aa0f34d46616a01ad78a",
-   "hash": "fff82c4431758678ea77bf1f95edd8a1101833d1110a3e0d4d30496708011dfb"
+   "prev": "1daacda9c79be55b2c7f955aaae5c47b4ca436efc916e39ef94b9d79ead2d490",
+   "hash": "b06cda5fce393f75013558f42a5f0347d2649129ead796b22b5856ee8589be46"
   },
   {
    "generation": 92,
@@ -2394,6 +3132,20 @@
    "kind": "software",
    "delta": -2,
    "step_ppm": 125000,
+   "held": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 100,
+    "floor_kw": 415,
+    "shed_ppm": 0
+   },
+   "proposed": {
+    "pcm_kwh": 4350,
+    "capture_ppm": 950000,
+    "wall_u_mw": 100,
+    "floor_kw": 413,
+    "shed_ppm": 0
+   },
    "base_ppm": [
     179100,
     563000,
@@ -2433,8 +3185,8 @@
    "cost": 1,
    "verdict": "ok",
    "budget_after": 19,
-   "prev": "fff82c4431758678ea77bf1f95edd8a1101833d1110a3e0d4d30496708011dfb",
-   "hash": "20e492cea1606034f0e6917df14ccb774a219c00748fae8104429939cfbc9532"
+   "prev": "b06cda5fce393f75013558f42a5f0347d2649129ead796b22b5856ee8589be46",
+   "hash": "c60e31d13303a1605f91d1d19ab8800af07d211d5402e7baedd9a992997bd5fd"
   }
  ],
  "final_genome": {
@@ -2463,5 +3215,5 @@
  },
  "final_eta_ppm": 919009,
  "final_budget": 19,
- "final_hash": "20e492cea1606034f0e6917df14ccb774a219c00748fae8104429939cfbc9532"
+ "final_hash": "c60e31d13303a1605f91d1d19ab8800af07d211d5402e7baedd9a992997bd5fd"
 }
