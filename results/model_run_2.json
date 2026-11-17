@@ -1,0 +1,15 @@
+{
+ "schema": "optifab-proposals/1",
+ "proposer": "A language model (Claude, Anthropic) run as a second sub-agent of the session that prepared this version, with no memory of the first run. It was given the output of tools/propose.py and the notes the first proposer left in results/model_lessons.md, and was told not to read anything else in the repository. That instruction was not enforced.",
+ "budget": 64,
+ "turns": 40,
+ "start": {
+  "pcm_kwh": 2500,
+  "capture_ppm": 850000,
+  "wall_u_mw": 132,
+  "floor_kw": 600,
+  "shed_ppm": 300000
+ },
+ "proposals": [],
+ "lessons_file": "results/model_lessons.md"
+}
