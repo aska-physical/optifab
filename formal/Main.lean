@@ -12,7 +12,11 @@
       g LIMIT BUDGET ; PLANT (9) ; SCENARIO (5) ; LOW (5) ; HIGH (5) ; FIXED ... ; HELD (5) ; PROPOSED (5)
 
   It prints the verdict, the budget left, the objective of the design held
-  and of the one proposed, and the margins of the one proposed. It calls
+  and of the one proposed, and the margins of the one proposed. A line that
+  starts with `l` is a whole run: the same seven parts with the start design
+  in place of HELD, then any number of proposed designs, each after a `;`.
+  It goes through the proved `loop` and `changes` and prints the design held
+  at the end, the budget left and the number of designs taken up. It calls
   the proved functions, not copies of them.
 -/
 
@@ -38,32 +42,48 @@ def genomeOf : List Int → Option Genome
   | [a, b, c, d, e] => some ⟨a, b, c, d, e⟩
   | _ => none
 
+def plantOf (pl fixed : List Int) (lo hi : Genome) : Option Plant :=
+  match pl with
+  | [pIt, cop, uaRoof, wallArea, dT, other, passive, aux, loopCop] =>
+    some ⟨pIt, cop, uaRoof, wallArea, dT, other, passive, aux, loopCop, fixed, lo, hi⟩
+  | _ => none
+
+def scenarioOf : List Int → Option Scenario
+  | [outMin, nOut, lowPpm, lowH, hours] => some ⟨outMin, nOut, lowPpm, lowH, hours⟩
+  | _ => none
+
 /-- One proposed design. `accepts` and `step` decide; the name of a refusal is for the reader. -/
-def design (limit budget : Int) (pl sc lo hi fixed held cand : List Int) : String :=
-  match pl, sc, genomeOf lo, genomeOf hi, genomeOf held, genomeOf cand with
-  | [pIt, cop, uaRoof, wallArea, dT, other, passive, aux, loopCop], [outMin, nOut, lowPpm, lowH, hours],
-    some lo, some hi, some b, some c =>
-    let p : Plant := ⟨pIt, cop, uaRoof, wallArea, dT, other, passive, aux, loopCop, fixed, lo, hi⟩
-    let y : Scenario := ⟨outMin, nOut, lowPpm, lowH, hours⟩
-    let j := judge p y limit (b, budget) c
-    let name :=
-      if accepts p y limit (b, budget) c = true then "ok"
-      else if inBounds p.lo p.hi c = false then "bounds"
-      else if j.verdict ≠ Verdict.ok then verdictName j.verdict
-      else "worse"
-    let after := step p y limit (b, budget) c
-    let ms := " ".intercalate ((margins p y c).map toString)
-    s!"{name} {after.2} {objective p y b} {objective p y c} ; {ms}"
-  | _, _, _, _, _, _ => "error"
+def design (limit budget : Int) (p : Plant) (y : Scenario) (b c : Genome) : String :=
+  let j := judge p y limit (b, budget) c
+  let name :=
+    if accepts p y limit (b, budget) c = true then "ok"
+    else if inBounds p.lo p.hi c = false then "bounds"
+    else if j.verdict ≠ Verdict.ok then verdictName j.verdict
+    else "worse"
+  let after := step p y limit (b, budget) c
+  let ms := " ".intercalate ((margins p y c).map toString)
+  s!"{name} {after.2} {objective p y b} {objective p y c} ; {ms}"
+
+/-- A whole list of proposed designs, through the proved `loop` and `changes`. -/
+def wholeLoop (limit budget : Int) (p : Plant) (y : Scenario) (start : Genome) (cands : List Genome) : String :=
+  let fin := loop p y limit (start, budget) cands
+  s!"{fin.1.pcm} {fin.1.capture} {fin.1.wallU} {fin.1.floor} {fin.1.shed} {fin.2} {changes p y limit (start, budget) cands}"
 
 def answer (line : String) : String :=
   match line.splitOn ";" with
-  | [head, pl, sc, lo, hi, fixed, held, cand] =>
-    match words head, ints pl, ints sc, ints lo, ints hi, ints fixed, ints held, ints cand with
-    | ["g", limit, budget], some pl, some sc, some lo, some hi, some fixed, some held, some cand =>
-      match limit.toInt?, budget.toInt? with
-      | some limit, some budget => design limit budget pl sc lo hi fixed held cand
-      | _, _ => "error"
+  | head :: pl :: sc :: lo :: hi :: fixed :: held :: rest =>
+    match words head, ints pl, ints sc, (ints lo).bind genomeOf, (ints hi).bind genomeOf, ints fixed,
+        (ints held).bind genomeOf, rest.mapM (fun r => (ints r).bind genomeOf) with
+    | [mode, limit, budget], some pl, some sc, some lo, some hi, some fixed, some held, some cands =>
+      match limit.toInt?, budget.toInt?, plantOf pl fixed lo hi, scenarioOf sc with
+      | some limit, some budget, some p, some y =>
+        if mode = "g" then
+          match cands with
+          | [cand] => design limit budget p y held cand
+          | _ => "error"
+        else if mode = "l" then wholeLoop limit budget p y held cands
+        else "error"
+      | _, _, _, _ => "error"
     | _, _, _, _, _, _, _, _ => "error"
   | [head, base, cand] =>
     match words head, (words base).mapM String.toInt?, (words cand).mapM String.toInt? with

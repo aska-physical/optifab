@@ -11,6 +11,7 @@
     "PlantGate.Spec.run_safe",
     "PlantGate.Spec.run_bounded",
     "PlantGate.Spec.step_complete",
+    "PlantGate.Spec.step_refusal_changes_nothing",
     "PlantGate.Spec.loop_safe",
     "PlantGate.Spec.loop_in_bounds",
     "PlantGate.Spec.loop_never_worse",

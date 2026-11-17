@@ -11,7 +11,7 @@ for anything.
 
 | Part of the vision | What exists | What is missing |
 |---|---|---|
-| **Formally verified** | Fourteen theorems, proved in Lean with no dependencies ([formal/](../formal/README.md)). Eight are about the gate. Six are about designs: the plant model, the bounds, the objective and the step are inside the proved code, so the margins are no longer handed to the gate from outside. `lake comparator --paranoid` accepts them under six kernels with the standard axioms only. The Proven Commons bar check passes items 2 to 6. | A reviewer's approval of the specification, which is bar item 1 and cannot happen yet because the Proven Commons reviewer list is empty. Any proof that the model describes the plant: its constants are claimed, and eleven of its fourteen margins are carried as constants. The proposers and the floating-point gate are unproved. |
+| **Formally verified** | Fifteen theorems, proved in Lean with no dependencies ([formal/](../formal/README.md)). Eight are about the gate. Seven are about designs: the plant model, the bounds, the objective and the step are inside the proved code, so the three margins that move are no longer handed to the gate from outside. `lake comparator --paranoid` accepts them under six kernels with the standard axioms only. The Proven Commons bar check passes items 2 to 6. | A reviewer's approval of the specification, which is bar item 1 and cannot happen yet because the Proven Commons reviewer list is empty. Any proof that the model describes the plant: its constants are claimed, eleven of its fourteen margins are carried as constants, and an independent read found five defects in it ([formal/SPEC.md](../formal/SPEC.md)). The proposers and the floating-point gate are unproved. |
 | **End to end** | One command re-runs a chain from pinned certificates to a design, to margins and an objective, to the step, to a ledger. A second works every recorded decision out again in Lean from the two designs (3,071 decisions across three ledgers, 0 mismatches). | Both ends. No sensor feeds the chain and no valve, load or machine obeys it. Four of the ten interfaces in [STRUCTURE.md](STRUCTURE.md) are checked. |
 | **Recursively improving** | A loop ([loop.py](../loop.py)) in which each admitted change becomes the baseline of the next generation. The proposer's own step scale is part of the genome: it doubles after a success, halves after a refusal, and is recorded. 45 of 50 proposals were admitted and the objective rose from 0.914228 to 0.919009. That it can never fall is now a theorem (`loop_never_worse`), for any proposer. And what one proposer learned has been handed to the next: a second instance given the first run's notes reached the same objective in 4 proposals where the first took 11. | The hand-over was done once, by hand, with notes written in prose. Nothing improves the gate, the plant model or the proposer's own code. The objective is a choice. |
 | **Intelligence system** | A language model has proposed through the loop's interface in two separate runs, seeing only the printed state. The first made 11 proposals, 10 taken up, and reached 0.919548 against 0.919009 for the seeded search. The second, given the first one's notes, reached it in 4. Their reasons are recorded with their proposals. Weft's adaptive models and Exo's agents have a place in the structure, and the floating-point gate here agrees with Weft's own on 100,000 generated cases. | These are two recorded runs of one model. Neither Weft nor Exo proposes anything, and neither can yet shed load or report the energy it uses. |
@@ -23,10 +23,11 @@ for anything.
 ```
 proved in Lean        gate, plant model, bounds, objective, step,           formal/PlantGate.lean
                       loop over any proposed designs
-tested against it     Python gate, model and step (400,000 cases),          formal/tests/, results/formal.json
-                      replay of three ledgers from the designs
+tested against it     Python gate, model and step (405,000 cases),          formal/tests/, results/formal.json
+                      replay of four ledgers, decision by decision and
+                      as whole runs through the Lean loop
 tested, not proved    floating-point gate against Weft's (100,000 cases)    verify.py
-computed, not proved  the plant envelope, the eleven certified margins,     verify.py
+computed, not proved  the plant envelope, the eleven constant margins,      verify.py
                       the site-dependent load floor
 recorded, not proved  what a language model proposed in two runs, why,     results/model_run*.json,
                       and the notes one run left for the next               results/model_lessons*.md
@@ -46,13 +47,19 @@ The two theorems that matter most for a system that changes itself:
 Both are about the gate's arithmetic, and take the margins as given. Three more are about designs, with the
 margins computed inside the proved code:
 
-- **`loop_safe`**: after any list of proposed designs, the margins of the design held are within the limit.
-- **`loop_never_worse`**: after any list of proposed designs, the objective is at least what it was. This is
-  what makes it an improvement loop. No proposer, however bad, can make the design held score lower.
-- **`loop_keeps_physics`**: what "within the limit" means, as three exact inequalities about heat and storage.
+- **`loop_safe`**: from a start within the limit, after any list of proposed designs, the margins of the
+  design held are within the limit.
+- **`loop_never_worse`**: after any list of proposed designs, the objective is at least what it was. No
+  proposer, however bad, can make the design held score lower. It can stay the same: a design that ties is
+  taken up, so this is "never worse" and not "always better".
+- **`loop_keeps_physics`**: what "within the limit" means, as exact inequalities about heat and storage.
 
 They close the gap between the model and the gate. They do not close the gap between the model and the
-plant. Whether the model's constants are true is a question for sensors and independent verifiers.
+plant. Whether the model's constants are true is a question for sensors and independent verifiers. And the
+model has mistakes of its own: a separate agent, given the code and not these conclusions, found that the
+objective is off by a constant, that the outage margin leaves out the fixed heat load, and that a proposer
+can spend the whole budget on designs that tie. They are listed in [formal/SPEC.md](../formal/SPEC.md) and
+are not yet fixed, because fixing them changes every published figure and the recorded runs.
 
 ## What running the loop showed
 

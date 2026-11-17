@@ -324,6 +324,12 @@ theorem PlantGate.Spec.step_complete (p : Plant) (sc : Scenario) (limit : Int)
   · rw [ha] at hf
     exact absurd hf (by simp)
 
+theorem PlantGate.Spec.step_refusal_changes_nothing (p : Plant) (sc : Scenario) (limit : Int)
+    (s : Genome × Int) (cand : Genome)
+    (h : accepts p sc limit s cand = false) :
+    step p sc limit s cand = s := by
+  simp [step, h]
+
 theorem PlantGate.Proofs.loop_margins (p : Plant) (sc : Scenario) (limit : Int)
     (cands : List Genome) (s : Genome × Int)
     (hw : ∀ x ∈ margins p sc s.1, x ≤ limit) :

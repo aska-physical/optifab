@@ -334,25 +334,50 @@ margins in parts per million of their limit, and proves eight theorems about it.
 
 Those eight take the margins as given. Since v0.3.0 the plant model of section 12 is in the same Lean file,
 as exact integer arithmetic, with the bounds on each gene, the objective and the step that takes a design up.
-Six more theorems are about designs, so the margins are computed inside the proved code:
+Seven more theorems are about designs. In them the three margins that move with the genes are computed
+inside the proved code. The eleven carried as constants are still inputs.
 
-- `step_complete`: a design within the bounds and the headroom that does not lower the objective is taken up.
-- `loop_safe`, `loop_in_bounds`, `loop_bounded`: after any list of proposed designs, the margins of the design
-  held are within the limit, its genes are within their bounds, and the changes are within the budget.
+- `step_complete`: with budget left and the design held within the limit, a design within the bounds and the
+  headroom that does not lower the objective is taken up.
+- `step_refusal_changes_nothing`: a design that is not taken up leaves the design held and the budget as
+  they were.
+- `loop_safe`, `loop_in_bounds`, `loop_bounded`: from a start within the limit and the bounds, after any list
+  of proposed designs, the margins of the design held are within the limit, its genes are within their bounds,
+  and the changes are within the budget.
 - `loop_never_worse`: after any list of proposed designs, the objective is at least what it was at the start.
-- `loop_keeps_physics`: with the limit at 1,000,000 ppm, the design held always satisfies three exact
-  inequalities. The drive heat needed is at most the heat captured. The fixed heat load is at most the cooling
-  gained at the scheduler's floor. The heat of one outage is at most what the store holds. Rounding plays no
-  part in them.
+  It may be equal.
+- `loop_keeps_physics`: with the limit at 1,000,000 ppm and a start within it, the design held satisfies
+  three exact inequalities. The cooling needed at full load is at most what the captured heat can drive. The
+  fixed heat load is at most the cooling gained at the scheduler's floor. The IT heat of one outage is at most
+  what the store holds. Rounding plays no part in them. The first follows from the second for any scheduler
+  floor up to the IT load.
 
-`lake comparator --paranoid` accepts all fourteen under six kernels with the standard axioms only. A Python
-copy of the gate, the model and the step agrees with the Lean executable on 400,000 generated inputs: 300,000
-gate decisions and 100,000 proposed designs. The Proven Commons bar check reports items 2 to 6 as passing
+`lake comparator --paranoid` accepts all fifteen under six kernels with the standard axioms only. A Python
+copy of the gate, the model and the step agrees with the Lean executable on 405,000 generated inputs: 300,000
+gate decisions, 100,000 proposed designs and 5,000 whole runs through the Lean `loop`. The Proven Commons bar check reports items 2 to 6 as passing
 ([formal/BAR-REPORT.md](../formal/BAR-REPORT.md)).
 
-What the six do not say: that the model describes a real plant. Its constants are pinned from certificates
-that are claimed and not measured, eleven of its fourteen margins are carried as constants, and the bounds and
-the scenario are declared by a person.
+What the seven do not say: that the model describes a real plant, or that it is free of mistakes. Its
+constants are pinned from certificates that are claimed and not measured, eleven of its fourteen margins are
+carried as constants, and the bounds and the scenario are declared by a person.
+
+**Known defects.** A separate agent read the new statements against this prose and the earlier floating-point
+model. It confirmed the units and that the integer model matches the floating-point one. It also found five
+defects, each checked here by running the numbers, and listed in [formal/SPEC.md](../formal/SPEC.md):
+
+1. The objective subtracts the whole utility power of the shed load in an outage, including the part that
+   does not depend on load. Every objective in this note is about 18 ppm too high. The corrected start is
+   0.914210 (published 0.914228) and the corrected end of the seeded run is 0.918990 (published 0.919009).
+   The order of designs does not change, except between designs that tie.
+2. The outage margin counts IT heat and leaves out the fixed heat load, about 71 kWh in a 20-minute outage.
+3. A design that scores the same is taken up and charged, even one identical to the design held. 30 of the
+   45 changes in the seeded run left the objective unchanged. So "never worse" is what is proved, and a
+   proposer can spend the budget without improving anything.
+4. Nothing requires the plant, the bounds or the start to make sense.
+5. A large move towards safety is refused as too far, and a start past a limit can never be repaired.
+
+They are not fixed in this version. A fix to 1 or 2 changes every objective and margin figure and the
+ledgers of the recorded runs, whose notes quote the present figures.
 
 In the loop the radius is the headroom of the baseline: the smallest distance from any margin to its limit.
 Section 5's lemma, that a move within the headroom passes no limit, is one of the eight
@@ -360,8 +385,8 @@ Section 5's lemma, that a move within the headroom passes no limit, is one of th
 
 ## 12. The improvement loop
 
-**VERIFIED** on a model (deterministic, replayed in Lean). Its safety, its bound and the fact that it only
-improves are **machine-checked** (section 11). The plant model, the objective and the scenario are choices.
+**VERIFIED** on a model (deterministic, replayed in Lean). Its safety, its bound and the fact that it never
+gets worse are **machine-checked** (section 11). The plant model, the objective and the scenario are choices.
 The figures illustrate the mechanism and predict nothing.
 
 A genome holds three hardware genes (thermal store in kWh_th, liquid capture fraction, wall U-value), two

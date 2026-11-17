@@ -16,21 +16,25 @@ Status: in progress. The specification has not been approved by a reviewer, so t
 | When the radius is the headroom of the baseline, an admitted candidate has every margin at or below the limit. | `PlantGate.Spec.accepted_stays_within` |
 | Whatever is proposed, and in whatever order, the loop keeps every margin at or below the limit and never overdraws the budget. | `PlantGate.Spec.run_safe` |
 | The number of changes the loop admits is at most the budget it was given. | `PlantGate.Spec.run_bounded` |
-| A proposed design that lies within the bounds, stays within the headroom and does not lower the objective is taken up, for one unit of budget. | `PlantGate.Spec.step_complete` |
-| Whatever designs are proposed, the margins of the design held, as the model computes them, stay at or below the limit, and the budget is never overdrawn. | `PlantGate.Spec.loop_safe` |
-| The design held never leaves the bounds it started in. | `PlantGate.Spec.loop_in_bounds` |
-| Whatever designs are proposed, the objective of the design held never falls. | `PlantGate.Spec.loop_never_worse` |
+| With budget left and the design held within the limit, a proposed design that lies within the bounds, stays within the headroom and does not lower the objective is taken up, for one unit of budget. | `PlantGate.Spec.step_complete` |
+| A proposed design that is not taken up changes nothing: the design held and the budget stay as they were. | `PlantGate.Spec.step_refusal_changes_nothing` |
+| Start from a design whose margins are within the limit, with a budget that is not negative. Whatever designs are proposed, the margins of the design held, as the model computes them, stay at or below the limit, and the budget is never overdrawn. | `PlantGate.Spec.loop_safe` |
+| A design that starts within the bounds never leaves them. | `PlantGate.Spec.loop_in_bounds` |
+| Whatever designs are proposed, the objective of the design held never falls. It may stay the same. | `PlantGate.Spec.loop_never_worse` |
 | The number of designs taken up is at most the budget. | `PlantGate.Spec.loop_bounded` |
-| With the limit at 1,000,000 parts per million, the design held always has enough captured heat to drive its chiller, always cools itself at the scheduler's load floor, and always holds one outage in its store. These are exact inequalities, free of rounding. | `PlantGate.Spec.loop_keeps_physics` |
+| With the limit at 1,000,000 parts per million, start from a design whose margins are within it. The design held then always has captured heat enough for the cooling it needs at full load, always cools itself at the scheduler's load floor, and always holds the IT heat of one outage in its store. These are exact inequalities, free of rounding. | `PlantGate.Spec.loop_keeps_physics` |
 
-The statements are in `PlantGate/Spec.lean`, the proofs in `PlantGate/Proofs.lean`. The command-line tool in `Main.lean` calls the proved `PlantGate.gate` and `PlantGate.headroom` directly for a gate line, and the proved `PlantGate.accepts`, `PlantGate.step`, `PlantGate.margins` and `PlantGate.objective` for a design line.
+The statements are in `PlantGate/Spec.lean`, the proofs in `PlantGate/Proofs.lean`. The command-line tool in `Main.lean` calls the proved `PlantGate.gate` and `PlantGate.headroom` directly for a gate line, the proved `PlantGate.accepts`, `PlantGate.step`, `PlantGate.margins` and `PlantGate.objective` for a design line, and the proved `PlantGate.loop` and `PlantGate.changes` for a whole run.
 
-The first eight theorems are about the gate and take margins as given. The last six are about designs: the margins and the objective are computed inside the proved code, so nothing is passed across by hand between the model, the gate and the loop.
+The first eight theorems are about the gate and take margins as given. The last seven are about designs. In them the three margins that move with the genes, and the objective, are computed inside the proved code. The eleven margins carried as constants, the plant's nine numbers, the bounds, the scenario and the limit are still inputs.
+
+The model is not proved. It is defined in the code under proof, and the theorems say what the loop does with it.
 
 ## What is not proved
 
 - That the model describes a real plant. `loop_keeps_physics` is about the model's own inequalities. Its constants come from other repositories' certificates, which are claimed and not measured. No sensor exists yet.
-- That the eleven certified margins the model carries as constants are true. They are computed by other verifiers.
+- That the eleven margins the model carries as constants are true. Ten are certified by other verifiers and one is derived in `verify.py`.
+- That the model is free of mistakes. `SPEC.md` lists five known defects, found by an independent read: the objective's outage term, the outage margin, equal-scoring designs being taken up and charged, the lack of any requirement that the inputs make sense, and two limits on what the loop can do.
 - That the bounds are what could really be built or set. They are declared by a person.
 - That a higher objective is a better campus. `loop_never_worse` says the objective never falls. The objective and its scenario are choices.
 - That the gate alone admits only improvements. The gate bounds harm. It is the step over designs that also asks for the objective not to fall.
@@ -58,7 +62,7 @@ lake comparator --paranoid
 python3 tests/run_tests.py
 ```
 
-`lake comparator --paranoid` builds the project in a sandbox, checks that each theorem in `PlantGate/Proofs.lean` proves exactly the statement in `PlantGate/Spec.lean`, checks that it uses only the axioms `propext`, `Classical.choice`, and `Quot.sound`, and replays it through every kernel shipped with Lean. The test script compares the tool with the oracle on 400,000 inputs (300,000 gate decisions and 100,000 proposed designs) and rewrites `tests/TEST-RESULTS.md`.
+`lake comparator --paranoid` builds the project in a sandbox, checks that each theorem in `PlantGate/Proofs.lean` proves exactly the statement in `PlantGate/Spec.lean`, checks that it uses only the axioms `propext`, `Classical.choice`, and `Quot.sound`, and replays it through every kernel shipped with Lean. The test script compares the tool with the oracle on 405,000 inputs (300,000 gate decisions, 100,000 proposed designs and 5,000 whole runs) and rewrites `tests/TEST-RESULTS.md`.
 
 To run the Proven Commons bar check on it, from a clone of Proven-Commons/mission:
 

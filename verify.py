@@ -908,7 +908,8 @@ def adversary_run(plant: dict, proposals: int = 3000, seed: int = 20261117) -> t
               "first_six_verdicts": [e["verdict"] for e in ledger["entries"][:6]],
               "taken_up": verdicts.get("ok", 0), "budget": LOOP_BUDGET, "budget_left": ledger["final_budget"],
               "eta_start_ppm": ledger["head"]["start_eta_ppm"], "eta_final_ppm": ledger["final_eta_ppm"],
-              **held_states_ok(ledger, plant), "chain_intact": loop.check_chain(ledger), "final_hash": ledger["final_hash"]}
+              **held_states_ok(ledger, plant), "chain_intact": loop.check_chain(ledger),
+              "entries_follow_from_one_another": loop.check_continuity(ledger), "final_hash": ledger["final_hash"]}
     return ledger, report
 
 
@@ -933,7 +934,8 @@ def proposer_run(plant: dict, seeded: dict, run_file: str) -> tuple[dict | None,
         "every_proposal_has_a_reason": all(p.get("why", "").strip() for p in run["proposals"]),
         **{k: s[k] for k in ("admitted", "refused", "admitted_hardware_changes", "admitted_software_changes",
                              "admitted_changes_to_both_at_once", "budget_start", "budget_left", "eta_start_ppm",
-                             "eta_final_ppm", "worst_margin_ever_admitted_ppm", "final_genome", "chain_intact", "final_hash")},
+                             "eta_final_ppm", "worst_margin_ever_admitted_ppm", "final_genome", "chain_intact",
+                             "entries_follow_from_one_another", "final_hash")},
         **held_states_ok(ledger, plant),
         "final_margins_ppm": ledger["final_margins_ppm"],
         "best_objective_found_by_direct_search": best,
@@ -982,7 +984,10 @@ def run_formal(ledgers: dict) -> int:
         lines = loop.replay_lines(ledger)
         out = sh([str(FORMAL_DIR / ".lake" / "build" / "bin" / "plantgate")], input="\n".join(lines) + "\n").stdout.split("\n")
         bad = sum(1 for want, got in zip(loop.replay_expected(ledger), out) if got != want) + max(0, len(lines) - len(out))
-        replay[name] = {"decisions": len(lines), "mismatches": bad}
+        whole, want_whole = loop.replay_whole(ledger)  # the same run in one piece, through the proved `loop` and `changes`
+        got_whole = sh([str(FORMAL_DIR / ".lake" / "build" / "bin" / "plantgate")], input=whole + "\n").stdout.strip()
+        bad += got_whole != want_whole
+        replay[name] = {"decisions": len(lines), "mismatches": bad, "whole_run_through_lean_loop_agrees": got_whole == want_whole}
         mismatches += bad
     decisions = sum(r["decisions"] for r in replay.values())
     lean = sh(["lake", "env", "lean", "--version"]).stdout.strip()
@@ -1207,6 +1212,13 @@ def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, 
     variants = evolution["variants"]
     edited = copy.deepcopy(ledger)
     edited["entries"][0]["verdict"] = "ok" if edited["entries"][0]["verdict"] != "ok" else "distance"
+    rehashed = copy.deepcopy(ledger)  # one entry starts from a design nobody held; every hash is then made good again
+    rehashed["entries"][1]["held"] = dict(rehashed["entries"][1]["held"], pcm_kwh=rehashed["entries"][1]["held"]["pcm_kwh"] + 1)
+    prev = "0" * 64
+    for e in rehashed["entries"]:
+        e["prev"] = prev
+        e["hash"] = prev = loop.digest({k: v for k, v in e.items() if k != "hash"})
+    rehashed["final_hash"] = prev
     flipped = copy.deepcopy(inp["weft_vectors"])
     flipped["weight_update_vectors"][1]["expected_accepted"] = False
     drift = interface_checks(inp, floor_mass_override=200.0)
@@ -1281,6 +1293,11 @@ def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, 
                 and r["every_design_held_within_bounds"] and r["objective_never_fell"] and r["changes_within_budget"]
                 and r["proposals"] <= r["turns_allowed"] and r["edited_proposal_changes_the_ledger"]
                 for r in recorded_runs.values() if r["present"]),
+        "must_fail_28_ledger_whose_entries_do_not_follow_from_one_another_passes":
+            loop.check_continuity(ledger) and loop.check_chain(rehashed) and not loop.check_continuity(rehashed)
+            and adversary["entries_follow_from_one_another"]
+            and all(r["entries_follow_from_one_another"] for r in recorded_runs.values() if r["present"])
+            and all(r.get("whole_run_through_lean_loop_agrees", False) for r in formal["replay"]["by_ledger"].values()),
         "must_fail_27_warm_site_campus_counted_with_the_design_load_floor":
             abs(network["sites"][0]["load_floor_MW"] - ml["P_min_envelope_plus_overhead_MW"]) < 0.001
             and network["two_campuses"]["warm_floor_over_cool_floor"] > 2.0

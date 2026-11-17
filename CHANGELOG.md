@@ -9,9 +9,13 @@ The proof now covers the plant model and the loop over designs, and two new prop
 ### Added
 
 - **The plant model in Lean.** `formal/PlantGate.lean` holds the model that turns a design into margins and an
-  objective, the bounds on each gene, and the step that takes a design up. Six theorems about designs
-  (`step_complete`, `loop_safe`, `loop_in_bounds`, `loop_never_worse`, `loop_bounded`, `loop_keeps_physics`)
-  join the eight about the gate. `lake comparator --paranoid` accepts all fourteen under six kernels.
+  objective, the bounds on each gene, and the step that takes a design up. Seven theorems about designs
+  (`step_complete`, `step_refusal_changes_nothing`, `loop_safe`, `loop_in_bounds`, `loop_never_worse`,
+  `loop_bounded`, `loop_keeps_physics`) join the eight about the gate. `lake comparator --paranoid` accepts all
+  fifteen under six kernels.
+- **A whole-run mode in the Lean executable.** A line starting with `l` goes through the proved `loop` and
+  `changes`. `--formal` runs each of the four ledgers through it in one piece as well as decision by decision,
+  and `loop.check_continuity` checks that each ledger entry starts from the outcome of the one before.
 - **A proposer's command line**, `tools/propose.py`, and `loop.run_proposals`, which replays any recorded list
   of proposals.
 - **A recorded run by a language model** (`results/model_run.json`, `results/model_ledger.json`): 11 proposals,
@@ -20,7 +24,14 @@ The proof now covers the plant model and the loop over designs, and two new prop
   4 proposals. Its notes are in `results/model_lessons_2.md`.
 - **An adversarial proposer** (3,006 proposals) and a **first look at a network** (assumption A-4, section 13
   of the model note).
-- Must-fail controls 25 to 27. Findings 16 to 19 in the README.
+- Must-fail controls 25 to 28. Findings 16 to 19 in the README.
+
+### Known defects
+
+An independent read by a separate agent found five defects in the plant model, listed in `formal/SPEC.md` and
+in section 11 of the model note. The two that change numbers: the objective is about 18 ppm too high for every
+design, and the outage margin leaves out the fixed heat load. They are disclosed and not fixed in this version.
+The same read found prose that claimed more than the statements say. That prose is corrected.
 
 ### Changed
 
@@ -30,7 +41,7 @@ The proof now covers the plant model and the loop over designs, and two new prop
   giving Lean the designs, so the margins, the objective, the verdict and the budget are all worked out again.
 - The step over designs refuses a design outside the bounds (`bounds`) and one that lowers the objective
   (`worse`), in addition to the gate's refusals.
-- Differential tests: 400,000 inputs (300,000 gate decisions and 100,000 proposed designs).
+- Differential tests: 405,000 inputs (300,000 gate decisions, 100,000 proposed designs and 5,000 whole runs).
 - `results/formal.json` holds one hash per ledger.
 
 ## [0.2.0] - 2026-11-17

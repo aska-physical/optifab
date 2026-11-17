@@ -8,10 +8,11 @@ the radius, one unit inside it and one unit outside it, and a cost exactly
 at, just under and just over the budget. Design inputs are whole proposed
 designs, run through the model, the bounds, the gate and the objective:
 designs near the reference plant, designs with a gene exactly on a bound or
-a margin exactly on its limit, and designs made of arbitrary integers. Run
-from anywhere:
+a margin exactly on its limit, and designs made of arbitrary integers. Loop
+inputs are whole runs, a start design and up to twelve proposals, which go
+through the proved `loop` and `changes`. Run from anywhere:
 
-    python3 tests/run_tests.py [--seed N] [--count N] [--designs N]
+    python3 tests/run_tests.py [--seed N] [--count N] [--designs N] [--loops N]
 
 It builds the executable if it is missing, writes `tests/TEST-RESULTS.md`,
 and exits non-zero if any input disagrees.
@@ -108,6 +109,39 @@ def design_inputs(seed, count):
     return cases, edges
 
 
+def loop_inputs(seed, count):
+    """Whole runs: a start design and up to twelve proposals, near the reference plant or arbitrary."""
+    rng = random.Random(seed + 2)
+    cases = []
+    while len(cases) < count:
+        budget = rng.choice([0, 1, 2, 3, 64])
+        limit = rng.choice([1_000_000, 1_000_000, 950_000])
+        if rng.random() < 0.85:
+            plant, year = dict(PLANT), YEAR
+            start = dict(pcm_kwh=rng.randint(2400, 5000), capture_ppm=rng.randint(800_000, 950_000),
+                         wall_u_mw=rng.randint(100, 400), floor_kw=rng.randint(450, 900), shed_ppm=rng.randint(0, 400_000))
+            cands, held = [], dict(start)
+            for _ in range(rng.randint(0, 12)):
+                cand = dict(held)
+                for gene in rng.sample(oracle.GENES, rng.randint(0, 3)):  # none at all is a proposal too
+                    cand[gene] += rng.choice([1, -1]) * rng.choice([1, NUDGE[gene], 3 * NUDGE[gene]])
+                cands.append(cand)
+                if rng.random() < 0.7:
+                    held = cand  # the proposer assumes it was taken up, which may be wrong
+        else:
+            bits = rng.choice([3, 12, 24])
+            signed = lambda: rng.getrandbits(bits) - (1 << (bits - 1))
+            plant = {k: signed() for k in oracle.PLANT}
+            plant["fixed"] = [signed() for _ in range(rng.randint(0, 3))]
+            plant["lo"] = {k: signed() for k in oracle.GENES}
+            plant["hi"] = {k: plant["lo"][k] + rng.getrandbits(bits) for k in oracle.GENES}
+            year = {k: signed() for k in oracle.SCENARIO}
+            start = {k: signed() for k in oracle.GENES}
+            cands = [{k: start[k] + rng.choice([0, 1, -1, signed()]) for k in oracle.GENES} for _ in range(rng.randint(0, 6))]
+        cases.append((limit, budget, plant, year, start, cands))
+    return cases
+
+
 def inputs(seed, count):
     """Edge cases, then random cases, each followed by its mutations.
     Returns the cases and how many of them are mutations."""
@@ -170,6 +204,7 @@ def main():
     ap.add_argument("--seed", type=int, default=20261117)
     ap.add_argument("--count", type=int, default=300_000)
     ap.add_argument("--designs", type=int, default=100_000)
+    ap.add_argument("--loops", type=int, default=5_000)
     args = ap.parse_args()
 
     if not EXE.exists():
@@ -177,18 +212,23 @@ def main():
 
     cases, mutated = inputs(args.seed, args.count)
     designs, edges = design_inputs(args.seed, args.designs)
-    stdin = "".join(oracle.line(*c) + "\n" for c in cases) + "".join(oracle.design_line(*d) + "\n" for d in designs)
+    loops = loop_inputs(args.seed, args.loops)
+    stdin = "".join(oracle.line(*c) + "\n" for c in cases) + "".join(oracle.design_line(*d) + "\n" for d in designs) \
+        + "".join(oracle.loop_line(*r) + "\n" for r in loops)
     out = subprocess.run([str(EXE)], input=stdin, capture_output=True,
                          text=True, check=True).stdout.split("\n")
-    want = [expected(c) for c in cases] + [oracle.design_expected(*d) for d in designs]
-    failures = [(c, got) for c, w, got in zip(cases + designs, want, out) if got != w]
+    want = [expected(c) for c in cases] + [oracle.design_expected(*d) for d in designs] \
+        + [oracle.loop_expected(*r) for r in loops]
+    failures = [(c, got) for c, w, got in zip(cases + designs + loops, want, out) if got != w]
     if len(out) < len(want):
         failures.append(("missing output", f"{len(out)} lines"))
     verdicts, design_verdicts = {}, {}
     for w in want[:len(cases)]:
         verdicts[w.split()[0]] = verdicts.get(w.split()[0], 0) + 1
-    for w in want[len(cases):]:
+    for w in want[len(cases):len(cases) + len(designs)]:
         design_verdicts[w.split()[0]] = design_verdicts.get(w.split()[0], 0) + 1
+    proposals = sum(len(r[5]) for r in loops)
+    taken = sum(int(w.split()[-1]) for w in want[len(cases) + len(designs):])
 
     lean = subprocess.run(["lake", "env", "lean", "--version"], cwd=ROOT,
                           capture_output=True, text=True).stdout.strip()
@@ -207,6 +247,7 @@ def main():
         f"- Design inputs: {len(designs)}, each a proposed design run through the model, the bounds, the gate and the objective",
         f"- Design edges: {edges} of the design inputs have a gene on or just past a bound, or a margin on or just past its limit",
         "- Design verdicts: " + ", ".join(f"{k} {v}" for k, v in sorted(design_verdicts.items())),
+        f"- Loop inputs: {len(loops)}, each a whole run through `loop` and `changes`: {proposals} proposals in all, {taken} taken up",
         f"- Failures: {len(failures)}",
         "",
     ]

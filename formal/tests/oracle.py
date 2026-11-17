@@ -149,3 +149,25 @@ def design_expected(limit, budget, p, sc, held, cand):
     (_, after), name = design_step(p, sc, limit, (held, budget), cand)
     return (f"{name} {after} {objective(p, sc, held)} {objective(p, sc, cand)} ; "
             + " ".join(map(str, margins(p, sc, cand))))
+
+
+def run_designs(p, sc, limit, state, cands):
+    """A whole run: every proposed design in turn. Returns the final state and the number taken up."""
+    taken = 0
+    for cand in cands:
+        state, name = design_step(p, sc, limit, state, cand)
+        taken += name == "ok"
+    return state, taken
+
+
+def loop_line(limit, budget, p, sc, start, cands):
+    """One input line for the Lean executable: a whole run through `loop` and `changes`."""
+    return " ; ".join([f"l {limit} {budget}", " ".join(str(p[k]) for k in PLANT),
+                       " ".join(str(sc[k]) for k in SCENARIO), _genes(p["lo"]), _genes(p["hi"]),
+                       " ".join(map(str, p["fixed"])), _genes(start)] + [_genes(c) for c in cands])
+
+
+def loop_expected(limit, budget, p, sc, start, cands):
+    """What the Lean executable must print for that line: final design, budget left, designs taken up."""
+    (held, left), taken = run_designs(p, sc, limit, (start, budget), cands)
+    return f"{_genes(held)} {left} {taken}"

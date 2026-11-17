@@ -81,6 +81,13 @@ theorem PlantGate.Spec.step_complete (p : Plant) (sc : Scenario) (limit : Int)
     (ho : objective p sc s.1 ≤ objective p sc cand) :
     step p sc limit s cand = (cand, s.2 - 1) := sorry
 
+/-- A proposed design that is not taken up changes nothing: the design
+    held and the budget are as they were. -/
+theorem PlantGate.Spec.step_refusal_changes_nothing (p : Plant) (sc : Scenario) (limit : Int)
+    (s : Genome × Int) (cand : Genome)
+    (h : accepts p sc limit s cand = false) :
+    step p sc limit s cand = s := sorry
+
 /-- The loop over designs is safe against any proposer. Start from a
     design whose margins are within the limit, with a budget that is not
     negative. After any list of proposed designs whatever, the margins of
@@ -98,8 +105,10 @@ theorem PlantGate.Spec.loop_in_bounds (p : Plant) (sc : Scenario) (limit : Int)
     (h : inBounds p.lo p.hi s.1 = true) :
     inBounds p.lo p.hi (loop p sc limit s cands).1 = true := sorry
 
-/-- The loop only improves. Whatever is proposed, the objective of the
-    design held at the end is at least the objective at the start. -/
+/-- The loop never gets worse. Whatever is proposed, the objective of the
+    design held at the end is at least the objective at the start. A design
+    that scores the same is taken up, so this does not say that every
+    change is an improvement. -/
 theorem PlantGate.Spec.loop_never_worse (p : Plant) (sc : Scenario) (limit : Int)
     (cands : List Genome) (s : Genome × Int) :
     objective p sc s.1 ≤ objective p sc (loop p sc limit s cands).1 := sorry

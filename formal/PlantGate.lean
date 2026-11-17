@@ -149,12 +149,13 @@ def ppm (num den : Int) : Int :=
 def qFix (p : Plant) (g : Genome) : Int :=
   (p.uaRoof + g.wallU * p.wallArea) * p.dT + p.other * 1000000
 
-/-- Heat the sorption chiller needs at full load. -/
+/-- Cooling the plant needs at full load: the IT heat the liquid loop does
+    not capture, plus the fixed heat load. Scaled to the unit of `driveDen`. -/
 def driveNum (p : Plant) (g : Genome) : Int :=
   ((1000000 - g.capture) * (p.pIt * 1000000) + 1000000 * qFix p g) * 1000000
 
-/-- Heat the liquid loop captures at full load, times the chiller's COP,
-    in the unit of `driveNum`. -/
+/-- Cooling the sorption chiller can make at full load: the heat the liquid
+    loop captures, times the chiller's COP. -/
 def driveDen (p : Plant) (g : Genome) : Int :=
   p.cop * g.capture * (p.pIt * 1000000)
 
@@ -166,14 +167,15 @@ def coolGain (p : Plant) (g : Genome) : Int :=
 /-- The fixed heat load, in the unit of `coolGain p g * g.floor`. -/
 def floorNum (p : Plant) (g : Genome) : Int := qFix p g * 1000
 
-/-- Heat the store must take in one outage, after shedding. -/
+/-- IT heat the store must take in one outage, after shedding. The fixed
+    heat load is not counted here. -/
 def outageNum (p : Plant) (sc : Scenario) (g : Genome) : Int :=
   p.pIt * (1000000 - g.shed) * sc.outMin
 
 /-- What the store holds, in the unit of `outageNum`. -/
 def outageDen (g : Genome) : Int := 60000000000 * g.pcm
 
-/-- Margin: drive heat needed over drive heat captured. -/
+/-- Margin: cooling needed over cooling the captured heat can drive. -/
 def driveMargin (p : Plant) (g : Genome) : Int := ppm (driveNum p g) (driveDen p g)
 
 /-- Margin: the plant's load floor over the scheduler's load floor. -/
@@ -252,7 +254,8 @@ def changes (p : Plant) (sc : Scenario) (limit : Int) : Genome × Int → List G
 /-! ## What the limits mean, stated without rounding -/
 
 /-- The captured heat, through the chiller, covers the cooling the plant
-    needs at full load. -/
+    needs at full load. For a scheduler floor at or below the IT load this
+    follows from `SelfCoolsAtFloor`. -/
 def DriveHeatSuffices (p : Plant) (g : Genome) : Prop :=
   0 < driveDen p g ∧ driveNum p g ≤ driveDen p g
 
@@ -260,7 +263,7 @@ def DriveHeatSuffices (p : Plant) (g : Genome) : Prop :=
 def SelfCoolsAtFloor (p : Plant) (g : Genome) : Prop :=
   0 < coolGain p g ∧ 0 < g.floor ∧ floorNum p g ≤ coolGain p g * g.floor
 
-/-- The store holds the heat of one outage, after shedding. -/
+/-- The store holds the IT heat of one outage, after shedding. -/
 def RidesThrough (p : Plant) (sc : Scenario) (g : Genome) : Prop :=
   0 < outageDen g ∧ outageNum p sc g ≤ outageDen g
 

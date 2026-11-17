@@ -45,10 +45,10 @@ Foundation-0 standard: PROVEN (written proof, checked symbolically), VERIFIED (f
 | 10 | **The contract fits in one 64-byte frame.** The 12 margins, the budget, the load, the recooling temperature and the time fill the 16 floats of the frame Weft already uses for telemetry. The design point as certified cannot fill the recooling slot. | VERIFIED. The slot meanings are a proposal. |
 | 11 | **The Terrafab latency figures hold in direction, and this campus does not need them.** A 15 ms loop can counter none of the four plant vibration tones within its cycle; a 0.5 ms loop can counter all four. Passive isolation already holds rack vibration at 17.9% of its limit, and every term of the contract moves over seconds to minutes. | PROVEN (identity), VERIFIED |
 | 12 | **Every repository has a place, and the loop is open.** 32 of 41 repositories are placed in the structure and 9 are listed as having no place. Of the 10 interfaces that would close the loop between structure and intelligence, 4 are checked. | VERIFIED (the accounting). Statuses were assigned here. |
-| 13 | **The gate, the plant model and the loop are proved in Lean.** Fourteen theorems, accepted by `lake comparator --paranoid` under six kernels. Eight are about an exact integer gate. Six are about designs, with the margins and the objective computed inside the proved code: whatever designs are proposed, the design held stays within every modelled limit and within its bounds, its objective never falls, and the number of changes is at most the budget a person set. The Proven Commons bar check passes items 2 to 6. It is not verified: no reviewer has approved the specification. | Machine-checked proof. Bar item 1 open. |
+| 13 | **The gate and the loop over designs are proved in Lean, with the plant model inside the proved code.** Fifteen theorems, accepted by `lake comparator --paranoid` under six kernels. Eight are about an exact integer gate. Seven are about designs, with the three moving margins and the objective computed inside the proved code. From a start within its limits and bounds, whatever designs are proposed, the design held stays within every modelled limit and within its bounds, its objective never falls, and the number of changes is at most the budget a person set. The model itself is defined, not proved, and an independent read found five defects in it, listed in [formal/SPEC.md](formal/SPEC.md). The Proven Commons bar check passes items 2 to 6. It is not verified: no reviewer has approved the specification. | Machine-checked proof. Bar item 1 open. |
 | 14 | **Hardware and software improve together under that gate.** A loop proposed 50 changes to three hardware and two software parameters. 45 were admitted (30 hardware, 15 software) and 5 refused. The objective rose from 0.914228 to 0.919009 and never fell, and every decision was worked out again in Lean from the two designs with no mismatch. It runs on a model: no sensor, load or machine is involved. | VERIFIED on a model. The scenario is a choice, so the figures are illustrations. |
 | 15 | **A design that sits exactly on a limit cannot change.** Started with one margin at its limit, the loop admitted nothing. A proposer with no reserve had 126 of 186 proposals refused and finished lower. Headroom is what makes change possible. | VERIFIED on a model |
-| 16 | **A margin within its limit means a physical inequality, with no rounding in it.** Proved for every design the loop can hold: the captured heat is enough to drive the chiller, the plant cools itself at the scheduler's load floor, and the store holds one outage. This is a statement about the model. Its constants are claimed, not measured. | Machine-checked proof about a model |
+| 16 | **A margin within its limit means a physical inequality, with no rounding in it.** Proved for every design the loop can reach from a start within its limits: the captured heat can drive the cooling needed at full load, the plant cools itself at the scheduler's load floor, and the store holds the IT heat of one outage. The first follows from the second for any floor up to the IT load, so these are two independent facts, not three. This is a statement about the model. Its constants are claimed, not measured. | Machine-checked proof about a model |
 | 17 | **A language model has proposed through the same interface, and a second run built on the first one's notes.** Given only the loop's printed state, the first made 11 proposals in a limit of 40. 10 were taken up, 4 of them changing hardware and software in one step. The objective reached 0.919548, the best a direct search finds possible. The seeded search reached 0.919009 (89.9% of that gain) with 50 proposals. A second instance of the same model, with no memory of the first run, was given the notes the first left. It reached the same 0.919548 in 4 proposals with 0 refused. The proposals, reasons and notes are in [results/](results/), and both ledgers replay in Lean. | VERIFIED (the replays). Two runs are anecdotes, not an experiment. |
 | 18 | **An adversary cannot move the design out of its envelope.** 3,006 proposals built to break the loop: genes out of bounds, margins past limits, designs that score lower, then random ones. 64 were taken up, which is the whole budget, and no more. Every design held stayed within every limit and every bound, and the objective never fell. | VERIFIED on the Python copy. The property itself is proved in Lean. |
 | 19 | **A campus's load floor is a property of its site.** If the chiller keeps its design share of the reversible COP, the floor is 0.564 MW with recooling at 30 °C, 2.804 MW at 38 °C and 6.113 MW at 40 °C. At 41 °C the campus cannot cool itself at any load, though 41 °C is under the limit of finding 2. One cool and one warm campus cannot idle below 3.368 MW, 16.8% of their nameplate. In the plant model, moving load between campuses changes no energy, so a placement optimum needs a model with a site-dependent cost first. | VERIFIED under assumption A-4 |
@@ -78,7 +78,7 @@ pip install sympy
 python3 verify.py
 ```
 
-This recomputes every figure from the pinned inputs, runs the improvement loop, replays the recorded run, runs 27 must-fail controls, and
+This recomputes every figure from the pinned inputs, runs the improvement loop, replays the recorded runs, runs 28 must-fail controls, and
 compares the result with [results/certificate.json](results/certificate.json) and the two ledgers in
 [results/](results/). It reads no network and needs no Lean. It checks that the committed
 formal record matches the current Lean sources and ledger.
@@ -88,7 +88,7 @@ and bubblewrap):
 
 ```bash
 python3 verify.py --formal
-# [FORMAL] comparator accepts 14 theorems under 6 kernels; 400000 differential tests, 0 failures;
+# [FORMAL] comparator accepts 15 theorems under 6 kernels; 405000 differential tests, 0 failures;
 #          ledger replay 3071 decisions, 0 mismatches
 ```
 
@@ -116,7 +116,8 @@ python3 verify.py --upstream ../upstream
 - That the gate is safe to put in control of a plant. Its arithmetic is proved. The margins it is fed are not,
   and it can only refuse a step. Nothing here commands anything.
 - That the loop's gains are real. The loop is proved to keep its model within the model's limits. The model's
-  constants, the objective and the scenario are choices, and none is measured.
+  constants, the objective and the scenario are choices, and none is measured. The objective has a known
+  error of about 18 ppm that is the same for every design ([formal/SPEC.md](formal/SPEC.md), known defects).
 - That a language model is a good proposer, or that notes always help the next one. Two recorded runs show
   the interface and the hand-over work. They measure nothing.
 - Anything the Terrafab documents claim. They are the source of the idea and are not used as evidence.
@@ -124,7 +125,7 @@ python3 verify.py --upstream ../upstream
 ## Layout
 
 ```
-verify.py                 the verifier: derivations, the gates, the frame, the loop, graph and unit checks, 27 must-fail controls
+verify.py                 the verifier: derivations, the gates, the frame, the loop, graph and unit checks, 28 must-fail controls
 loop.py                   the improvement loop: the seeded proposer, the replay of recorded proposals, the ledger
 formal/                   the exact gate, the plant model and the loop, proved in Lean, in the Proven Commons layout
 results/certificate.json  what verify.py must reproduce

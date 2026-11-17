@@ -227,7 +227,7 @@
         "Proven-Commons/mission"
       ],
       "status": "checked",
-      "note": "formal/ proves fourteen theorems in Lean: eight about an exact integer gate, six about the plant model and the loop over designs. The comparator accepts them under six kernels and Proven Commons bar items 2 to 6 pass. Item 1 is open: no reviewer has approved the specification, so it is not verified. Weft's own floating-point gate has no proof yet."
+      "note": "formal/ proves fifteen theorems in Lean: eight about an exact integer gate, seven about the loop over designs, with the plant model inside the proved code. The comparator accepts them under six kernels and Proven Commons bar items 2 to 6 pass. Item 1 is open: no reviewer has approved the specification, so it is not verified. Weft's own floating-point gate has no proof yet."
     },
     {
       "id": "R3",

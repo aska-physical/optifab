@@ -36,8 +36,8 @@ The fifteen findings are in [README.md](README.md) and derived in [docs/MODEL.md
     admitted, the objective up from 0.914228 to 0.919009, every decision replayed in Lean.
 15. A design that sits exactly on a limit cannot change under this gate, and a proposer with no reserve slows
     itself.
-16. v0.3.0: the plant model, the bounds, the objective and the step are in Lean beside the gate, and six more
-    theorems are about designs (fourteen in all). For any proposer the design held stays within the model's
+16. v0.3.0: the plant model, the bounds, the objective and the step are in Lean beside the gate, and seven more
+    theorems are about designs (fifteen in all). For any proposer the design held stays within the model's
     limits and its bounds, its objective never falls, and a margin within the limit is proved to mean three
     exact inequalities about heat and storage.
 17. A language model proposed through `tools/propose.py`, seeing only the printed state: 11 proposals, 10
@@ -228,7 +228,10 @@ could be given `results/model_lessons_2.md`.
 - **Whether the plant gate is a direction worth pursuing.** Its arithmetic is now proved, and it has been run
   on a model. It has never seen a sensor or a machine.
 - **Who reviews `formal/SPEC.md`.** Until a person who did not write it approves it, nothing here may be
-  called verified. The specification grew in v0.3.0 (the model and six statements), so its hash changed.
+  called verified. The specification grew in v0.3.0 (the model and seven statements), so its hash changed.
+- **The five known defects in the model** (`formal/SPEC.md`). Fixing the objective and the outage margin changes
+  every published objective figure and the ledgers of the two recorded runs. The owner should say whether to fix
+  and re-run, or fix and keep the runs with a note.
 - **A branch rule.** Bar item 7 is open in CI: `main` does not require the `bar / bar` check. Only a repository
   admin can add that rule.
 - **Assumption A-4.** The site-dependence of the load floor rests on it. A chiller datasheet would replace it.

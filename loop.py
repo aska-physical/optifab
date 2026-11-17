@@ -181,6 +181,32 @@ def replay_expected(ledger: dict) -> list[str]:
             + " ".join(map(str, e["cand_ppm"])) for e in ledger["entries"]]
 
 
+def replay_whole(ledger: dict) -> tuple[str, str]:
+    """The whole run as one line for the Lean executable, and what `loop` and `changes` must print for it."""
+    h = ledger["head"]
+    line = oracle.loop_line(h["limit"], h["budget"], h["plant"], h["scenario"], genes(h["start_genome"]),
+                            [e["proposed"] for e in ledger["entries"]])
+    taken = sum(1 for e in ledger["entries"] if e["verdict"] == "ok")
+    final = " ".join(str(ledger["final_genome"][k]) for k in oracle.GENES)
+    return line, f"{final} {ledger['final_budget']} {taken}"
+
+
+def check_continuity(ledger: dict) -> bool:
+    """Each entry starts from the outcome of the one before, and the run starts within its limits and bounds."""
+    h = ledger["head"]
+    held, budget = genes(h["start_genome"]), h["budget"]
+    if max(h["start_margins_ppm"].values()) > h["limit"] or not oracle.in_bounds(h["plant"]["lo"], h["plant"]["hi"], held):
+        return False
+    for e in ledger["entries"]:
+        if e["held"] != held or e["budget_before"] != budget:
+            return False
+        if e["verdict"] == "ok":
+            held, budget = e["proposed"], e["budget_after"]
+        elif e["budget_after"] != budget:
+            return False
+    return held == genes(ledger["final_genome"]) and budget == ledger["final_budget"]
+
+
 def summary(ledger: dict) -> dict:
     ok = [e for e in ledger["entries"] if e["verdict"] == "ok"]
     refused: dict[str, int] = {}
@@ -199,5 +225,6 @@ def summary(ledger: dict) -> dict:
         "worst_margin_ever_admitted_ppm": worst, "every_admitted_state_within_limit": worst <= LIMIT,
         "start_genome": ledger["head"]["start_genome"], "final_genome": ledger["final_genome"],
         "largest_step_scale_ppm": max([e.get("step_ppm", 0) for e in ledger["entries"]], default=0),
-        "chain_intact": check_chain(ledger), "final_hash": ledger["final_hash"],
+        "chain_intact": check_chain(ledger), "entries_follow_from_one_another": check_continuity(ledger),
+        "final_hash": ledger["final_hash"],
     }
