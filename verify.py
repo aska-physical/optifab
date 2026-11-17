@@ -21,6 +21,7 @@ import copy
 import hashlib
 import json
 import math
+import random
 import re
 import struct
 import subprocess
@@ -35,6 +36,9 @@ ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
 CERT_PATH = ROOT / "results" / "certificate.json"
 LEDGER_PATH = ROOT / "results" / "ledger.json"
+# Recorded runs of outside proposers: certificate key -> (run file, ledger file), both in results/.
+RECORDED_RUNS = {"recorded_proposer": ("model_run.json", "model_ledger.json"),
+                 "recorded_proposer_given_lessons": ("model_run_2.json", "model_ledger_2.json")}
 FORMAL_PATH = ROOT / "results" / "formal.json"
 FORMAL_DIR = ROOT / "formal"
 FORMAL_SOURCES = ["PlantGate.lean", "PlantGate/Spec.lean", "PlantGate/Proofs.lean", "Main.lean", "comparator.json",
@@ -751,6 +755,49 @@ def loop_plant(inp: dict, env: dict, margins: list[dict]) -> dict:
     }
 
 
+def network_first_look(inp: dict, env: dict, plant: dict) -> dict:
+    """What a site does to one campus's load floor, and what that means for a network of two.
+
+    Assumption A-4, made here: at any recooling temperature the sorption chiller reaches the same share of
+    its reversible COP as at the design point (58 C drive, 18 C chilled water, 30 C recooling). The 30 C
+    is the design value proposed in aska-physical/funi-frame#4, not a certified one."""
+    pins, ml, sl = inp["pins"], env["minimum_load"], env["second_law"]
+    cop = pin_value(pins, "ff.cop_ads", "cop_ads")
+    t_drive, t_chw = sl["T_drive_C"], sl["T_chilled_C"][1]
+    share = cop / cop_tri_thermal(t_drive, 30.0, t_chw)
+    alpha, q_fix = ml["liquid_capture_fraction"], ml["envelope_gain_MW"] + ml["other_overhead_MW"]
+    nameplate = plant["p_it_w"] / 1e6
+
+    def site(t_recool: float) -> dict:
+        c = share * cop_tri_thermal(t_drive, t_recool, t_chw)
+        gain = (1.0 + c) * alpha - 1.0
+        floor = q_fix / gain if gain > 0 else math.inf
+        return {"recooling_C": t_recool, "sorption_cop": round(c, 3),
+                "load_floor_MW": round(floor, 3) if floor <= nameplate else None,
+                "load_floor_share_of_nameplate": round(floor / nameplate, 3) if floor <= nameplate else None,
+                "cools_itself_at_some_load": floor <= nameplate}
+
+    sites = [site(t) for t in (30.0, 34.0, 36.0, 38.0, 40.0, 41.0)]
+    cool, warm = sites[0], sites[3]
+    slope = 1.0 + 1000.0 / plant["loop_cop_milli"]
+    return {
+        "assumption": "A-4: the chiller keeps its design share of the reversible COP at every recooling temperature",
+        "share_of_reversible_cop_at_design": round(share, 4),
+        "sites": sites,
+        "two_campuses": {
+            "recooling_C": [cool["recooling_C"], warm["recooling_C"]],
+            "load_floors_MW": [cool["load_floor_MW"], warm["load_floor_MW"]],
+            "network_load_floor_MW": round(cool["load_floor_MW"] + warm["load_floor_MW"], 3),
+            "network_load_floor_share_of_nameplate": round((cool["load_floor_MW"] + warm["load_floor_MW"]) / (2 * nameplate), 3),
+            "warm_floor_over_cool_floor": round(warm["load_floor_MW"] / cool["load_floor_MW"], 2),
+        },
+        # In the upstream plant model utility power is a straight line in IT load, and its slope does not
+        # depend on the site. So moving load between campuses changes no energy: placement is degenerate.
+        "utility_MW_per_MW_of_IT_load_at_every_site": round(slope, 4),
+        "placement_between_campuses_changes_energy_use": False,
+    }
+
+
 def formal_sources_hash() -> str:
     return sha256_bytes(b"".join((FORMAL_DIR / f).read_bytes() for f in FORMAL_SOURCES))
 
@@ -810,19 +857,113 @@ def improvement_loop(inp: dict, env: dict, margins: list[dict]) -> tuple[dict, d
     return ledger, report
 
 
-def formal_record(ledger: dict) -> dict:
-    """What the committed formal record must say about the current ledger and Lean sources."""
+def reference_optimum(plant: dict) -> dict:
+    """The best objective found by direct search, to measure a proposer against.
+
+    The objective reads only the two software genes, and falls as the scheduler's floor rises. So the
+    hardware genes are set to their most generous bounds, and for each of 41 shed levels the floors are
+    tried upwards until the design is within every limit."""
+    hardware = {"pcm_kwh": plant["hi"]["pcm_kwh"], "capture_ppm": plant["hi"]["capture_ppm"], "wall_u_mw": plant["lo"]["wall_u_mw"]}
+    best = None
+    for shed in range(plant["lo"]["shed_ppm"], plant["hi"]["shed_ppm"] + 1, 25000):
+        for floor in range(plant["lo"]["floor_kw"], plant["hi"]["floor_kw"] + 1):
+            design = dict(hardware, floor_kw=floor, shed_ppm=shed)
+            m = loop.model(design, plant)
+            if max(m["vector"]) <= loop.LIMIT:
+                if best is None or m["eta_ppm"] > best[0]:
+                    best = (m["eta_ppm"], design)
+                break
+    return {"objective_ppm": best[0], "design": best[1]}
+
+
+def held_states_ok(ledger: dict, plant: dict) -> dict:
+    """Walk a ledger and check every design that was taken up, without using the step function."""
+    ok = [e for e in ledger["entries"] if e["verdict"] == "ok"]
+    return {
+        "every_design_held_within_limit": all(max(e["cand_ppm"]) <= loop.LIMIT for e in ok),
+        "every_design_held_within_bounds": all(plant["lo"][k] <= e["proposed"][k] <= plant["hi"][k]
+                                               for e in ok for k in loop.oracle.GENES),
+        "objective_never_fell": all(e["eta_after_ppm"] >= e["eta_before_ppm"] for e in ok),
+        "changes_within_budget": len(ok) + ledger["final_budget"] == ledger["head"]["budget"] and ledger["final_budget"] >= 0,
+    }
+
+
+def adversary_run(plant: dict, proposals: int = 3000, seed: int = 20261117) -> tuple[dict, dict]:
+    """A proposer that tries to break the loop: designs out of bounds, past a limit and worse, then random ones."""
+    rng = random.Random(seed)
+    start = loop.genes(LOOP_START)
+    props = [{"set": {"capture_ppm": 2_000_000}}, {"set": {"pcm_kwh": -1}}, {"set": {"floor_kw": 0}},
+             {"set": {"floor_kw": 500}}, {"set": {"floor_kw": 620}}, {"set": {"pcm_kwh": 2400, "shed_ppm": 200_000}}]
+    for _ in range(proposals):
+        chosen = rng.sample(loop.oracle.GENES, rng.randint(1, 5))
+        if rng.random() < 0.5:  # anywhere, including just outside the bounds
+            props.append({"set": {g: rng.randint(plant["lo"][g] - 50, plant["hi"][g] + 50) for g in chosen}})
+        else:  # near the start, where the gate may say yes
+            props.append({"set": {g: start[g] + rng.randint(-3, 3) * loop.STEP[g] for g in chosen}})
+    ledger = loop.run_proposals(plant, start, LOOP_BUDGET, props)
+    verdicts: dict[str, int] = {}
+    for e in ledger["entries"]:
+        verdicts[e["verdict"]] = verdicts.get(e["verdict"], 0) + 1
+    report = {"proposals": len(props), "seed": seed, "verdicts": dict(sorted(verdicts.items())),
+              "first_six_verdicts": [e["verdict"] for e in ledger["entries"][:6]],
+              "taken_up": verdicts.get("ok", 0), "budget": LOOP_BUDGET, "budget_left": ledger["final_budget"],
+              "eta_start_ppm": ledger["head"]["start_eta_ppm"], "eta_final_ppm": ledger["final_eta_ppm"],
+              **held_states_ok(ledger, plant), "chain_intact": loop.check_chain(ledger), "final_hash": ledger["final_hash"]}
+    return ledger, report
+
+
+def proposer_run(plant: dict, seeded: dict, run_file: str) -> tuple[dict | None, dict]:
+    """Replay the recorded run of an outside proposer and compare it with the seeded search."""
+    if not (ROOT / "results" / run_file).exists():
+        return None, {"present": False}
+    run = read_json(ROOT / "results" / run_file)
+    ledger = loop.run_proposals(plant, run["start"], run["budget"], run["proposals"])
+    s = loop.summary(ledger)
+    best = reference_optimum(plant)
+    gain = lambda eta: round((eta - s["eta_start_ppm"]) / (best["objective_ppm"] - s["eta_start_ppm"]), 4)
+    edited = copy.deepcopy(run["proposals"])
+    for prop in edited:  # change the first proposal that was taken up by one unit
+        gene = next(iter(prop["set"]))
+        prop["set"][gene] += 1
+        break
+    report = {
+        "present": True, "proposer": run["proposer"], "run_file": f"results/{run_file}",
+        **({"lessons_file": run["lessons_file"]} if "lessons_file" in run else {}),
+        "turns_allowed": run["turns"], "proposals": len(run["proposals"]),
+        "every_proposal_has_a_reason": all(p.get("why", "").strip() for p in run["proposals"]),
+        **{k: s[k] for k in ("admitted", "refused", "admitted_hardware_changes", "admitted_software_changes",
+                             "admitted_changes_to_both_at_once", "budget_start", "budget_left", "eta_start_ppm",
+                             "eta_final_ppm", "worst_margin_ever_admitted_ppm", "final_genome", "chain_intact", "final_hash")},
+        **held_states_ok(ledger, plant),
+        "final_margins_ppm": ledger["final_margins_ppm"],
+        "best_objective_found_by_direct_search": best,
+        "share_of_the_possible_gain_reached": gain(s["eta_final_ppm"]),
+        "against_the_seeded_search": {
+            "seeded": {"proposals": seeded["decisions"], "changes": seeded["admitted"], "eta_final_ppm": seeded["eta_final_ppm"],
+                       "share_of_the_possible_gain_reached": gain(seeded["eta_final_ppm"])},
+            "recorded": {"proposals": len(run["proposals"]), "changes": s["admitted"], "eta_final_ppm": s["eta_final_ppm"],
+                         "share_of_the_possible_gain_reached": gain(s["eta_final_ppm"])},
+        },
+        "edited_proposal_changes_the_ledger":
+            loop.run_proposals(plant, run["start"], run["budget"], edited)["final_hash"] != ledger["final_hash"],
+    }
+    return ledger, report
+
+
+def formal_record(ledgers: dict) -> dict:
+    """What the committed formal record must say about the current ledgers and Lean sources."""
     if not FORMAL_PATH.exists():
         return {"present": False}
     rec = read_json(FORMAL_PATH)
     return {"present": True, "lean": rec["lean"], "theorems": rec["theorems"], "comparator": rec["comparator"],
             "replay": rec["replay"], "differential_tests": rec["differential_tests"], "bar": rec["bar"],
             "matches_current_lean_sources": rec["sources_sha256"] == formal_sources_hash(),
-            "matches_current_ledger": rec["ledger_hash"] == ledger["final_hash"]}
+            "matches_current_ledgers": rec.get("ledger_hashes") == {k: l["final_hash"] for k, l in ledgers.items()},
+            "matches_current_ledger": rec.get("ledger_hashes", {}).get("seeded_search") == ledgers["seeded_search"]["final_hash"]}
 
 
-def run_formal(ledger: dict) -> int:
-    """Rebuild the proofs, run the comparator and the differential tests, and replay the ledger in Lean."""
+def run_formal(ledgers: dict) -> int:
+    """Rebuild the proofs, run the comparator and the differential tests, and replay every ledger in Lean."""
     def sh(cmd, **kw):
         return subprocess.run(cmd, cwd=FORMAL_DIR, capture_output=True, text=True, **kw)
 
@@ -836,9 +977,14 @@ def run_formal(ledger: dict) -> int:
     tests = sh([sys.executable, "tests/run_tests.py"])
     results = (FORMAL_DIR / "tests" / "TEST-RESULTS.md").read_text(encoding="utf-8")
     field = lambda name: re.search(rf"^- {name}: (.+)$", results, flags=re.M).group(1)
-    lines = loop.replay_lines(ledger)
-    out = sh([str(FORMAL_DIR / ".lake" / "build" / "bin" / "plantgate")], input="\n".join(lines) + "\n").stdout.split("\n")
-    mismatches = [i for i, (want, got) in enumerate(zip(loop.replay_expected(ledger), out)) if got != want]
+    replay, mismatches = {}, 0
+    for name, ledger in ledgers.items():
+        lines = loop.replay_lines(ledger)
+        out = sh([str(FORMAL_DIR / ".lake" / "build" / "bin" / "plantgate")], input="\n".join(lines) + "\n").stdout.split("\n")
+        bad = sum(1 for want, got in zip(loop.replay_expected(ledger), out) if got != want) + max(0, len(lines) - len(out))
+        replay[name] = {"decisions": len(lines), "mismatches": bad}
+        mismatches += bad
+    decisions = sum(r["decisions"] for r in replay.values())
     lean = sh(["lake", "env", "lean", "--version"]).stdout.strip()
     record = {
         "schema": "optifab-formal/1", "lean": lean,
@@ -846,16 +992,16 @@ def run_formal(ledger: dict) -> int:
         "comparator": {"command": "lake comparator --paranoid", "accepted": accepted, "kernels": kernels},
         "differential_tests": {"inputs": int(field("Inputs")), "seed": int(field("Seed")), "failures": int(field("Failures")),
                                "passed": tests.returncode == 0},
-        "replay": {"decisions": len(lines), "mismatches": len(mismatches)},
+        "replay": {"decisions": decisions, "mismatches": mismatches, "by_ledger": replay},
         "bar": "Proven Commons bar check: items 2 to 6 pass; item 1 is open (no reviewer has approved the specification). See formal/BAR-REPORT.md.",
-        "sources_sha256": formal_sources_hash(), "ledger_hash": ledger["final_hash"],
+        "sources_sha256": formal_sources_hash(), "ledger_hashes": {k: l["final_hash"] for k, l in ledgers.items()},
     }
     ok = accepted and tests.returncode == 0 and not mismatches and int(field("Failures")) == 0
     if ok:
         FORMAL_PATH.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"[FORMAL] comparator {'accepts' if accepted else 'REJECTS'} {len(record['theorems'])} theorems under {len(kernels)} kernels; "
           f"{record['differential_tests']['inputs']} differential tests, {record['differential_tests']['failures']} failures; "
-          f"ledger replay {len(lines)} decisions, {len(mismatches)} mismatches")
+          f"ledger replay {decisions} decisions, {mismatches} mismatches")
     return 0 if ok else 1
 
 
@@ -996,7 +1142,8 @@ def _rejects(fn) -> bool:
 
 
 def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, rank: dict, max_depth: int,
-                       timing: dict, frames: dict, ledger: dict, evolution: dict, formal: dict) -> dict:
+                       timing: dict, frames: dict, ledger: dict, evolution: dict, formal: dict,
+                       adversary: dict, recorded_runs: dict, network: dict) -> dict:
     pins, graph, sources = inp["pins"], inp["graph"], inp["sources"]
     sub, sl, ml = env["substation"], env["second_law"], env["minimum_load"]
     cop = pin_value(pins, "ff.cop_ads", "cop_ads")
@@ -1121,13 +1268,30 @@ def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, 
         "must_fail_24_formal_record_is_stale_or_missing":
             formal.get("present", False) and formal["matches_current_lean_sources"] and formal["matches_current_ledger"]
             and formal["comparator"]["accepted"] and formal["replay"]["mismatches"] == 0
-            and formal["replay"]["decisions"] == evolution["decisions"],
+            and formal["matches_current_ledgers"]
+            and formal["replay"]["by_ledger"]["seeded_search"]["decisions"] == evolution["decisions"],
+        "must_fail_25_adversary_moves_the_design_out_of_its_envelope":
+            adversary["first_six_verdicts"] == ["bounds", "bounds", "distance", "distance", "worse", "distance"]
+            and adversary["taken_up"] > 0 and adversary["every_design_held_within_limit"]
+            and adversary["every_design_held_within_bounds"] and adversary["objective_never_fell"]
+            and adversary["changes_within_budget"] and adversary["chain_intact"],
+        "must_fail_26_recorded_run_of_an_outside_proposer_breaks_a_rule_or_can_be_edited_unseen":
+            recorded_runs["recorded_proposer"]["present"] and all(
+                r["every_proposal_has_a_reason"] and r["chain_intact"] and r["every_design_held_within_limit"]
+                and r["every_design_held_within_bounds"] and r["objective_never_fell"] and r["changes_within_budget"]
+                and r["proposals"] <= r["turns_allowed"] and r["edited_proposal_changes_the_ledger"]
+                for r in recorded_runs.values() if r["present"]),
+        "must_fail_27_warm_site_campus_counted_with_the_design_load_floor":
+            abs(network["sites"][0]["load_floor_MW"] - ml["P_min_envelope_plus_overhead_MW"]) < 0.001
+            and network["two_campuses"]["warm_floor_over_cool_floor"] > 2.0
+            and not network["sites"][-1]["cools_itself_at_some_load"]
+            and network["sites"][-1]["recooling_C"] < sl["max_recooling_C_at_chilled_18C"],
     }
     return controls
 
 
 # --------------------------------------------------------------------------- certificate
-def build_certificate(with_ledger: bool = False):
+def build_certificate(with_ledger: bool = False, check: bool = True):
     inp = load_inputs()
     pins = inp["pins"]
     rank = pins["f0.evidence_rank"]["value"]
@@ -1147,8 +1311,32 @@ def build_certificate(with_ledger: bool = False):
     frames = plant_frame_checks(inp, margins, radius["plant_radius"], env)
     unit = check_unit(inp["unit"], inp["graph"])
     ledger, evolution = improvement_loop(inp, env, margins)
-    formal = formal_record(ledger)
-    controls = must_fail_controls(inp, env, margins, radius, rank, max_depth, timing, frames, ledger, evolution, formal)
+    plant = loop_plant(inp, env, margins)
+    adversary_ledger, adversary = adversary_run(plant)
+    ledgers = {"seeded_search": ledger, "adversary": adversary_ledger}
+    recorded_runs = {}
+    for key, (run_file, _) in RECORDED_RUNS.items():
+        run_ledger, recorded_runs[key] = proposer_run(plant, evolution, run_file)
+        if run_ledger is not None:
+            ledgers[key] = run_ledger
+    recorded = recorded_runs["recorded_proposer"]
+    second = recorded_runs["recorded_proposer_given_lessons"]
+    if second["present"]:  # what the lessons of the first run were worth to the second
+        first_reached = lambda r, target: next((i + 1 for i, e in enumerate(ledgers[r]["entries"])
+                                                if e["verdict"] == "ok" and e["eta_after_ppm"] >= target), None)
+        target = min(recorded["eta_final_ppm"], second["eta_final_ppm"])
+        second["against_the_first_run"] = {
+            "objective_both_runs_reached_ppm": target,
+            "proposals_needed_first_run": first_reached("recorded_proposer", target),
+            "proposals_needed_with_lessons": first_reached("recorded_proposer_given_lessons", target),
+            "refused_first_run": sum(recorded["refused"].values()), "refused_with_lessons": sum(second["refused"].values()),
+            "eta_final_first_run_ppm": recorded["eta_final_ppm"], "eta_final_with_lessons_ppm": second["eta_final_ppm"],
+            "lessons_file_sha256": sha256_bytes((ROOT / second["lessons_file"]).read_bytes()),
+        }
+    formal = formal_record(ledgers)
+    network = network_first_look(inp, env, plant)
+    controls = must_fail_controls(inp, env, margins, radius, rank, max_depth, timing, frames, ledger, evolution, formal,
+                                  adversary, recorded_runs, network)
 
     assert env["pue_reproduction"]["liquid_plus_air_equals_it_load"] and env["pue_reproduction"]["matches_certificate"]
     assert not env["second_law"]["certificate_has_a_recooling_field"], "funi-frame now carries a recooling field: revisit finding 2"
@@ -1160,7 +1348,7 @@ def build_certificate(with_ledger: bool = False):
     assert graph["aska_physical_to_moissanite_links_before"] == 0 and graph["aska_physical_to_moissanite_links_added"] >= 1
     assert frames["matches_weft_frame_layout"] and frames["gate_from_frame"]["design point"] == "ok"
     assert not unit["loop_closed"], "the loop is reported closed; check data/unit.json before believing it"
-    assert all(controls.values()), [k for k, v in controls.items() if not v]
+    assert not check or all(controls.values()), [k for k, v in controls.items() if not v]
 
     overhead_cut = (ts["PUE_conventional"] - ts["PUE_funi_frame"]) / (ts["PUE_conventional"] - 1.0) * 100.0
     data_files = ["pins.json", "graph.json", "sources.json", "unit.json", "upstream/MANIFEST.json"]
@@ -1186,6 +1374,9 @@ def build_certificate(with_ledger: bool = False):
             "funi_frame_evidence": "claimed",
         },
         "improvement_loop": evolution,
+        "network_first_look": network,
+        "adversarial_proposer": adversary,
+        **recorded_runs,
         "formal": formal,
         "loop_timing": timing,
         "plant_frame": frames,
@@ -1194,7 +1385,7 @@ def build_certificate(with_ledger: bool = False):
         "must_fail_controls": controls,
         "controls_passed": f"{sum(controls.values())}/{len(controls)}",
     }
-    return (cert, ledger) if with_ledger else cert
+    return (cert, ledgers) if with_ledger else cert
 
 
 # --------------------------------------------------------------------------- upstream re-check
@@ -1306,21 +1497,28 @@ def main() -> int:
         if status or args.repin:
             return status
     if args.formal:
-        inp = load_inputs()
-        env, margins = plant_envelope(inp), margin_vector(inp)
-        if run_formal(improvement_loop(inp, env, margins)[0]):
+        if run_formal(build_certificate(with_ledger=True, check=False)[1]):
             return 1
-    cert, ledger = build_certificate(with_ledger=True)
+    cert, ledgers = build_certificate(with_ledger=True)
+    ledger = ledgers["seeded_search"]
     if args.write:
         CERT_PATH.parent.mkdir(parents=True, exist_ok=True)
         CERT_PATH.write_text(json.dumps(cert, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         LEDGER_PATH.write_text(json.dumps(ledger, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+        for key, (_, ledger_file) in RECORDED_RUNS.items():
+            if key in ledgers:
+                (ROOT / "results" / ledger_file).write_text(json.dumps(ledgers[key], indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     if not CERT_PATH.exists() or read_json(CERT_PATH) != cert:
         print("ERROR: results/certificate.json does not match verify.py. Run with --write after a deliberate change.", file=sys.stderr)
         return 1
     if not LEDGER_PATH.exists() or read_json(LEDGER_PATH) != ledger:
         print("ERROR: results/ledger.json does not match the loop. Run with --write after a deliberate change.", file=sys.stderr)
         return 1
+    for key, (run_file, ledger_file) in RECORDED_RUNS.items():
+        path = ROOT / "results" / ledger_file
+        if key in ledgers and (not path.exists() or read_json(path) != ledgers[key]):
+            print(f"ERROR: results/{ledger_file} does not match results/{run_file}. Run with --write.", file=sys.stderr)
+            return 1
     g, m, p = cert["graph"], cert["margins"], cert["plant"]
     print(f"[PASS] optifab v{VERSION}: {cert['controls_passed']} controls, "
           f"Weft vectors {cert['gate']['weft_conformance']['passed']}/{cert['gate']['weft_conformance']['weight_update_vectors']}, "
@@ -1330,7 +1528,9 @@ def main() -> int:
           f"recooling limit {p['second_law']['max_recooling_C_at_chilled_18C']} C, "
           f"lineage depth {g['optifab_lineage_depth']} of {g['lineage_depth_bound']}, "
           f"loop {cert['improvement_loop']['admitted']} changes admitted of {cert['improvement_loop']['decisions']} proposed, "
-          f"Lean replay {cert['formal']['replay']['mismatches']} mismatches, "
+          f"recorded proposer {cert['recorded_proposer']['admitted']} of {cert['recorded_proposer']['proposals']}, "
+          f"adversary held to the envelope over {cert['adversarial_proposer']['proposals']} proposals, "
+          f"Lean replay {cert['formal']['replay']['decisions']} decisions {cert['formal']['replay']['mismatches']} mismatches, "
           f"unit {cert['unit']['repositories_placed']} repositories placed, "
           f"{cert['unit']['loop_interfaces_by_status'].get('checked', 0)} of {cert['unit']['loop_interfaces']} interfaces checked")
     return 0

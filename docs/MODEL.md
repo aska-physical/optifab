@@ -332,9 +332,27 @@ margins in parts per million of their limit, and proves eight theorems about it.
   the limit and the budget is not negative.
 - `run_bounded`: the number of admitted changes plus the budget left never exceeds the budget at the start.
 
-`lake comparator --paranoid` accepts all eight under six kernels with the standard axioms only. A Python copy
-of the gate agrees with the Lean executable on 300,000 generated inputs. The Proven Commons bar check reports
-items 2 to 6 as passing ([formal/BAR-REPORT.md](../formal/BAR-REPORT.md)).
+Those eight take the margins as given. Since v0.3.0 the plant model of section 12 is in the same Lean file,
+as exact integer arithmetic, with the bounds on each gene, the objective and the step that takes a design up.
+Six more theorems are about designs, so the margins are computed inside the proved code:
+
+- `step_complete`: a design within the bounds and the headroom that does not lower the objective is taken up.
+- `loop_safe`, `loop_in_bounds`, `loop_bounded`: after any list of proposed designs, the margins of the design
+  held are within the limit, its genes are within their bounds, and the changes are within the budget.
+- `loop_never_worse`: after any list of proposed designs, the objective is at least what it was at the start.
+- `loop_keeps_physics`: with the limit at 1,000,000 ppm, the design held always satisfies three exact
+  inequalities. The drive heat needed is at most the heat captured. The fixed heat load is at most the cooling
+  gained at the scheduler's floor. The heat of one outage is at most what the store holds. Rounding plays no
+  part in them.
+
+`lake comparator --paranoid` accepts all fourteen under six kernels with the standard axioms only. A Python
+copy of the gate, the model and the step agrees with the Lean executable on 400,000 generated inputs: 300,000
+gate decisions and 100,000 proposed designs. The Proven Commons bar check reports items 2 to 6 as passing
+([formal/BAR-REPORT.md](../formal/BAR-REPORT.md)).
+
+What the six do not say: that the model describes a real plant. Its constants are pinned from certificates
+that are claimed and not measured, eleven of its fourteen margins are carried as constants, and the bounds and
+the scenario are declared by a person.
 
 In the loop the radius is the headroom of the baseline: the smallest distance from any margin to its limit.
 Section 5's lemma, that a move within the headroom passes no limit, is one of the eight
@@ -342,8 +360,9 @@ Section 5's lemma, that a move within the headroom passes no limit, is one of th
 
 ## 12. The improvement loop
 
-**VERIFIED** on a model (deterministic, replayed in Lean). The plant model, the objective and the scenario are
-choices made in `loop.py`. The figures illustrate the mechanism and predict nothing.
+**VERIFIED** on a model (deterministic, replayed in Lean). Its safety, its bound and the fact that it only
+improves are **machine-checked** (section 11). The plant model, the objective and the scenario are choices.
+The figures illustrate the mechanism and predict nothing.
 
 A genome holds three hardware genes (thermal store in kWh_th, liquid capture fraction, wall U-value), two
 software genes (the scheduler's load floor, the share of load shed in a cooling outage) and the proposer's own
@@ -354,8 +373,9 @@ outages of 20 minutes and 2,000 hours at 3% demand.
 
 Each generation the proposer tries six single-gene changes. On even generations they are software changes,
 scored by the objective. On odd generations they are hardware changes, scored by the headroom they open. The
-best goes to the exact gate with a cost of one unit against a budget of 64. An admitted candidate becomes the
-baseline. The step scale doubles after an admission and halves after a refusal.
+best goes to the step function with a cost of one unit against a budget of 64. The step takes it up if it is
+within the bounds, passes the exact gate and does not lower the objective. A design that is taken up becomes
+the one held. The step scale doubles after an admission and halves after a refusal.
 
 | | Run | Proposer with no reserve | Budget of 3 | Start on a limit |
 |---|---|---|---|---|
@@ -366,8 +386,9 @@ baseline. The step scale doubles after an admission and halves after a refusal.
 
 The start is 0.914228, except in the last column, which starts at 0.914230 and does not move. The run ended
 with budget to spare because every hardware gene had reached the edge of
-its search range. `python3 verify.py --formal` replays all 50 decisions through the Lean executable: no
-mismatch. The floating-point gate of section 6 gives the same verdict on all 50.
+its search range. The ledger records both designs of every decision. `python3 verify.py --formal` gives the
+two designs to the Lean executable, which works out the margins, the objective, the verdict and the budget
+again: no mismatch on any of the 50. The floating-point gate of section 6 gives the same verdict on all 50.
 
 [VISION.md](VISION.md) discusses what the loop shows and how far it is from the system it stands in for.
 
