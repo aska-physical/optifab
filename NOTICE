@@ -1,5 +1,21 @@
 optifab
-aska-physical
+Copyright 2026 Aska Physical and the optifab contributors.
+https://github.com/aska-physical/optifab
+
+This repository is licensed by content type. Noncommercial use is permitted under both licences.
+Commercial use needs the written permission of the copyright holder.
+
+  * Source code (verify.py, tools/, formal/, the workflow files) is licensed under the PolyForm
+    Noncommercial License 1.0.0 (LICENSE).
+    Required Notice: Copyright 2026 Aska Physical and the optifab contributors
+    (https://github.com/aska-physical/optifab)
+
+  * Text and data (README.md, HANDOFF.md, CHANGELOG.md, docs/, results/, and the files under data/
+    other than data/upstream/) are licensed under the Creative Commons Attribution-NonCommercial 4.0
+    International License (LICENSE-docs).
+    Attribution: "optifab, Aska Physical, https://github.com/aska-physical/optifab".
+
+The files below belong to others and keep their own terms.
 
 This repository redistributes two third-party files, unmodified:
 

@@ -166,8 +166,10 @@ These are proposed issues. None has been filed. Items 1 to 4 close the open plac
 
 ## 6. Decisions for a person
 
-- **Licence.** optifab has none, like its aska-physical siblings. Weft's vectors are redistributed under
-  Apache-2.0 with a NOTICE.
+- **Licence.** Added at the owner's request: PolyForm Noncommercial 1.0.0 for code and CC BY-NC 4.0 for text
+  and data, so noncommercial use is open and commercial use is reserved. The owner should confirm the
+  copyright line in NOTICE ("Aska Physical and the optifab contributors"). The sibling aska-physical
+  repositories still have no licence. Weft's files are redistributed under Apache-2.0.
 - **Whether funi-frame should adopt notes 1 to 3.** They change published figures.
 - **Whether the plant gate is a direction worth pursuing.** It is a proposal with a conformance test, nothing
   more.

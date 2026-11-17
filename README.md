@@ -108,6 +108,14 @@ tools/                    fetch_upstream.py and render_map.py
 HANDOFF.md                what was learned, what failed, and what to do next
 ```
 
+## Licence
+
+Noncommercial use is allowed. Commercial use needs the owner's written permission.
+
+- Code: [PolyForm Noncommercial License 1.0.0](LICENSE).
+- Text and data: [Creative Commons Attribution-NonCommercial 4.0 International](LICENSE-docs).
+- Files from other projects keep their own licences. [NOTICE](NOTICE) lists them.
+
 ## Credit and disclosure
 
 - The certificates, designs and theorems used here belong to the repositories named above and their authors.
