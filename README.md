@@ -2,7 +2,7 @@
 
 Modelling the ideal datacenter.
 
-**Status: v0.1.0, claimed.** An AI agent wrote this version and no person has reviewed it. Nothing in it is
+**Status: v0.2.0, claimed.** An AI agent wrote this version and no person has reviewed it. Nothing in it is
 measured. Every number is derived from the certificates of other repositories, which are themselves models.
 
 optifab is the design of one physical structure that holds the work of four organisations, so that the digital
@@ -10,7 +10,8 @@ and the physical infrastructure are a single unit. It treats a data-centre campu
 mathematics under its structure to the rule that governs the software running in it. The idea of one structure
 comes from the Terrafab documents named in [issue 1](https://github.com/aska-physical/optifab/issues/1);
 [docs/STRUCTURE.md](docs/STRUCTURE.md) gives every repository its place in the structure and shows which parts
-of the loop are checked. The work it joins:
+of the loop are checked. [docs/VISION.md](docs/VISION.md) says how close this is to a formally verified system
+that improves its own hardware and software, part by part. The work it joins:
 
 - **aska-physical** designed the building, its thermal plant and its sensors
   ([funi-frame](https://github.com/aska-physical/funi-frame),
@@ -43,7 +44,10 @@ Foundation-0 standard: PROVEN (written proof, checked symbolically), VERIFIED (f
 | 9 | **The physical stack is unreviewed.** Of its 13 repositories, 10 are claimed, 1 is a preprint and 2 claim no result. None is peer reviewed, replicated, deployed or formally verified. | VERIFIED. Levels for aska-physical repositories were assigned here. |
 | 10 | **The contract fits in one 64-byte frame.** The 12 margins, the budget, the load, the recooling temperature and the time fill the 16 floats of the frame Weft already uses for telemetry. The design point as certified cannot fill the recooling slot. | VERIFIED. The slot meanings are a proposal. |
 | 11 | **The Terrafab latency figures hold in direction, and this campus does not need them.** A 15 ms loop can counter none of the four plant vibration tones within its cycle; a 0.5 ms loop can counter all four. Passive isolation already holds rack vibration at 17.9% of its limit, and every term of the contract moves over seconds to minutes. | PROVEN (identity), VERIFIED |
-| 12 | **Every repository has a place, and the loop is open.** 32 of 41 repositories are placed in the structure and 9 are listed as having no place. Of the 9 interfaces that would close the loop between structure and intelligence, 3 are checked. | VERIFIED (the accounting). Statuses were assigned here. |
+| 12 | **Every repository has a place, and the loop is open.** 32 of 41 repositories are placed in the structure and 9 are listed as having no place. Of the 10 interfaces that would close the loop between structure and intelligence, 4 are checked. | VERIFIED (the accounting). Statuses were assigned here. |
+| 13 | **The gate and the loop built on it are proved in Lean.** Eight theorems about an exact integer gate, accepted by `lake comparator --paranoid` under six kernels. Whatever is proposed, no margin passes its limit and the budget is never overdrawn; the number of changes is at most the budget a person set. The Proven Commons bar check passes items 2 to 6. It is not verified: no reviewer has approved the specification. | Machine-checked proof. Bar item 1 open. |
+| 14 | **Hardware and software improve together under that gate.** A loop proposed 50 changes to three hardware and two software parameters. 45 were admitted (30 hardware, 15 software) and 5 refused. The objective rose from 0.914228 to 0.919009 and never fell, and every decision was replayed in Lean with no mismatch. It runs on a model: no sensor, load or machine is involved. | VERIFIED on a model. The scenario is a choice, so the figures are illustrations. |
+| 15 | **A design that sits exactly on a limit cannot change.** Started with one margin at its limit, the loop admitted nothing. A proposer with no reserve had 126 of 186 proposals refused and finished lower. Headroom is what makes change possible. | VERIFIED on a model |
 
 Findings 1 and 2 concern funi-frame and are written up for its maintainers in [HANDOFF.md](HANDOFF.md).
 
@@ -70,8 +74,19 @@ pip install sympy
 python3 verify.py
 ```
 
-This recomputes every figure from the pinned inputs, runs 19 must-fail controls, and compares the result with
-[results/certificate.json](results/certificate.json). It reads no network.
+This recomputes every figure from the pinned inputs, runs the improvement loop, runs 24 must-fail controls, and
+compares the result with [results/certificate.json](results/certificate.json) and
+[results/ledger.json](results/ledger.json). It reads no network and needs no Lean. It checks that the committed
+formal record matches the current Lean sources and ledger.
+
+To rebuild the proofs and replay the ledger in Lean (needs Linux, [elan](https://github.com/leanprover/elan)
+and bubblewrap):
+
+```bash
+python3 verify.py --formal
+# [FORMAL] comparator accepts 8 theorems under 6 kernels; 300000 differential tests, 0 failures;
+#          ledger replay 50 decisions, 0 mismatches
+```
 
 To re-read every cited line from the source repositories:
 
@@ -87,20 +102,27 @@ python3 verify.py --upstream ../upstream
   certificate. The verifiers of funi-floors and venturi-collars were not re-run. Weft's gate module is run, as
   the oracle of the differential test.
 - Anything about more than one campus. A network of campuses is the next step, not this one.
-- That the gate is safe to put in control of a plant. It is a predicate with a conformance test, and it can
-  only refuse a step. Nothing here commands anything.
+- That the gate is safe to put in control of a plant. Its arithmetic is proved. The margins it is fed are not,
+  and it can only refuse a step. Nothing here commands anything.
+- That the loop's gains are real. Its plant model, objective and scenario are unproved choices.
 - Anything the Terrafab documents claim. They are the source of the idea and are not used as evidence.
 
 ## Layout
 
 ```
-verify.py                 the verifier: derivations, the gate, the frame, graph and unit checks, 19 must-fail controls
+verify.py                 the verifier: derivations, the gates, the frame, the loop, graph and unit checks, 24 must-fail controls
+loop.py                   the improvement loop: genome, plant model, proposer, ledger
+formal/                   the exact gate and the loop, proved in Lean, in the Proven Commons layout
 results/certificate.json  what verify.py must reproduce
+results/ledger.json       every decision of the loop, hash-chained
+results/formal.json       the record of the last formal run: comparator, differential tests, Lean replay
 data/upstream/            byte-exact copies of three certificates, Weft's vectors and Weft's gate (the test oracle)
 data/pins.json            every literal and line read from another repository
 data/graph.json           the cross-organisation map: repositories, links, citations
 data/unit.json            the structure: each element, where it sits, whose work it rests on, and its status
 data/sources.json         pinned commit and file hashes for each repository
+docs/VISION.md            how close this is to the vision, part by part
+docs/PROPOSALS.md         eight systems proposed for the open gaps
 docs/STRUCTURE.md         one structure: the unit, the loop, the plant frame, and the Terrafab claims one by one
 docs/MODEL.md             each result, its derivation and its assumptions
 docs/CONVERGENCE.md       the map as tables, generated from data/graph.json

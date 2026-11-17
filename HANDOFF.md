@@ -1,8 +1,9 @@
-# Handoff: aska-physical/optifab v0.1.0
+# Handoff: aska-physical/optifab v0.2.0
 
 Written under the group ethos: leave everything the next agent needs so nothing has to be derived twice.
 
-optifab v0.1.0 was prepared by an AI agent on 2026-11-17. It is claimed work. No person has reviewed it.
+optifab v0.1.0 and v0.2.0 were prepared by an AI agent on 2026-11-17. They are claimed work. No person has
+reviewed them.
 
 ## 1. What was learned and checked
 
@@ -10,7 +11,7 @@ The aim, stated by the owner and in [issue 1](https://github.com/aska-physical/o
 physical structure that holds all four organisations' work, with digital and physical infrastructure as a
 single unit. [docs/STRUCTURE.md](docs/STRUCTURE.md) is the design of that unit as far as it can be checked today.
 
-The twelve findings are in [README.md](README.md) and derived in [docs/MODEL.md](docs/MODEL.md). In one line each:
+The fifteen findings are in [README.md](README.md) and derived in [docs/MODEL.md](docs/MODEL.md). In one line each:
 
 1. The 3.06 MW of utility power that funi-frame's plant frees carries 2.85 to 2.96 MW of IT load, depending on
    how much of the overhead grows with load.
@@ -27,8 +28,16 @@ The twelve findings are in [README.md](README.md) and derived in [docs/MODEL.md]
 10. The contract's whole state fits the 64-byte frame Weft uses for telemetry.
 11. The Terrafab latency figures hold in direction for the plant's vibration tones, and the campus as designed
     does not need a fast loop.
-12. 32 of 41 repositories have a place in the structure. Of the 9 interfaces that would close the loop between
-    structure and intelligence, 3 are checked, and the loop is open in three places.
+12. 32 of 41 repositories have a place in the structure. Of the 10 interfaces that would close the loop between
+    structure and intelligence, 4 are checked, and the loop is open in three places.
+13. An exact integer gate and the loop built on it are proved in Lean (eight theorems, six kernels, standard
+    axioms). The Proven Commons bar check passes items 2 to 6. Item 1, a reviewer's approval, is open.
+14. A loop changed three hardware and two software parameters together under that gate: 45 of 50 proposals
+    admitted, the objective up from 0.914228 to 0.919009, every decision replayed in Lean.
+15. A design that sits exactly on a limit cannot change under this gate, and a proposer with no reserve slows
+    itself.
+
+[docs/VISION.md](docs/VISION.md) sets these against the vision, part by part.
 
 ## 2. Negative findings. Do not re-derive.
 
@@ -72,9 +81,21 @@ The twelve findings are in [README.md](README.md) and derived in [docs/MODEL.md]
     inputs are process limits already in the certificates, such as the Fe-SMA activation energy in funi-floors
     (0.3227 against a cap of 0.5 kWh/m²).
 
+12. **The loop's proposer is not an intelligence, and its gains are not predictions.** It is a seeded search on
+    a three-parameter thermal model, scored on a scenario chosen here. What carries over is the mechanism and
+    the behaviours in finding 15, not the 0.5%.
+13. **Do not name the gate function `admit` in Lean.** `admit` is Lean's keyword for an unfinished proof, and
+    the Proven Commons checker rightly flags every use. The function is `gate`.
+14. **The comparator needs bubblewrap, and the bar check needs every definition a statement uses to be listed**
+    in `bar.toml`, constructors and projections included (`Verdict.ok`, `Outcome.verdict`, `Outcome.remaining`).
+
 ## 3. Notes for upstream maintainers
 
 These concern other repositories. Nothing was changed there except the profile fix in item 4.
+
+These three funi-frame notes are implemented in aska-physical/funi-frame#4 (draft). When it merges,
+optifab's verifier fails on purpose (must-fail control 1 and the recooling-field check), because findings 1 and
+2 will then be out of date: refresh the vendored certificate, run `--repin`, and restate them.
 
 1. **funi-frame, compute revenue.** `results/certificate.json` reports `freed_substation_power_MW` of 3.06 and
    `unlocked_annual_revenue_low_M_usd` of 76.62, the product of that power and $25M per MW-year
@@ -109,13 +130,17 @@ These concern other repositories. Nothing was changed there except the profile f
 
 ## 4. Artifacts
 
-- [verify.py](verify.py): the derivations, the gate and its differential test, the plant frame, the graph and
-  unit checks, 19 must-fail controls.
+- [verify.py](verify.py): the derivations, both gates, the plant frame, the loop, the graph and unit checks, 24
+  must-fail controls. `--formal` rebuilds the proofs and replays the ledger in Lean.
+- [loop.py](loop.py): the improvement loop. [formal/](formal/README.md): the Lean project.
+- [results/ledger.json](results/ledger.json) and [results/formal.json](results/formal.json): every decision of
+  the loop, and the record of the last formal run.
 - [results/certificate.json](results/certificate.json): the outputs `verify.py` must reproduce.
 - [data/](data/): vendored inputs with hashes, 48 pins, the graph, the unit, and the commit of each of 36
   repositories.
-- [docs/STRUCTURE.md](docs/STRUCTURE.md), [docs/MODEL.md](docs/MODEL.md) and
-  [docs/CONVERGENCE.md](docs/CONVERGENCE.md). The tables in the first and all of the third are generated.
+- [docs/VISION.md](docs/VISION.md), [docs/PROPOSALS.md](docs/PROPOSALS.md), [docs/STRUCTURE.md](docs/STRUCTURE.md),
+  [docs/MODEL.md](docs/MODEL.md) and [docs/CONVERGENCE.md](docs/CONVERGENCE.md). The tables in STRUCTURE.md and
+  all of CONVERGENCE.md are generated.
 - [tools/fetch_upstream.py](tools/fetch_upstream.py) and [tools/render_map.py](tools/render_map.py).
 
 To move an element of the unit forward, change its status in `data/unit.json`. `verify.py` refuses to report the
@@ -129,8 +154,13 @@ gone, which is the signal that an upstream claim changed.
 
 ## 5. Next-agent build queue
 
-These are proposed issues. None has been filed. Items 1 to 4 close the open places in the loop
-([docs/STRUCTURE.md](docs/STRUCTURE.md), interfaces L1, L2, L5 and L8).
+The larger pieces are written up as eight proposals in [docs/PROPOSALS.md](docs/PROPOSALS.md), each with an
+issue on GitHub. The list below is the working queue, and its first four items are proposals 1, 2 and 7.
+Items 1 to 4 close the open places in the loop ([docs/STRUCTURE.md](docs/STRUCTURE.md), interfaces L1, L2, L5
+and L8).
+
+To change the formal project: edit `formal/`, then run `python3 verify.py --formal --write`. Any change to a
+Lean source, the oracle or the ledger makes must-fail control 24 fail until the formal run is repeated.
 
 1. **Agree the plant frame with Weft (interface L2, element W1).** The 16 slots are defined and tested here.
    Weft's owners decide whether the frame shares their telemetry bus or travels as an abios line. Done when one
@@ -148,10 +178,10 @@ These are proposed issues. None has been filed. Items 1 to 4 close the open plac
 6. **A year at part load (optifab, with funi-frame issue 2).** Run an hourly utilisation trace against the load
    floor and the thermal budget. Report hours below the floor and the budget drawn. Share the trace with
    funi-frame's aquifer balance, which injects 84.3 GWh_th a year in one direction.
-7. **One Lean proof for both gates (optifab, Weft, Proven-Commons; element R2).** State the gate in Lean: the
-   budget rule and the lemma of section 5 of the model note. Check it against Weft's 15 vectors. This is Weft's
-   open Milestone I.3 and would be the first artifact shared by three of the organisations. The Proven-Commons
-   reviewer list is empty today, so no project can yet pass bar item 1.
+7. **Carry the proof over to Weft's floating-point gate (Weft, Proven-Commons; element R2).** The exact gate is
+   proved in `formal/`. What remains is Weft's open Milestone I.3: a statement relating its float gate to the
+   exact one, and a reviewer for the specification (proposal 5). The Proven-Commons reviewer list is empty
+   today, so no project can yet pass bar item 1.
 8. **A second verifier that shares no code (optifab).** The Foundation-0 physics rule asks for two. A different
    agent, or a different language, should recompute sections 1 to 5 of the model note from the same pins.
 9. **A network of campuses (optifab).** v0.1.0 models one. With N campuses, each with a load floor, a thermal
@@ -171,8 +201,10 @@ These are proposed issues. None has been filed. Items 1 to 4 close the open plac
   copyright line in NOTICE ("Aska Physical and the optifab contributors"). The sibling aska-physical
   repositories still have no licence. Weft's files are redistributed under Apache-2.0.
 - **Whether funi-frame should adopt notes 1 to 3.** They change published figures.
-- **Whether the plant gate is a direction worth pursuing.** It is a proposal with a conformance test, nothing
-  more.
+- **Whether the plant gate is a direction worth pursuing.** Its arithmetic is now proved, and it has been run
+  on a model. It has never seen a sensor or a machine.
+- **Who reviews `formal/SPEC.md`.** Until a person who did not write it approves it, nothing here may be
+  called verified.
 - **Sign-off.** Nothing here counts until a named person reviews it.
 
 ## 7. How this session worked
@@ -183,7 +215,8 @@ These are proposed issues. None has been filed. Items 1 to 4 close the open plac
   lines; every value used here was then re-read directly and is pinned.
 - Ran: funi-frame's `verify.py`, which reproduces its certificate (12/12 controls). optifab's own verifier,
   offline and against the clones.
-- Ran: Weft's `invariants.py`, as the oracle of the differential test.
+- Ran: Weft's `invariants.py`, as the oracle of the differential test. Lean 4.35.0, `lake comparator --paranoid`
+  and the Proven Commons bar checker (`bar/check.py` at mission `7b22e54`) on `formal/`.
 - Did not run: the verifiers of the other aska-physical repositories. Their certificates were read as data.
 - Reviewed: a second AI agent, given the code and not the conclusions, re-derived the results and tested the
   gate against Weft's. It found that the gate disagreed with Weft's at floating-point boundaries, that the

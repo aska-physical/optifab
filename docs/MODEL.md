@@ -319,6 +319,58 @@ The building does not need the fast loop. Its passive isolation holds rack vibra
 the contract's own timescales are long: the thermal budget lasts 900 s at full load, against which 15 ms is
 0.002%. The table is in [STRUCTURE.md](STRUCTURE.md).
 
+## 11. The exact gate and its proofs
+
+**Machine-checked proof** in Lean. Not verified in the Proven Commons sense: no reviewer has approved the
+specification.
+
+The floating-point gate of section 6 has boundary cases that depend on rounding. For a plant that is
+unnecessary: margins can be integers. [formal/](../formal/README.md) defines an exact gate over integers, with
+margins in parts per million of their limit, and proves eight theorems about it. The two about the loop:
+
+- `run_safe`: from a start within the limit, after any list of proposals every margin is still at or below
+  the limit and the budget is not negative.
+- `run_bounded`: the number of admitted changes plus the budget left never exceeds the budget at the start.
+
+`lake comparator --paranoid` accepts all eight under six kernels with the standard axioms only. A Python copy
+of the gate agrees with the Lean executable on 300,000 generated inputs. The Proven Commons bar check reports
+items 2 to 6 as passing ([formal/BAR-REPORT.md](../formal/BAR-REPORT.md)).
+
+In the loop the radius is the headroom of the baseline: the smallest distance from any margin to its limit.
+Section 5's lemma, that a move within the headroom passes no limit, is one of the eight
+(`accepted_stays_within`), and here it needs no assumption about the baseline.
+
+## 12. The improvement loop
+
+**VERIFIED** on a model (deterministic, replayed in Lean). The plant model, the objective and the scenario are
+choices made in `loop.py`. The figures illustrate the mechanism and predict nothing.
+
+A genome holds three hardware genes (thermal store in kWh_th, liquid capture fraction, wall U-value), two
+software genes (the scheduler's load floor, the share of load shed in a cooling outage) and the proposer's own
+step scale. The plant model turns a genome into 14 margins: ten certified upstream and held constant, the
+sensor margin of section 5, and three that move with the genes (sorption drive heat, load floor, outage
+ride-through). The objective is useful IT energy per unit of utility energy over a scenario year with 12
+outages of 20 minutes and 2,000 hours at 3% demand.
+
+Each generation the proposer tries six single-gene changes. On even generations they are software changes,
+scored by the objective. On odd generations they are hardware changes, scored by the headroom they open. The
+best goes to the exact gate with a cost of one unit against a budget of 64. An admitted candidate becomes the
+baseline. The step scale doubles after an admission and halves after a refusal.
+
+| | Run | Proposer with no reserve | Budget of 3 | Start on a limit |
+|---|---|---|---|---|
+| Proposals | 50 | 186 | 3 | 14 |
+| Admitted | 45 | 60 | 3 | 0 |
+| Refused by the gate | 5 | 126 | 0 | 14 |
+| Objective at the end | 0.919009 | 0.916009 | 0.914355 | 0.914230 |
+
+The start is 0.914228, except in the last column, which starts at 0.914230 and does not move. The run ended
+with budget to spare because every hardware gene had reached the edge of
+its search range. `python3 verify.py --formal` replays all 50 decisions through the Lean executable: no
+mismatch. The floating-point gate of section 6 gives the same verdict on all 50.
+
+[VISION.md](VISION.md) discusses what the loop shows and how far it is from the system it stands in for.
+
 ## Limits
 
 - No measurement of any kind. Every input is the output of another model.
@@ -329,6 +381,8 @@ the contract's own timescales are long: the thermal budget lasts 900 s at full l
 - Tested on Python 3.13 only. The certificate rounds every figure, which should absorb differences between
   maths libraries, but no other version has been tried.
 - One campus only. A network of campuses is not modelled.
-- The loop between structure and intelligence is open. Three of its nine interfaces are checked. No sensor is
+- The loop between structure and intelligence is open. Four of its ten interfaces are checked. No sensor is
   read, no load is shed and no machine is driven. See [STRUCTURE.md](STRUCTURE.md).
+- The improvement loop runs on a three-parameter thermal model with a seeded search as its proposer. See
+  [VISION.md](VISION.md) for what that does and does not show.
 - The load floor and the margin vector are steady-state. No transient is modelled.

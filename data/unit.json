@@ -220,13 +220,25 @@
     {
       "id": "R2",
       "organ": "Reflex",
-      "element": "A machine-checked proof of the gate",
+      "element": "A machine-checked proof of the gate and of the loop built on it",
       "where": "with the gate",
       "repos": [
+        "aska-physical/optifab",
         "Proven-Commons/mission"
       ],
-      "status": "missing",
-      "note": "Weft's Milestone I.3 is open, and the verified bar has no reviewers yet."
+      "status": "checked",
+      "note": "formal/ proves eight theorems in Lean about an exact integer gate. The comparator accepts them under six kernels and Proven Commons bar items 2 to 6 pass. Item 1 is open: no reviewer has approved the specification, so it is not verified. Weft's own floating-point gate has no proof yet."
+    },
+    {
+      "id": "R3",
+      "organ": "Reflex",
+      "element": "The loop that changes hardware and software together",
+      "where": "design office and scheduler",
+      "repos": [
+        "aska-physical/optifab"
+      ],
+      "status": "checked",
+      "note": "Runs on a model of the plant. Every decision is made by the exact gate, recorded in a hash-chained ledger and replayed in Lean. No sensor, load or machine is involved."
     },
     {
       "id": "M1",
@@ -340,7 +352,7 @@
         "Proven-Commons/mission"
       ],
       "status": "rule",
-      "note": "The target for elements R2 and W3."
+      "note": "The standard formal/ is built to, and the target for element W3."
     },
     {
       "id": "K6",
@@ -417,6 +429,13 @@
       "to": "the record",
       "status": "designed",
       "note": "Certificates and pins are checked. Signed records are not connected."
+    },
+    {
+      "id": "L10",
+      "from": "proposer",
+      "to": "gate and ledger",
+      "status": "checked",
+      "note": "The improvement loop: each proposed change to hardware or software is decided by the exact gate, logged and replayed in Lean. On a model only."
     }
   ],
   "interface_statuses": [

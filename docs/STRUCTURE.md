@@ -82,7 +82,8 @@ structure, where it sits, and whose work it rests on.
 | | Element | Where in the structure | Work it rests on | Status | Note |
 |---|---|---|---|---|---|
 | R1 | The gate | at each controller and in the scheduler | [weft](https://github.com/Moissanite-Labs/weft), [weft-corpus](https://github.com/Moissanite-Labs/weft-corpus) | checked | Weft's predicate, first written in the Terrafab documents as a fence for machines. It passes Weft's 15 vectors and runs here on plant numbers. |
-| R2 | A machine-checked proof of the gate | with the gate | [mission](https://github.com/Proven-Commons/mission) | missing | Weft's Milestone I.3 is open, and the verified bar has no reviewers yet. |
+| R2 | A machine-checked proof of the gate and of the loop built on it | with the gate | [optifab](https://github.com/aska-physical/optifab), [mission](https://github.com/Proven-Commons/mission) | checked | formal/ proves eight theorems in Lean about an exact integer gate. The comparator accepts them under six kernels and Proven Commons bar items 2 to 6 pass. Item 1 is open: no reviewer has approved the specification, so it is not verified. Weft's own floating-point gate has no proof yet. |
+| R3 | The loop that changes hardware and software together | design office and scheduler | [optifab](https://github.com/aska-physical/optifab) | checked | Runs on a model of the plant. Every decision is made by the exact gate, recorded in a hash-chained ledger and replayed in Lean. No sensor, load or machine is involved. |
 
 ### Mind
 
@@ -107,7 +108,7 @@ structure, where it sits, and whose work it rests on.
 | K2 | Signed commands and contributions | command channel | [synmerit](https://github.com/Moissanite-Labs/synmerit) | specified | Needed before any scheduler may command a plant. Weft's telemetry hash is unkeyed. |
 | K3 | Preferences are not permissions | operator interface | [ethos](https://github.com/Moissanite-Labs/ethos), [siliconcordat](https://github.com/Moissanite-Labs/siliconcordat) | specified | The gate can refuse a step. Only a person can authorise one. |
 | K4 | The evidence scale, and the rule that a person signs | every claim | [f0](https://github.com/Foundation-0/f0), [Foundation-0/.github](https://github.com/Foundation-0/.github) | rule | Used for every status in this repository. |
-| K5 | The bar for calling software verified | the gate and the parsers | [mission](https://github.com/Proven-Commons/mission) | rule | The target for elements R2 and W3. |
+| K5 | The bar for calling software verified | the gate and the parsers | [mission](https://github.com/Proven-Commons/mission) | rule | The standard formal/ is built to, and the target for element W3. |
 | K6 | The group ethos: capture the work and pass it on | every handoff | [aska-physical/.github](https://github.com/aska-physical/.github) | rule | The reason for HANDOFF.md. |
 
 Status words:
@@ -141,20 +142,22 @@ and the loads move the structure's margins, which are sensed again.
 | L7 | stores and structure | margins | checked | The margin vector from the certificates. It is static: no transient is modelled. |
 | L8 | gate | fabrication machines | idea | In the Terrafab documents only. |
 | L9 | every step | the record | designed | Certificates and pins are checked. Signed records are not connected. |
+| L10 | proposer | gate and ledger | checked | The improvement loop: each proposed change to hardware or software is decided by the exact gate, logged and replayed in Lean. On a model only. |
 <!-- loop:end -->
 
 ## How far it is
 
 <!-- count:begin -->
 - **Placed:** 32 of 41 repositories (7 from Foundation-0, 11 from Moissanite-Labs, 5 from Proven-Commons, 9 from aska-physical). 9 have no place and say why.
-- **Elements:** 29 (8 checked, 6 designed, 2 idea, 1 in_progress, 3 missing, 1 research, 3 rule, 2 specified, 3 tested_code).
-- **Loop:** 9 interfaces (3 checked, 2 designed, 1 idea, 2 missing, 1 proposed). The loop is open.
+- **Elements:** 30 (10 checked, 6 designed, 2 idea, 1 in_progress, 2 missing, 1 research, 3 rule, 2 specified, 3 tested_code).
+- **Loop:** 10 interfaces (4 checked, 2 designed, 1 idea, 2 missing, 1 proposed). The loop is open.
 - **Elements with nothing behind them:** N3, N4.
 <!-- count:end -->
 
 The loop is open in three places. Nothing reads a sensor into a frame. Nothing lets a scheduler shed or defer
 compute load, and neither Weft nor Exo measures the energy it uses. And no fabrication machine exists in any
-repository. The two elements with nothing behind them are the cheapest to supply, because both quantities
+repository. [PROPOSALS.md](PROPOSALS.md) has a system for each, and [VISION.md](VISION.md) says how far the
+whole is from a verified system that improves itself. The two elements with nothing behind them are the cheapest to supply, because both quantities
 already have a limit to be measured against: rack vibration (0.0005 g, certified) and recooling temperature
 (41.5 °C at best, derived here).
 
@@ -246,11 +249,11 @@ here.
 | Claim in the documents | Weft's audit | In this structure |
 |---|---|---|
 | Sensor-to-nozzle latency falls from 15 ms to under 0.5 ms | Asserted, not derived | Tried on the four plant tones above. The direction holds for tones. The campus as designed does not need it. |
-| With the gate header in place, "the physical machine cannot misbehave" | False. The header's gate does not keep its own invariant and bounds only abstract scalars | Weft repaired the gate and tests it. Here its inputs are physical. It is still only a predicate that can refuse a step. It is not a safety system. |
+| With the gate header in place, "the physical machine cannot misbehave" | False. The header's gate does not keep its own invariant and bounds only abstract scalars | Weft repaired the gate and tests it. Here its inputs are physical, and an exact version is proved in Lean to keep its invariants against any proposer. The proof covers the arithmetic, not the truth of the margins. It is still only a predicate that can refuse a step. It is not a safety system. |
 | The building writes its own structural equations as it is made | Vision | The margin vector is the nearest checked thing: 12 residuals of the structure's design equations, recomputed by the upstream verifiers. No machine changes the structure. |
 | Deposition machines act as ports of the net | Concept only | Element F1, an idea. No machine is modelled. |
 | A chip that runs the net directly | Not testable as stated | Element M4, an idea. |
-| The facility closes the loop for the intelligence | The owner's sentence, not an audited claim | The contract in the README: a load floor, a thermal budget and a margin radius. Three interfaces of the loop are checked and six are open. |
+| The facility closes the loop for the intelligence | The owner's sentence, not an audited claim | The contract in the README: a load floor, a thermal budget and a margin radius. Four interfaces of the loop are checked and six are open. An improvement loop runs on a model under a gate proved in Lean. |
 
 ## Boundaries
 

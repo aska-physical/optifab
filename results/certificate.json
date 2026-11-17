@@ -13,7 +13,7 @@
       "pins.json": "acb6db126f4fdf3901c6f9f64a9b2d03ee4edc48ec863ccfb170d14604e96d54",
       "graph.json": "3c0a2dd368a0f223c6aea43b621e131461037425001eb6bceaa7742b25034966",
       "sources.json": "0ec0cfd7d8aa05ab7a51fb77ac8e91fb06dc44ce66ee6333ed965f7368ecc2d6",
-      "unit.json": "e642a76e7b89b439fdc2e3ba422e564fc9d58db2d6f4ce360cba3eb6e400a666",
+      "unit.json": "c2cb8e74da3ecb9c18ede97c00d5b1f1c65a9238dc5865d6aff751073ea96f4a",
       "upstream/MANIFEST.json": "9dd0e7efbb39fb37bc542f86751becb3a6dc46fd348737e2b040a24598238541"
     },
     "pinned_repositories": 36,
@@ -637,13 +637,13 @@
     }
   },
   "unit": {
-    "elements": 29,
+    "elements": 30,
     "elements_by_status": {
-      "checked": 8,
+      "checked": 10,
       "designed": 6,
       "idea": 2,
       "in_progress": 1,
-      "missing": 3,
+      "missing": 2,
       "research": 1,
       "rule": 3,
       "specified": 2,
@@ -661,9 +661,9 @@
       "aska-physical": 9
     },
     "repositories_not_placed": 9,
-    "loop_interfaces": 9,
+    "loop_interfaces": 10,
     "loop_interfaces_by_status": {
-      "checked": 3,
+      "checked": 4,
       "designed": 2,
       "idea": 1,
       "missing": 2,

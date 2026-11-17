@@ -2,6 +2,29 @@
 
 Machine-checked milestones for `aska-physical/optifab`.
 
+## [0.2.0] - 2026-11-17
+
+Status: claimed. Prepared by an AI agent; not reviewed by a person. Nothing is called verified.
+
+### Added
+
+- **`formal/`**: a Lean 4 project with no dependencies, in the Proven Commons layout. An exact integer gate,
+  the generation step and the loop over any list of proposals, with eight theorems. `lake comparator
+  --paranoid` accepts them under six kernels. 300,000 differential tests against the Python oracle agree. The
+  Proven Commons bar check reports items 2 to 6 PASS and item 1 OPEN (`formal/BAR-REPORT.md`).
+- **`loop.py`**: the improvement loop. Three hardware genes, two software genes and the proposer's own step
+  scale, changed one gated step at a time. On the scenario in the file: 50 proposals, 45 admitted (30
+  hardware, 15 software), objective 0.914228 to 0.919009.
+- **`results/ledger.json`** and **`results/formal.json`**: the hash-chained record of every decision, and the
+  record of the last formal run. `verify.py --formal` rebuilds the proofs and replays the ledger in Lean
+  (50 decisions, 0 mismatches). The plain verifier fails if that record does not match the current Lean
+  sources and ledger.
+- **`docs/VISION.md`**: how close this is to a formally verified system that improves its own hardware and
+  software, part by part. **`docs/PROPOSALS.md`**: eight systems for the open gaps.
+- **Licences**: PolyForm Noncommercial 1.0.0 for code, CC BY-NC 4.0 for text and data.
+- **Two workflows**: the Proven Commons bar check on `formal/`, and a rerun of `verify.py`.
+- Five must-fail controls (24 in all). The unit now has 30 elements and 10 loop interfaces, 4 of them checked.
+
 ## [0.1.0] - 2026-11-17
 
 First version. Status: claimed. Prepared by an AI agent; not reviewed by a person.
