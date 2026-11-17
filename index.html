@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OptiFab · Modelling the Ideal Datacenter</title>
+  <meta name="description" content="OptiFab models the ideal datacenter: one checked campus stack — the building, the cooling plant, and the gate that decides what may change. v0.2.0, claimed, unreviewed." />
+  <meta property="og:title" content="OptiFab · Modelling the Ideal Datacenter" />
+  <meta property="og:description" content="One checked stack for a whole data-center campus: the load floor, the recooling limit, the thermal budget, and the gate that guards them. v0.2.0, claimed, unreviewed." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://optifab.askaconsult.com/" />
+  <meta property="og:site_name" content="OptiFab · ASKA Physical" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="OptiFab · Modelling the Ideal Datacenter" />
+  <meta name="twitter:description" content="One checked stack for a whole data-center campus: the load floor, the recooling limit, the thermal budget, and the gate that guards them." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root, [data-theme="light"] {
+      --bg: #F6F4EE;
+      --bg-elevated: #FDFCF9;
+      --bg-subtle: #ECE9E0;
+      --bg-canvas: #F1EFE8;
+      --fg: #151513;
+      --fg-muted: #57554E;
+      --fg-faint: #858278;
+      --border: #D8D4C8;
+      --accent: #C24124;
+      --accent-soft: rgba(194, 65, 36, 0.11);
+      --blueprint: #1E40AF;
+      --blueprint-soft: rgba(30, 64, 175, 0.10);
+      --verified: #166534;
+      --verified-soft: rgba(22, 101, 52, 0.11);
+      --amber: #9A5B08;
+      --amber-soft: rgba(154, 91, 8, 0.12);
+      --grid-line: rgba(21, 21, 19, 0.055);
+    }
+    [data-theme="dark"] {
+      --bg: #0F1113;
+      --bg-elevated: #16191D;
+      --bg-subtle: #1E2228;
+      --bg-canvas: #13161A;
+      --fg: #ECEAE3;
+      --fg-muted: #A3A097;
+      --fg-faint: #6E6B63;
+      --border: #2B3038;
+      --accent: #EA6A47;
+      --accent-soft: rgba(234, 106, 71, 0.15);
+      --blueprint: #60A5FA;
+      --blueprint-soft: rgba(96, 165, 250, 0.14);
+      --verified: #4ADE80;
+      --verified-soft: rgba(74, 222, 128, 0.13);
+      --amber: #FBBF24;
+      --amber-soft: rgba(251, 191, 36, 0.14);
+      --grid-line: rgba(236, 234, 227, 0.055);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background-color: var(--bg); color: var(--fg); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+    .font-serif-editorial { font-family: 'Instrument Serif', Georgia, serif; letter-spacing: -0.015em; }
+    .font-mono-tech { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace; font-variant-numeric: tabular-nums; }
+    .surface-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 0.5rem; transition: border-color 0.18s ease, transform 0.18s ease; }
+    .surface-card:hover { border-color: var(--fg-faint); }
+    .canvas-frame { background-color: var(--bg-canvas); background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px); background-size: 24px 24px; border: 1px solid var(--border); border-radius: 0.5rem; }
+    input[type="range"].precision-slider { -webkit-appearance: none; appearance: none; height: 6px; background: var(--border); border-radius: 999px; outline: none; cursor: pointer; }
+    input[type="range"].precision-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 999px; background: var(--accent); border: 2px solid var(--bg-elevated); box-shadow: 0 1px 4px rgba(0,0,0,0.3); cursor: grab; }
+    input[type="range"].precision-slider::-moz-range-thumb { width: 18px; height: 18px; border-radius: 999px; background: var(--accent); border: 2px solid var(--bg-elevated); cursor: grab; }
+    .badge-pill { display: inline-flex; align-items: center; gap: 0.35rem; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; line-height: 1; padding: 0.32rem 0.55rem; border-radius: 0.3rem; border: 1px solid var(--border); background: var(--bg-subtle); color: var(--fg-muted); white-space: nowrap; }
+    .badge-verified { background: var(--verified-soft); color: var(--verified); border-color: rgba(22, 101, 52, 0.25); }
+    .badge-accent { background: var(--accent-soft); color: var(--accent); border-color: rgba(194, 65, 36, 0.25); }
+    .badge-blueprint { background: var(--blueprint-soft); color: var(--blueprint); border-color: rgba(30, 64, 175, 0.25); }
+    .badge-amber { background: var(--amber-soft); color: var(--amber); border-color: rgba(154, 91, 8, 0.25); }
+    .ctrl-btn { font-family: 'JetBrains Mono', monospace; font-size: 0.73rem; padding: 0.38rem 0.72rem; border-radius: 0.375rem; border: 1px solid var(--border); background: var(--bg-elevated); color: var(--fg); transition: all 0.15s ease; cursor: pointer; white-space: nowrap; }
+    .ctrl-btn:hover { border-color: var(--fg); background: var(--bg-subtle); }
+    .ctrl-btn.active { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased overflow-x-hidden selection:bg-[var(--accent)] selection:text-white">
+
+  <header class="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <a href="https://aska-physical.github.io/dock/#/optifab" class="flex items-center gap-2.5 group focus:outline-none">
+          <span class="w-6 h-6 rounded flex items-center justify-center font-mono-tech text-xs font-semibold bg-[var(--fg)] text-[var(--bg)]">O</span>
+          <span class="font-mono-tech text-xs text-[var(--fg-faint)]">/</span>
+          <span class="font-mono-tech text-xs font-semibold text-[var(--accent)]">optifab</span>
+        </a>
+        <span class="hidden sm:inline font-mono-tech text-[11px] text-[var(--fg-faint)]">Modelling the ideal datacenter · v0.2.0</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-1.5">
+        <a href="https://aska-physical.github.io/dock/#/optifab" class="ctrl-btn">Dock Subpage ↗</a>
+        <a href="https://github.com/aska-physical/optifab" target="_blank" rel="noopener" class="ctrl-btn">Repo ↗</a>
+        <button onclick="toggleTheme()" class="ctrl-btn" id="themeBtn">Dark</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 w-full space-y-6 py-6">
+
+    <div class="flex flex-wrap items-center gap-2 font-mono-tech text-xs">
+      <a href="https://aska-physical.github.io/dock/" class="ctrl-btn inline-flex items-center gap-1.5">← The Dock</a>
+      <span class="text-[var(--fg-faint)]">/</span>
+      <span class="badge-pill badge-accent">SUBPAGE 08</span>
+      <span class="font-semibold text-[var(--fg)]">optifab</span>
+    </div>
+
+    <header class="space-y-5">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="badge-pill">07 · Whole-Campus Model &amp; Gate</span>
+        <span class="badge-pill">Readiness Rung 2/5 · Solver &amp; FEA Checked Only</span>
+        <span class="badge-pill badge-amber">⚠ No person has reviewed it; nothing is measured — model only</span>
+      </div>
+      <h1 class="font-serif-editorial text-4xl sm:text-5xl lg:text-6xl leading-[1.04]">Modelling the Ideal Datacenter: One Checked Campus Stack</h1>
+      <p class="text-base sm:text-xl text-[var(--fg)] leading-relaxed max-w-4xl">One checked stack for a whole data-center campus: the building, the cooling plant, and the software gate that decides what may change — so a scheduler sees the load floor, the recooling limit, and the thermal budget before it places a single job.</p>
+      <div class="surface-card p-4 bg-[var(--bg-subtle)] text-xs sm:text-sm text-[var(--fg-muted)]">
+        <span class="font-mono-tech text-[11px] uppercase tracking-wider text-[var(--fg)] font-semibold">Engineering Mechanism:</span>
+        Models the ideal datacenter as one structure across four organisations: funi-frame's 10 MW / 2,500 m² campus, a sorption plant with a second-law recooling limit of 41.5 °C, a 2,500 kWh_th PCM budget, a 12-margin vector with radius 0.1989, and Weft's gate predicate proved in Lean over exact integers.
+      </div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+        <div class="surface-card p-4 flex flex-col justify-between">
+          <div><div class="font-serif-editorial text-3xl sm:text-4xl text-[var(--fg)]">2.85–2.96 MW</div>
+          <div class="text-xs text-[var(--fg-muted)] mt-1 leading-snug">extra IT load the freed 3.06 MW of utility power carries</div></div>
+          <div class="font-mono-tech text-[10.5px] text-[var(--fg-faint)] mt-3 pt-2 border-t border-[var(--border)] truncate">src: docs/MODEL.md §1</div>
+        </div>
+        <div class="surface-card p-4 flex flex-col justify-between">
+          <div><div class="font-serif-editorial text-3xl sm:text-4xl text-[var(--fg)]">0.56 MW</div>
+          <div class="text-xs text-[var(--fg-muted)] mt-1 leading-snug">load floor — 5.6% of nameplate — below which the campus stops cooling itself</div></div>
+          <div class="font-mono-tech text-[10.5px] text-[var(--fg-faint)] mt-3 pt-2 border-t border-[var(--border)] truncate">src: docs/MODEL.md §3</div>
+        </div>
+        <div class="surface-card p-4 flex flex-col justify-between">
+          <div><div class="font-serif-editorial text-3xl sm:text-4xl text-[var(--fg)]">2,500 kWh_th</div>
+          <div class="text-xs text-[var(--fg-muted)] mt-1 leading-snug">PCM thermal budget — 15 min at full load, 30 min at 50% shed</div></div>
+          <div class="font-mono-tech text-[10.5px] text-[var(--fg-faint)] mt-3 pt-2 border-t border-[var(--border)] truncate">src: docs/MODEL.md §4</div>
+        </div>
+        <div class="surface-card p-4 flex flex-col justify-between">
+          <div><div class="font-serif-editorial text-3xl sm:text-4xl text-[var(--fg)]">8 theorems</div>
+          <div class="text-xs text-[var(--fg-muted)] mt-1 leading-snug">exact integer gate proved in Lean, 6 kernels, 50-decision replay with 0 mismatches</div></div>
+          <div class="font-mono-tech text-[10.5px] text-[var(--fg-faint)] mt-3 pt-2 border-t border-[var(--border)] truncate">src: formal/README.md</div>
+        </div>
+      </div>
+    </header>
+
+    <section id="sec-workbench" class="scroll-mt-28 space-y-4 pt-6 border-t border-[var(--border)]">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+        <div>
+          <div class="font-mono-tech text-xs text-[var(--fg-faint)]">01 // INTERACTIVE PHYSICAL WORKBENCH</div>
+          <h2 class="font-serif-editorial text-3xl">Manipulate the mechanism directly</h2>
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <button onclick="setSlider(4)" class="ctrl-btn">Below Load Floor (4%)</button>
+          <button onclick="setSlider(50)" class="ctrl-btn">Half Load (50%)</button>
+          <button onclick="setSlider(100)" class="ctrl-btn">Full Load (100%)</button>
+        </div>
+      </div>
+      <p class="text-xs sm:text-sm font-mono-tech text-[var(--fg-muted)] bg-[var(--bg-subtle)] p-3 rounded border border-[var(--border)]">
+        <strong class="text-[var(--fg)]">How to read:</strong> Drag the slider from 0% to 100% of the 10 MW nameplate. Watch the load bar cross the 5.6% floor: below it the campus stops cooling itself and the air-side load must move to the aquifer loop; above it the sorption loop, the PCM budget, and the margin radius hold the contract.
+      </p>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+        <div class="lg:col-span-8 canvas-frame p-4 flex flex-col justify-between space-y-4">
+          <canvas id="mainCanvas" class="w-full h-[290px] sm:h-[340px] rounded block"></canvas>
+          <div class="surface-card p-3.5 space-y-2">
+            <div class="flex items-center justify-between">
+              <label for="loadSlider" class="font-mono-tech text-xs font-semibold">IT Load as % of 10 MW Nameplate</label>
+              <span id="sliderReadout" class="font-mono-tech text-xs font-semibold text-[var(--accent)]">100 % of nameplate</span>
+            </div>
+            <input id="loadSlider" type="range" min="0" max="100" value="100" oninput="setSlider(Number(this.value))" class="precision-slider w-full" />
+          </div>
+        </div>
+        <div class="lg:col-span-4 flex flex-col justify-between space-y-2.5" id="walkthrough">
+          <button onclick="setSlider(4)" class="walk-step text-left surface-card p-3.5" data-val="4">
+            <div class="flex items-center justify-between font-mono-tech text-[11px] text-[var(--fg-faint)]"><span>STEP 01</span><span class="text-[var(--accent)]">4 % of nameplate</span></div>
+            <div class="font-semibold text-sm mt-0.5 text-[var(--fg)]">Below the Load Floor</div>
+            <p class="text-xs text-[var(--fg-muted)] mt-1 leading-relaxed">At 0.4 MW the captured heat can no longer drive the chiller — the campus stops cooling itself, and the air-side load has to move to the aquifer loop or a chiller. That is a change of operating mode, not a failure.</p>
+          </button>
+          <button onclick="setSlider(50)" class="walk-step text-left surface-card p-3.5" data-val="50">
+            <div class="flex items-center justify-between font-mono-tech text-[11px] text-[var(--fg-faint)]"><span>STEP 02</span><span class="text-[var(--accent)]">50 % of nameplate</span></div>
+            <div class="font-semibold text-sm mt-0.5 text-[var(--fg)]">Half Load Raises the Capture Bar</div>
+            <p class="text-xs text-[var(--fg-muted)] mt-1 leading-relaxed">At 5 MW the capture fraction needed for self-cooling rises to 64.4%; at a tenth of load it is 74.9%. The wall that kills the thermal bridge also cuts the floor by a third, from 0.85 MW to 0.56 MW.</p>
+          </button>
+          <button onclick="setSlider(85)" class="walk-step text-left surface-card p-3.5" data-val="85">
+            <div class="flex items-center justify-between font-mono-tech text-[11px] text-[var(--fg-faint)]"><span>STEP 03</span><span class="text-[var(--accent)]">85 % of nameplate</span></div>
+            <div class="font-semibold text-sm mt-0.5 text-[var(--fg)]">The Gate's Radius Is the Headroom</div>
+            <p class="text-xs text-[var(--fg-muted)] mt-1 leading-relaxed">Twelve margins, one vector. The floor punching collar sits at 80.1% — the tightest in the building. Any change moving the vector by more than 0.1989 passes a limit, so the gate refuses it.</p>
+          </button>
+          <button onclick="setSlider(100)" class="walk-step text-left surface-card p-3.5" data-val="100">
+            <div class="flex items-center justify-between font-mono-tech text-[11px] text-[var(--fg-faint)]"><span>STEP 04</span><span class="text-[var(--accent)]">100 % of nameplate</span></div>
+            <div class="font-semibold text-sm mt-0.5 text-[var(--fg)]">Full Load, Full Contract</div>
+            <p class="text-xs text-[var(--fg-muted)] mt-1 leading-relaxed">PUE 1.074 with no water if recooling stays below about 41 °C, 15 minutes of PCM ride-through, and the whole state — 12 margins, budget, load, recooling, time — packed into one 64-byte frame.</p>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-sizer" class="scroll-mt-28 space-y-4 pt-6 border-t border-[var(--border)]">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <div class="font-mono-tech text-xs text-[var(--fg-faint)]">02 // PARAMETRIC SHOP &amp; JOBSITE SIZER</div>
+          <h2 class="font-serif-editorial text-3xl">Campus Contract Sizer: Load Floor, Recooling Limit &amp; Thermal Budget</h2>
+          <p class="text-xs sm:text-sm text-[var(--fg-muted)] mt-1">Live solver from optifab/verify.py: test the 0.56 MW load floor, the 41.5 °C second-law recooling limit, the 2,500 kWh_th PCM budget, and the 2.85–2.96 MW of unlocked IT load.</p>
+        </div>
+        <span id="calcBadge" class="badge-pill badge-verified">✓ READY</span>
+      </div>
+      <div class="surface-card p-5 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <div class="lg:col-span-5 space-y-4">
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-mono-tech"><label class="text-[var(--fg)] font-medium">IT Hall Compute Load P_IT (MW)</label><span id="calc-val-itMw" class="text-[var(--accent)] font-semibold">10 MW</span></div>
+            <input type="range" min="1" max="10" step="0.5" value="10" oninput="updateCalc('itMw', Number(this.value))" class="precision-slider w-full" />
+          </div>
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-mono-tech"><label class="text-[var(--fg)] font-medium">Direct-to-Chip Capture α_liq (%)</label><span id="calc-val-liqPct" class="text-[var(--accent)] font-semibold">85 %</span></div>
+            <input type="range" min="62" max="95" step="1" value="85" oninput="updateCalc('liqPct', Number(this.value))" class="precision-slider w-full" />
+          </div>
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-mono-tech"><label class="text-[var(--fg)] font-medium">Recooling Temperature T_a (°C)</label><span id="calc-val-recoolC" class="text-[var(--accent)] font-semibold">30 °C</span></div>
+            <input type="range" min="25" max="45" step="1" value="30" oninput="updateCalc('recoolC', Number(this.value))" class="precision-slider w-full" />
+          </div>
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-xs font-mono-tech"><label class="text-[var(--fg)] font-medium">Load Shed in an Outage (%)</label><span id="calc-val-shedPct" class="text-[var(--accent)] font-semibold">0 %</span></div>
+            <input type="range" min="0" max="75" step="5" value="0" oninput="updateCalc('shedPct', Number(this.value))" class="precision-slider w-full" />
+          </div>
+        </div>
+        <div id="calcOutputs" class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      </div>
+    </section>
+
+    <section id="sec-method" class="scroll-mt-28 space-y-4 pt-6 border-t border-[var(--border)]">
+      <div>
+        <div class="font-mono-tech text-xs text-[var(--fg-faint)]">03 // FLOOR &amp; FIELD METHOD STATEMENT</div>
+        <h2 class="font-serif-editorial text-3xl">How a crew actually runs this</h2>
+      </div>
+      <div class="surface-card p-3.5 bg-[var(--bg-subtle)] text-xs sm:text-sm flex flex-wrap items-center gap-2">
+        <span class="badge-pill badge-blueprint">REQUIRED TOOLING</span>
+        <span class="text-[var(--fg-muted)]">Python 3.10+ with SymPy; pinned upstream clones (36 repos); elan + bubblewrap for the Lean replay.</span>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <div class="surface-card p-4 flex flex-col justify-between space-y-3">
+          <div class="space-y-1.5"><div class="font-mono-tech text-xs font-semibold text-[var(--accent)]">01 · Pin Upstream &amp; Recompute</div>
+          <p class="text-xs sm:text-sm text-[var(--fg-muted)] leading-relaxed">Clone the 36 pinned repositories, run python3 verify.py; every figure must reproduce results/certificate.json.</p></div>
+          <div class="font-mono-tech text-[11px] text-[var(--fg-faint)] pt-2 border-t border-[var(--border)]">HOLD: verify.py exit 0</div>
+        </div>
+        <div class="surface-card p-4 flex flex-col justify-between space-y-3">
+          <div class="space-y-1.5"><div class="font-mono-tech text-xs font-semibold text-[var(--accent)]">02 · Run the Gate on Weft's Vectors</div>
+          <p class="text-xs sm:text-sm text-[var(--fg-muted)] leading-relaxed">plant_gate must pass all 15 Weft weight-update vectors and match Weft's own function on the 100,000-case differential test.</p></div>
+          <div class="font-mono-tech text-[11px] text-[var(--fg-faint)] pt-2 border-t border-[var(--border)]">HOLD: 0 mismatches</div>
+        </div>
+        <div class="surface-card p-4 flex flex-col justify-between space-y-3">
+          <div class="space-y-1.5"><div class="font-mono-tech text-xs font-semibold text-[var(--accent)]">03 · Replay the Ledger in Lean</div>
+          <p class="text-xs sm:text-sm text-[var(--fg-muted)] leading-relaxed">Run python3 verify.py --formal: the comparator accepts 8 theorems under 6 kernels and replays all 50 ledger decisions.</p></div>
+          <div class="font-mono-tech text-[11px] text-[var(--fg-faint)] pt-2 border-t border-[var(--border)]">HOLD: comparator accepts</div>
+        </div>
+        <div class="surface-card p-4 flex flex-col justify-between space-y-3">
+          <div class="space-y-1.5"><div class="font-mono-tech text-xs font-semibold text-[var(--accent)]">04 · File the Frame &amp; Handoff</div>
+          <p class="text-xs sm:text-sm text-[var(--fg-muted)] leading-relaxed">Pack the 12 margins, budget, load, recooling temperature, and time into the 64-byte frame; flag recooling_not_measured if the slot is empty.</p></div>
+          <div class="font-mono-tech text-[11px] text-[var(--fg-faint)] pt-2 border-t border-[var(--border)]">HOLD: frame round-trips</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-bench" class="scroll-mt-28 space-y-4 pt-6 border-t border-[var(--border)]">
+      <div>
+        <div class="font-mono-tech text-xs text-[var(--fg-faint)]">04 // BENCH &amp; LIMITS</div>
+        <h2 class="font-serif-editorial text-3xl">Propose · Verify · Sign, measured runs, and untested limits</h2>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
+        <div class="surface-card p-4"><div class="font-mono-tech text-xs font-semibold text-[var(--accent)]">PROPOSE</div>
+          <p class="text-xs sm:text-sm text-[var(--fg-muted)] mt-2 leading-relaxed">One physical structure holding four organisations' work — aska-physical's building, thermal plant, and sensors; Foundation-0's mathematics; Moissanite-Labs' Weft gate; Proven-Commons' bar for verified software — mapped as 41 repositories and 43 links.</p></div>
+        <div class="surface-card p-4"><div class="font-mono-tech text-xs font-semibold text-[var(--accent)]">VERIFY</div>
+          <p class="text-xs sm:text-sm text-[var(--fg-muted)] mt-2 leading-relaxed">verify.py recomputes all 15 findings from pinned certificates and runs 24 must-fail controls; the exact gate passes Weft's 15 vectors and agrees with Weft's own function on 100,000 generated cases; the Lean comparator accepts 8 theorems under 6 kernels.</p></div>
+        <div class="surface-card p-4"><div class="font-mono-tech text-xs font-semibold text-[var(--accent)]">SIGN</div>
+          <p class="text-xs sm:text-sm text-[var(--fg-muted)] mt-2 leading-relaxed">Claimed, not signed. An AI agent wrote v0.2.0 and no person has reviewed it; under the Foundation-0 rule a person signs, nothing here counts until a named person has reviewed it.</p></div>
+      </div>
+      <div class="surface-card overflow-x-auto">
+        <table class="w-full text-left text-xs sm:text-sm">
+          <thead><tr class="border-b border-[var(--border)] font-mono-tech text-[11px] text-[var(--fg-faint)]">
+            <th class="p-3">Contract Term</th><th class="p-3">Workload Must</th><th class="p-3">Plant Offers</th><th class="p-3">Gate</th>
+          </tr></thead>
+          <tbody class="text-[var(--fg-muted)]">
+            <tr class="border-b border-[var(--border)]"><td class="p-3 text-[var(--fg)] font-medium">IT load</td><td class="p-3">Stay above the 0.56 MW floor, or move air load to the aquifer loop</td><td class="p-3">PUE 1.074, no water, if recooling &lt; ~41 °C</td><td class="p-3 font-mono-tech">MODEL §3</td></tr>
+            <tr class="border-b border-[var(--border)]"><td class="p-3 text-[var(--fg)] font-medium">Cooling outage / burst</td><td class="p-3">Charge every outage and burst above capacity to the thermal budget</td><td class="p-3">15 min ride-through at full load</td><td class="p-3 font-mono-tech">MODEL §4</td></tr>
+            <tr class="border-b border-[var(--border)]"><td class="p-3 text-[var(--fg)] font-medium">Margin moves</td><td class="p-3">Keep the margin vector within 0.1989 of the certified point</td><td class="p-3">Rack vibration at 17.9% of its limit</td><td class="p-3 font-mono-tech">MODEL §5</td></tr>
+            <tr><td class="p-3 text-[var(--fg)] font-medium">Capacity planning</td><td class="p-3">Plan capacity in IT power, not utility power</td><td class="p-3">2.85–2.96 MW more IT than a conventional plant</td><td class="p-3 font-mono-tech">MODEL §1</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs sm:text-sm text-[var(--fg-muted)] bg-[var(--bg-subtle)] p-3 rounded border border-[var(--border)]">
+        <strong class="text-[var(--fg)]">Untested:</strong> No sensor feeds the chain and no valve, load, or machine obeys the gate; the plant model, the margins, the proposer, and the Python are unproved; the recooling temperature is absent from the funi-frame certificate; a real sorption machine needs a manufacturer's curve to confirm COP 0.62 at 58 °C drive.
+      </p>
+    </section>
+
+    <section id="sec-spec" class="scroll-mt-28 space-y-4 pt-6 border-t border-[var(--border)]">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <div class="font-mono-tech text-xs text-[var(--fg-faint)]">05 // SPEC SHEET</div>
+          <h2 class="font-serif-editorial text-3xl">Generated shop ticket (<span class="font-mono-tech text-lg text-[var(--accent)]">optifab-plant-gate.toml</span>)</h2>
+          <p class="text-xs sm:text-sm text-[var(--fg-muted)] mt-1">Updates live with the sizer above. Copy it into the repo's check run.</p>
+        </div>
+        <button id="copySpecBtn" onclick="copySpec()" class="ctrl-btn">Copy Spec</button>
+      </div>
+      <pre id="specPre" class="surface-card p-4 font-mono-tech text-[11px] sm:text-xs leading-relaxed overflow-x-auto whitespace-pre text-[var(--fg)]"></pre>
+    </section>
+
+    <footer class="pt-6 pb-10 border-t border-[var(--border)] space-y-3">
+      <p class="text-xs text-[var(--fg-muted)] leading-relaxed">OptiFab v0.2.0 — modelling the ideal datacenter. Status: claimed. An AI agent wrote this version and no person has reviewed it. Nothing in it is measured. Every number is derived from the certificates of other repositories, which are themselves models.</p>
+      <div class="flex flex-wrap gap-2 font-mono-tech text-xs">
+        <a href="https://github.com/aska-physical/optifab" target="_blank" rel="noopener" class="ctrl-btn">Repo ↗</a>
+        <a href="https://github.com/aska-physical/optifab/blob/main/docs/MODEL.md" target="_blank" rel="noopener" class="ctrl-btn">MODEL.md ↗</a>
+        <a href="https://github.com/aska-physical/optifab/blob/main/docs/VISION.md" target="_blank" rel="noopener" class="ctrl-btn">VISION.md ↗</a>
+        <a href="https://github.com/aska-physical/optifab/blob/main/HANDOFF.md" target="_blank" rel="noopener" class="ctrl-btn">HANDOFF.md ↗</a>
+        <a href="https://aska-physical.github.io/dock/#/optifab" class="ctrl-btn">Dock Subpage ↗</a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    /* Standalone OptiFab page. Calculator and canvas are the same solver as
+       aska-physical/dock optifab-dock.js, with local state instead of the Dock's. */
+    const OPTI_COP = 0.62, OPTI_TH_K = 331.15, OPTI_TC18_K = 291.15, OPTI_TC15_K = 288.15;
+    const OPTI_QFIX_MW = 0.213, OPTI_PCM_KWH = 2500, OPTI_PUE_F = 1.074, OPTI_FREED_PER_MW = 0.3065;
+    const calc = { itMw: 10, liqPct: 85, recoolC: 30, shedPct: 0 };
+    let sliderVal = 100;
+    function optiRecoolMaxK(tcK) { return (tcK * OPTI_TH_K * (1 + OPTI_COP)) / (OPTI_COP * OPTI_TH_K + tcK); }
+    function evalOptifab() {
+      const Pit = calc.itMw, aLiq = calc.liqPct / 100.0, TaC = calc.recoolC, shed = calc.shedPct / 100.0;
+      const TaK = TaC + 273.15;
+      const freedMw = OPTI_FREED_PER_MW * Pit;
+      const itLow = freedMw / OPTI_PUE_F;
+      const itHigh = freedMw / (1 + 1 / 28);
+      const alphaCrit = 1 / (1 + OPTI_COP);
+      const floorDenom = (1 + OPTI_COP) * aLiq - 1;
+      const floorMw = floorDenom > 0 ? OPTI_QFIX_MW / floorDenom : Infinity;
+      const alphaNeed = (1 + OPTI_QFIX_MW / Pit) / (1 + OPTI_COP);
+      const selfCools = aLiq > alphaCrit && Pit >= floorMw;
+      const taMaxC = optiRecoolMaxK(OPTI_TC18_K) - 273.15;
+      const taMax15C = optiRecoolMaxK(OPTI_TC15_K) - 273.15;
+      const copRev = (OPTI_TC18_K / (TaK - OPTI_TC18_K)) * ((OPTI_TH_K - TaK) / OPTI_TH_K);
+      const copFracPct = copRev > 0 ? (OPTI_COP / copRev) * 100 : Infinity;
+      const rideMin = OPTI_PCM_KWH / (Pit * 1000 * (1 - shed)) * 60;
+      const fails = [];
+      if (!selfCools) fails.push("BELOW LOAD FLOOR (" + Pit.toFixed(1) + " MW < " + (isFinite(floorMw) ? floorMw.toFixed(2) : "∞") + " MW: SELF-COOLING FAILS)");
+      else if (aLiq <= alphaCrit) fails.push("CAPTURE " + Math.round(aLiq * 100) + "% ≤ " + (alphaCrit * 100).toFixed(1) + "% SELF-COOL THRESHOLD");
+      if (TaC >= taMaxC) fails.push("RECOOLING " + TaC + " °C ≥ " + taMaxC.toFixed(1) + " °C SECOND-LAW LIMIT");
+      const badge = fails.length === 0 ? { cls: "badge-pill badge-verified", text: "✓ PLANT GATE HOLDS · PUE 1.074 · R* 0.1989" }
+        : { cls: "badge-pill badge-accent", text: "FAIL-CLOSED · " + fails[0] };
+      const specText = [ "# ASKA PHYSICAL — OPTIFAB v0.2.0 CAMPUS CONTRACT & PLANT GATE SPEC", "repo = \"https://github.com/aska-physical/optifab\"",
+        "gate_status = \"" + (fails.length === 0 ? "PASS" : "FAIL_CLOSED") + "\" # claimed, unreviewed: no person has signed",
+        "", "[campus]", "hall_it_capacity_MW = " + Pit.toFixed(1) + " # reference campus: 10 MW on a 2,500 m2 plan, two storeys",
+        "liquid_capture_fraction = " + aLiq.toFixed(2) + " # critical threshold = " + alphaCrit.toFixed(4),
+        "PUE_optifab = 1.074 # vs 1.380 conventional; WUE = 0.0 L/kWh",
+        "freed_substation_power_MW = " + freedMw.toFixed(2) + " # carries " + itLow.toFixed(2) + "–" + itHigh.toFixed(2) + " MW of IT load",
+        "", "[recooling_limit]", "recooling_temp_C = " + TaC + " # second-law maximum = " + taMaxC.toFixed(1) + " C at 18 C chilled water (" + taMax15C.toFixed(1) + " C at 15 C)",
+        "sorption_COP_claimed = 0.62 # " + copFracPct.toFixed(0) + "% of the reversible COP at this recooling temperature",
+        "", "[load_floor]", "load_floor_MW = " + (isFinite(floorMw) ? floorMw.toFixed(3) : "inf") + " # " + (isFinite(floorMw) ? (floorMw / 10 * 100).toFixed(1) + "% of nameplate" : "no self-cooling at this capture fraction"),
+        "capture_needed_at_this_load = " + (alphaNeed * 100).toFixed(1) + "% # 63.0% at full load, 64.4% at half, 67.0% at a quarter, 74.9% at a tenth",
+        "self_cooling = " + (selfCools ? "true" : "false") + " # below the floor, move the air-side load to the aquifer loop",
+        "", "[thermal_budget]", "pcm_budget_kWh_th = 2500 # ride-through " + rideMin.toFixed(1) + " min at " + Pit.toFixed(1) + " MW with " + Math.round(shed * 100) + "% shed",
+        "", "[plant_gate]", "margin_radius_R_star = 0.1989 # tightest margin: floor punching collar at 80.1% of capacity",
+        "gate = \"Weft I3 predicate, plant units: baseline = certified margin vector, budget = PCM kWh_th\"",
+        "frame64 = \"12 margins + budget + load + recooling + time in 16 float32, 64 bytes (Weft layout)\"" ].join("\n");
+      return { outputs: [
+        { label: "Extra IT Load Unlocked", value: itLow.toFixed(2) + "–" + itHigh.toFixed(2) + " MW", sub: "Freed " + freedMw.toFixed(2) + " MW utility at " + Pit.toFixed(1) + " MW IT; a value per MW of IT is 3.6–7.4% high if misread" },
+        { label: "Load Floor & Self-Cooling", value: isFinite(floorMw) ? floorMw.toFixed(2) + " MW" : "NO SELF-COOLING", sub: selfCools ? "Self-cools at " + Pit.toFixed(1) + " MW; needs α ≥ " + (alphaNeed * 100).toFixed(1) + "% at this load" : "Below floor — move air-side load to the aquifer loop" },
+        { label: "Recooling Limit & COP Headroom", value: taMaxC.toFixed(1) + " °C max", sub: copFracPct <= 100 ? "Claimed COP 0.62 is " + copFracPct.toFixed(0) + "% of reversible at " + TaC + " °C recooling" : "Claimed COP 0.62 exceeds the reversible limit at " + TaC + " °C — impossible" },
+        { label: "PCM Ride-Through", value: rideMin.toFixed(1) + " min", sub: "2,500 kWh_th budget · 10% burst above capacity for 2.5 h" }
+      ], statusBadge: badge, specText: specText };
+    }
+    function drawCanvas(val) {
+      const canvas = document.getElementById("mainCanvas"); if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const w = Math.max(260, rect.width || canvas.clientWidth || 640);
+      const h = Math.max(160, rect.height || canvas.clientHeight || 300);
+      const dpr = window.devicePixelRatio || 1;
+      if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) { canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr); }
+      const ctx = canvas.getContext("2d"); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const cs = getComputedStyle(document.documentElement);
+      const tk = (k, fb) => (cs.getPropertyValue(k) || "").trim() || fb;
+      const bg = tk("--bg-canvas", "#F1EFE8"), fg = tk("--fg", "#151513"), muted = tk("--fg-muted", "#57554E");
+      const accent = tk("--accent", "#C24124"), blue = tk("--blueprint", "#1E40AF"), ver = tk("--verified", "#166534");
+      const grid = tk("--grid-line", "rgba(21,21,19,0.06)");
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h); ctx.strokeStyle = grid; ctx.lineWidth = 1;
+      for (let x = 24; x < w; x += 28) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+      for (let y = 24; y < h; y += 28) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+      const t = Math.max(0, Math.min(1, (val ?? 100) / 100));
+      const loadMw = 10 * t, floorMw = 0.564, ok = loadMw >= floorMw, mode = ok ? ver : accent;
+      const bx = w * 0.06, bw = w * 0.58, roofY = h * 0.30, midY = h * 0.52, baseY = h * 0.74;
+      ctx.strokeStyle = blue; ctx.lineWidth = 2;
+      ctx.strokeRect(bx, roofY, 12, baseY - roofY); ctx.strokeRect(bx + bw - 12, roofY, 12, baseY - roofY);
+      ctx.beginPath(); ctx.moveTo(bx - 4, roofY + 4); ctx.quadraticCurveTo(bx + bw * 0.5, roofY - h * 0.15, bx + bw + 4, roofY + 4);
+      ctx.strokeStyle = ver; ctx.lineWidth = 4; ctx.stroke();
+      [midY, baseY].forEach(function (fy) { ctx.fillStyle = muted; ctx.fillRect(bx + 12, fy - 4, bw - 24, 5);
+        for (let k = 0; k < 3; k++) { const rx = bx + bw * (0.18 + k * 0.24), rw = bw * 0.14, rh = h * 0.12;
+          ctx.fillStyle = ok ? ver : accent; ctx.globalAlpha = 0.25 + 0.75 * t; ctx.fillRect(rx, fy - 6 - rh, rw, rh); ctx.globalAlpha = 1.0; } });
+      ctx.strokeStyle = blue; ctx.lineWidth = 1.6;
+      ctx.strokeRect(bx + bw + w * 0.02, midY - h * 0.10, w * 0.10, h * 0.10);
+      ctx.strokeRect(bx + bw + w * 0.02, baseY - h * 0.10, w * 0.10, h * 0.10);
+      ctx.strokeStyle = muted; ctx.setLineDash([5, 4]); ctx.beginPath();
+      ctx.moveTo(bx, baseY + h * 0.10); ctx.lineTo(bx + bw + w * 0.14, baseY + h * 0.10); ctx.stroke(); ctx.setLineDash([]);
+      const barX = w * 0.86, barW = w * 0.045, barTop = h * 0.22, barBot = h * 0.78, barH = barBot - barTop;
+      ctx.strokeStyle = fg; ctx.lineWidth = 1.5; ctx.strokeRect(barX, barTop, barW, barH);
+      const fillH = barH * t; ctx.fillStyle = mode; ctx.fillRect(barX, barBot - fillH, barW, fillH);
+      const floorY = barBot - barH * (floorMw / 10);
+      ctx.strokeStyle = accent; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(barX - 6, floorY); ctx.lineTo(barX + barW + 6, floorY); ctx.stroke();
+      if (w >= 420) {
+        ctx.font = "600 11px 'JetBrains Mono', monospace"; ctx.fillStyle = fg;
+        ctx.fillText("10 MW IT · 2,500 m² · 2 STOREYS · PUE 1.074", 14, 20);
+        ctx.fillStyle = blue; ctx.fillText("SORPTION 58°C · COP 0.62", bx + bw + w * 0.02, midY - h * 0.13);
+        ctx.fillText("PCM 2,500 kWh_th", bx + bw + w * 0.02, baseY - h * 0.13);
+        ctx.fillStyle = muted; ctx.fillText("AQUIFER LOOP", bx + 4, baseY + h * 0.10 + 14);
+        ctx.fillStyle = accent; ctx.fillText("FLOOR 0.56 MW", barX - 92, floorY + 4);
+        ctx.fillStyle = mode;
+        ctx.fillText(ok ? "SELF-COOLING · α 85% > 61.73% · R* 0.1989" : "BELOW FLOOR — AIR LOAD TO AQUIFER LOOP", 14, h - 10); }
+    }
+    function renderCalc() {
+      const r = evalOptifab();
+      const badge = document.getElementById("calcBadge");
+      if (badge) { badge.className = "badge-pill " + r.statusBadge.cls; badge.textContent = r.statusBadge.text; }
+      const box = document.getElementById("calcOutputs");
+      if (box) box.innerHTML = r.outputs.map(o =>
+        '<div class="surface-card p-3.5 bg-[var(--bg-subtle)] flex flex-col justify-between">' +
+        '<div class="font-mono-tech text-[11px] text-[var(--fg-muted)]">' + o.label + '</div>' +
+        '<div class="font-serif-editorial text-2xl sm:text-3xl text-[var(--fg)] mt-1">' + o.value + '</div>' +
+        '<div class="text-[11px] text-[var(--fg-muted)] mt-1 leading-snug">' + o.sub + '</div></div>').join("");
+      const pre = document.getElementById("specPre");
+      if (pre) pre.textContent = r.specText;
+    }
+    function updateCalc(key, v) {
+      calc[key] = Number(v);
+      const units = { itMw: " MW", liqPct: " %", recoolC: " °C", shedPct: " %" };
+      const span = document.getElementById("calc-val-" + key);
+      if (span) span.textContent = v + units[key];
+      renderCalc();
+    }
+    function setSlider(v) {
+      sliderVal = Math.max(0, Math.min(100, Number(v)));
+      const s = document.getElementById("loadSlider"); if (s) s.value = sliderVal;
+      const r = document.getElementById("sliderReadout"); if (r) r.textContent = sliderVal + " % of nameplate";
+      document.querySelectorAll(".walk-step").forEach(function (el) {
+        const on = Number(el.dataset.val) === sliderVal;
+        el.style.borderColor = on ? "var(--accent)" : "";
+        el.style.boxShadow = on ? "0 0 0 1px var(--accent)" : "";
+      });
+      drawCanvas(sliderVal);
+    }
+    function copySpec() {
+      const ta = document.createElement("textarea");
+      ta.value = evalOptifab().specText; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); } catch (_) {}
+      document.body.removeChild(ta);
+      const btn = document.getElementById("copySpecBtn");
+      if (btn) { const orig = btn.textContent; btn.textContent = "Copied ✓"; setTimeout(function () { btn.textContent = orig; }, 1600); }
+    }
+    function toggleTheme() {
+      const root = document.documentElement;
+      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      const btn = document.getElementById("themeBtn"); if (btn) btn.textContent = next === "dark" ? "Light" : "Dark";
+      drawCanvas(sliderVal);
+    }
+    window.addEventListener("resize", function () { drawCanvas(sliderVal); });
+    window.addEventListener("DOMContentLoaded", function () { setSlider(100); renderCalc(); });
+  </script>
+</body>
+</html>
