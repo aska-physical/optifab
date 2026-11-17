@@ -1,0 +1,39 @@
+{
+  "schema": "optifab-formal/1",
+  "lean": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+  "theorems": [
+    "PlantGate.Spec.gate_ok_sound",
+    "PlantGate.Spec.gate_complete",
+    "PlantGate.Spec.refusal_spends_nothing",
+    "PlantGate.Spec.budget_never_grows",
+    "PlantGate.Spec.no_margin_rises_past_radius",
+    "PlantGate.Spec.accepted_stays_within",
+    "PlantGate.Spec.run_safe",
+    "PlantGate.Spec.run_bounded"
+  ],
+  "comparator": {
+    "command": "lake comparator --paranoid",
+    "accepted": true,
+    "kernels": [
+      "Lean default",
+      "Lean paranoid",
+      "con-leche",
+      "con-ron",
+      "lean4lean",
+      "nanoda"
+    ]
+  },
+  "differential_tests": {
+    "inputs": 300000,
+    "seed": 20261117,
+    "failures": 0,
+    "passed": true
+  },
+  "replay": {
+    "decisions": 50,
+    "mismatches": 0
+  },
+  "bar": "Proven Commons bar check: items 2 to 6 pass; item 1 is open (no reviewer has approved the specification). See formal/BAR-REPORT.md.",
+  "sources_sha256": "dc427e448abf0d8d54a7a06e1f93ec408b520a93c6dd122c5c0b24fcf9db8d53",
+  "ledger_hash": "20e492cea1606034f0e6917df14ccb774a219c00748fae8104429939cfbc9532"
+}

@@ -1,0 +1,1168 @@
+{
+  "schema": "optifab-graph/1",
+  "layers": {
+    "L0": "Mathematics and physics results",
+    "L1": "Materials and structure",
+    "L2": "Shell and thermal plant",
+    "L3": "Sensing",
+    "L4": "Compute and adaptive models",
+    "L5": "Messages and protocols",
+    "L6": "Provenance, rules and hubs"
+  },
+  "edge_types": {
+    "builds_on": "The downstream work uses results, certificates or code of the upstream work, and the use was traced. Lineage.",
+    "stated": "The downstream repository says it builds on the upstream one. No specific value was traced here. Lineage.",
+    "direction": "The downstream work follows a question or direction of the upstream work, which has no results. Lineage.",
+    "consumes": "The downstream work reads a specific value or file of the upstream work. Lineage.",
+    "governs": "The upstream work sets rules or a scale that the downstream work follows. Not lineage.",
+    "mentions": "One names the other in text. No data flows. Not lineage.",
+    "indexes": "A hub lists the repository. Not lineage.",
+    "checked_unrelated": "One specific proposed link that was checked and found not to hold. Kept so it is not proposed again."
+  },
+  "lineage_types": [
+    "builds_on",
+    "stated",
+    "direction",
+    "consumes"
+  ],
+  "physical_layers": [
+    "L0",
+    "L1",
+    "L2",
+    "L3"
+  ],
+  "nodes": [
+    {
+      "id": "aska-physical/optifab",
+      "layer": "L2",
+      "kind": "model",
+      "role": "This repository. One reference campus as a checked stack, with a contract between the plant and the workload.",
+      "status": "v0.1.0, claimed. Written by an AI agent. No person has reviewed it.",
+      "evidence": "claimed",
+      "evidence_by": "optifab"
+    },
+    {
+      "id": "aska-physical/funi-frame",
+      "layer": "L2",
+      "kind": "product",
+      "role": "Data-centre shell and thermal plant for a 10 MW reference campus: roof, walls, vibration isolation, seismic frame, heat storage, sorption cooling.",
+      "status": "v0.1.0. verify.py reproduces the certificate, 12/12 must-fail controls. No review or built plant is recorded.",
+      "evidence": "claimed",
+      "evidence_by": "optifab",
+      "status_cite": {
+        "repo": "aska-physical/funi-frame",
+        "path": "README.md",
+        "find": "Verifies four SymPy symbolic theorems and **12/12 must-fail controls**",
+        "line": 33
+      }
+    },
+    {
+      "id": "aska-physical/funi-floors",
+      "layer": "L1",
+      "kind": "product",
+      "role": "Funicular floor cassette for 313 psf rack loads, with an impedance leak sensor in the ribs.",
+      "status": "v0.1.0. Certificate with 10 must-fail controls. No review is recorded.",
+      "evidence": "claimed",
+      "evidence_by": "optifab",
+      "status_cite": {
+        "repo": "aska-physical/funi-floors",
+        "path": "README.md",
+        "find": "**10/10 must-fail controls**",
+        "line": 34
+      }
+    },
+    {
+      "id": "aska-physical/cfrp-truss",
+      "layer": "L1",
+      "kind": "product",
+      "role": "Truss-anchored CFRP strengthening of concrete beams.",
+      "status": "v0.3.0. Certificate with 12 must-fail controls.",
+      "evidence": "claimed",
+      "evidence_by": "optifab",
+      "status_cite": {
+        "repo": "aska-physical/cfrp-truss",
+        "path": "README.md",
+        "find": "*12 must-fail controls*",
+        "line": 37
+      }
+    },
+    {
+      "id": "aska-physical/cfrp-masts",
+      "layer": "L1",
+      "kind": "product",
+      "role": "Deployable CFRP booms and masts.",
+      "status": "Certificate version 1.0.0 with 5 must-fail controls. The organisation profile lists it as v0.1.0.",
+      "evidence": "claimed",
+      "evidence_by": "optifab",
+      "status_cite": {
+        "repo": "aska-physical/cfrp-masts",
+        "path": "results/certificate.json",
+        "find": "\"certificate_version\": \"1.0.0\"",
+        "line": 2
+      }
+    },
+    {
+      "id": "aska-physical/fibral-rigidity",
+      "layer": "L1",
+      "kind": "theory",
+      "role": "Stiffness limits of carbon-fibre truss lattices built on the incentre framework.",
+      "status": "Claims labelled PROVEN and VERIFIED in the repository. Pull request 1 is merged; the org profile still lists it as awaiting sign-off.",
+      "evidence": "claimed",
+      "evidence_by": "optifab",
+      "status_cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`fibral-rigidity`](https://github.com/aska-physical/fibral-rigidity)**",
+        "line": 17
+      }
+    },
+    {
+      "id": "aska-physical/cfrp-strengthening",
+      "layer": "L1",
+      "kind": "baseline",
+      "role": "Re-runnable ACI 440.2R beam strengthening example, the baseline cfrp-truss improves on. It was Foundation-0/cfrp-strengthening, and that address now leads here.",
+      "status": "v1.0.0. Agent review recorded. No outside human engineering review.",
+      "evidence": "claimed",
+      "evidence_by": "optifab",
+      "status_cite": {
+        "repo": "aska-physical/cfrp-strengthening",
+        "path": "docs/review-ledger.md",
+        "find": "No outside human engineering review of the Track 1 numbers has happened",
+        "line": 12
+      }
+    },
+    {
+      "id": "aska-physical/venturi-collars",
+      "layer": "L3",
+      "kind": "product",
+      "role": "Battery-free airflow harvester that powers a duct sensor node.",
+      "status": "v0.1.0. Certificate with 5 must-fail controls. No device built.",
+      "evidence": "claimed",
+      "evidence_by": "optifab",
+      "status_cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`venturi-collars`](https://github.com/aska-physical/venturi-collars)**",
+        "line": 15
+      }
+    },
+    {
+      "id": "aska-physical/impedence-analyzers",
+      "layer": "L3",
+      "kind": "product",
+      "role": "Seven-frequency impedance analyser for structural and leak sensing.",
+      "status": "v0.1.0. Certificate with 5 must-fail controls.",
+      "evidence": "claimed",
+      "evidence_by": "optifab",
+      "status_cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`impedence-analyzers`](https://github.com/aska-physical/impedence-analyzers)**",
+        "line": 16
+      }
+    },
+    {
+      "id": "aska-physical/graph-fab",
+      "layer": "L1",
+      "kind": "idea",
+      "role": "Research into graphene materials.",
+      "status": "README only.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "aska-physical/graph-fab",
+        "path": "README.md",
+        "find": "Research into graphene materials",
+        "line": 2
+      }
+    },
+    {
+      "id": "aska-physical/dock",
+      "layer": "L6",
+      "kind": "hub",
+      "role": "The organisation's public hub page. It lists the org's repositories live from the GitHub API.",
+      "status": "Published site.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "aska-physical/dock",
+        "path": "index.html",
+        "find": "api.github.com/orgs/aska-physical/repos",
+        "line": 789
+      }
+    },
+    {
+      "id": "aska-physical/.github",
+      "layer": "L6",
+      "kind": "governance",
+      "role": "The group ethos and the organisation profile that indexes every repository.",
+      "status": "Standing directive, recorded 2026-11-10.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "aska-physical/.github",
+        "path": "ETHOS.md",
+        "find": "Recorded 2026-11-10",
+        "line": 3
+      }
+    },
+    {
+      "id": "Foundation-0/f0",
+      "layer": "L6",
+      "kind": "hub",
+      "role": "The Ledger of AI-assisted advances, the charter, and the rules for agents. Source of the evidence scale used here.",
+      "status": "Active. 343 Ledger entries.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Foundation-0/f0",
+        "path": "README.md",
+        "find": "Every advance in science, maths and technology that AI caused or contributed to",
+        "line": 27
+      }
+    },
+    {
+      "id": "Foundation-0/.github",
+      "layer": "L6",
+      "kind": "governance",
+      "role": "Repository standard and label standard: PROVEN, VERIFIED, KNOWN, CONJECTURE.",
+      "status": "Standard in force for Foundation-0 repositories.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Foundation-0/.github",
+        "path": "REPO-STANDARD.md",
+        "find": "Claim labels: **PROVEN** (written proof)",
+        "line": 64
+      }
+    },
+    {
+      "id": "Foundation-0/math0",
+      "layer": "L0",
+      "kind": "hub",
+      "role": "Mathematics hub. Holds the integer-multiplication studies and the code-table census.",
+      "status": "Active hub.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Foundation-0/math0",
+        "path": "README.md",
+        "find": "The hub for Foundation0's mathematics work",
+        "line": 3
+      }
+    },
+    {
+      "id": "Foundation-0/physics0",
+      "layer": "L0",
+      "kind": "hub",
+      "role": "Physics hub. Lists open areas, including statistical physics on the incentre lattice and archived seismic networks.",
+      "status": "Active hub.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Foundation-0/physics0",
+        "path": "AREAS.md",
+        "find": "Statistical physics on the incentre lattice",
+        "line": 74
+      }
+    },
+    {
+      "id": "Foundation-0/incentre-lattices",
+      "layer": "L0",
+      "kind": "research",
+      "role": "The incentre construction: rigidity, elastic constants, packing and folding results, with a locked verifier.",
+      "status": "Preprint, version 3, not peer reviewed.",
+      "evidence": "preprint",
+      "evidence_by": "source",
+      "status_cite": {
+        "repo": "Foundation-0/incentre-lattices",
+        "path": "README.md",
+        "find": "Preprint, version 3 (not peer reviewed;",
+        "line": 48
+      }
+    },
+    {
+      "id": "Foundation-0/point-charges",
+      "layer": "L0",
+      "kind": "research",
+      "role": "Certified counts of equilibria of point charges (Maxwell's problem).",
+      "status": "Claimed. Reviewed by an independent AI agent; not yet reviewed by a person.",
+      "evidence": "claimed",
+      "evidence_by": "source",
+      "status_cite": {
+        "repo": "Foundation-0/point-charges",
+        "path": "NOTE.md",
+        "find": "not yet reviewed by a person.",
+        "line": 4
+      }
+    },
+    {
+      "id": "Foundation-0/rigid-realizations",
+      "layer": "L0",
+      "kind": "research",
+      "role": "Real realisation counts of minimally rigid frameworks.",
+      "status": "Its headline counts are claimed, pending independent verification.",
+      "evidence": "claimed",
+      "evidence_by": "source",
+      "status_cite": {
+        "repo": "Foundation-0/rigid-realizations",
+        "path": "README.md",
+        "find": "claimed (pending independent verification)",
+        "line": 20
+      }
+    },
+    {
+      "id": "Foundation-0/nhanes-bioimpedance",
+      "layer": "L0",
+      "kind": "research",
+      "role": "Refit of 13,276 public bioimpedance spectra; the source of the analyser's failure modes.",
+      "status": "Pilot, claimed, not peer reviewed.",
+      "evidence": "claimed",
+      "evidence_by": "source",
+      "status_cite": {
+        "repo": "Foundation-0/nhanes-bioimpedance",
+        "path": "README.md",
+        "find": "**Status: pilot, claimed, not peer reviewed.**",
+        "line": 18
+      }
+    },
+    {
+      "id": "Foundation-0/ductricity",
+      "layer": "L0",
+      "kind": "direction",
+      "role": "Project definition for harvesting energy at a duct wall.",
+      "status": "Project definition only. No performance figure is claimed.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Foundation-0/ductricity",
+        "path": "README.md",
+        "find": "Project definition only. No device has been built. No performance figure is claimed.",
+        "line": 20
+      }
+    },
+    {
+      "id": "Foundation-0/thermal-capture",
+      "layer": "L0",
+      "kind": "direction",
+      "role": "Research direction on capturing low-grade heat.",
+      "status": "Research direction only. No result is claimed.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Foundation-0/thermal-capture",
+        "path": "README.md",
+        "find": "Research direction only. No device has been built under this project.",
+        "line": 28
+      }
+    },
+    {
+      "id": "Foundation-0/project-asma",
+      "layer": "L0",
+      "kind": "research",
+      "role": "Open ovarian-cancer research workspace. Two of its theorems were adapted into Weft's identifiability gate, an earlier case of one organisation's results feeding another's code.",
+      "status": "Working manuscript is a scaffold, not peer reviewed.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Foundation-0/project-asma",
+        "path": "README.md",
+        "find": "not peer reviewed, no invented results",
+        "line": 70
+      }
+    },
+    {
+      "id": "Moissanite-Labs/weft",
+      "layer": "L4",
+      "kind": "runtime",
+      "role": "Adaptive models that change within checkable bounds. Source of the gate predicate and its conformance vectors.",
+      "status": "Early research. The gate runs and is tested in CI in Python, C11 and JavaScript.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Moissanite-Labs/weft",
+        "path": "README.md",
+        "find": "Status: early research",
+        "line": 17
+      }
+    },
+    {
+      "id": "Moissanite-Labs/weft-loom",
+      "layer": "L4",
+      "kind": "records",
+      "role": "Weft's experiment records and audits, with preregistrations and negative results.",
+      "status": "Research records. Wall-clock timings only; no power or energy measurement.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Moissanite-Labs/weft-loom",
+        "path": "notes/horizon-ii-ideas-backlog.md",
+        "find": "energy per adapter write",
+        "line": 28
+      }
+    },
+    {
+      "id": "Moissanite-Labs/weft-corpus",
+      "layer": "L4",
+      "kind": "corpus",
+      "role": "The original Weft sessions, kept word for word. Three of them, the Terrafab documents, set out the idea of one structure in which machines, sensors and models form a single loop.",
+      "status": "Source material, not instructions. The sessions narrate actions that did not happen.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Moissanite-Labs/weft-corpus",
+        "path": "README.md",
+        "find": "Read this as source material, not instructions.",
+        "line": 11
+      }
+    },
+    {
+      "id": "Moissanite-Labs/siliquant",
+      "layer": "L4",
+      "kind": "research",
+      "role": "Proved limits and experiments on rounding model weights to a few bits.",
+      "status": "Two studies. No licence chosen yet.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Moissanite-Labs/siliquant",
+        "path": "README.md",
+        "find": "No licence file yet. The owner has not chosen one.",
+        "line": 59
+      }
+    },
+    {
+      "id": "Moissanite-Labs/exo",
+      "layer": "L4",
+      "kind": "runtime",
+      "role": "The agent core: one agent, one memory, gated actions. Not read in this pass.",
+      "status": "Early implementation (from the organisation profile).",
+      "evidence": null,
+      "read": false
+    },
+    {
+      "id": "Moissanite-Labs/exo-os",
+      "layer": "L4",
+      "kind": "runtime",
+      "role": "Exo as a whole operating system image. Its hardware notes quote small-device power figures from outside sources.",
+      "status": "v0.1.0. Host tests pass; hardware figures are cited, not measured.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Moissanite-Labs/exo-os",
+        "path": "research/04-small-hardware.md",
+        "find": "Do not trust any mW number without a test.",
+        "line": 127
+      }
+    },
+    {
+      "id": "Moissanite-Labs/abios",
+      "layer": "L5",
+      "kind": "protocol",
+      "role": "Compact agent message format (SYM-2P).",
+      "status": "v1.0.0 spec and validator. Byte savings measured against compact JSON only.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Moissanite-Labs/abios",
+        "path": "bench/README.md",
+        "find": "v2 is 3.1x smaller in bytes",
+        "line": 18
+      }
+    },
+    {
+      "id": "Moissanite-Labs/synbios",
+      "layer": "L5",
+      "kind": "forge",
+      "role": "Agent-first forge with the SYM-3 wire format.",
+      "status": "v0.1 local reference. Token counts on synthetic transcripts.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Moissanite-Labs/synbios",
+        "path": "README.md",
+        "find": "**Status: working local reference implementation, version 0.1.**",
+        "line": 5
+      }
+    },
+    {
+      "id": "Moissanite-Labs/synmerit",
+      "layer": "L6",
+      "kind": "protocol",
+      "role": "Signed records of contribution, consent and delegated authority.",
+      "status": "v0.1.0 experimental reference.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Moissanite-Labs/synmerit",
+        "path": "package.json",
+        "find": "\"version\": \"0.1.0\"",
+        "line": 3
+      }
+    },
+    {
+      "id": "Moissanite-Labs/ethos",
+      "layer": "L6",
+      "kind": "protocol",
+      "role": "Portable user preferences across agent harnesses.",
+      "status": "v0.1.0 spec, schema and fixtures.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Moissanite-Labs/ethos",
+        "path": "pyproject.toml",
+        "find": "version = \"0.1.0\"",
+        "line": 7
+      }
+    },
+    {
+      "id": "Moissanite-Labs/exofab",
+      "layer": "L6",
+      "kind": "hub",
+      "role": "Human-first hub for forming projects and ventures.",
+      "status": "Design and proposals. Nothing runnable.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Moissanite-Labs/exofab",
+        "path": "README.md",
+        "find": "This repository currently contains project orientation and proposals, not a runnable product.",
+        "line": 5
+      }
+    },
+    {
+      "id": "Moissanite-Labs/siliconcordat",
+      "layer": "L6",
+      "kind": "governance",
+      "role": "The lab's working manifesto and its dated ecosystem map.",
+      "status": "Working proposal, not adopted policy.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Moissanite-Labs/siliconcordat",
+        "path": "README.md",
+        "find": "**Working proposal.**",
+        "line": 3
+      }
+    },
+    {
+      "id": "Moissanite-Labs/.github",
+      "layer": "L6",
+      "kind": "governance",
+      "role": "Organisation profile and site. Names Foundation-0, Proven Commons and ASKA Digital as connected efforts.",
+      "status": "Published.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Moissanite-Labs/.github",
+        "path": "profile/README.md",
+        "find": "The wider practice connects applied work at",
+        "line": 30
+      }
+    },
+    {
+      "id": "Proven-Commons/mission",
+      "layer": "L6",
+      "kind": "programme",
+      "role": "The verified bar and the candidate list for Lean rewrites of widely used libraries.",
+      "status": "Bar version 2. No project is verified yet; the reviewer list is empty.",
+      "evidence": null,
+      "status_cite": {
+        "repo": "Proven-Commons/mission",
+        "path": "CANDIDATES.md",
+        "find": "so none is verified",
+        "line": 44
+      }
+    },
+    {
+      "id": "Proven-Commons/mqtt",
+      "layer": "L5",
+      "kind": "target",
+      "role": "MQTT 5.0 packet framing, a common sensor telemetry transport.",
+      "status": "Open pull request; nothing verified.",
+      "evidence": null,
+      "read": false,
+      "status_cite": {
+        "repo": "Proven-Commons/mission",
+        "path": "CANDIDATES.md",
+        "find": "| MQTT 5.0 packet framing |",
+        "line": 78
+      }
+    },
+    {
+      "id": "Proven-Commons/cbor",
+      "layer": "L5",
+      "kind": "target",
+      "role": "CBOR codec, a compact binary encoding for sensor records.",
+      "status": "Draft pull request; nothing verified.",
+      "evidence": null,
+      "read": false,
+      "status_cite": {
+        "repo": "Proven-Commons/mission",
+        "path": "CANDIDATES.md",
+        "find": "| CBOR codec (RFC 8949) |",
+        "line": 74
+      }
+    },
+    {
+      "id": "Proven-Commons/ntp",
+      "layer": "L5",
+      "kind": "target",
+      "role": "NTP wire packet, time synchronisation for telemetry.",
+      "status": "Open pull request; nothing verified.",
+      "evidence": null,
+      "read": false,
+      "status_cite": {
+        "repo": "Proven-Commons/mission",
+        "path": "CANDIDATES.md",
+        "find": "| NTP wire packet |",
+        "line": 82
+      }
+    },
+    {
+      "id": "Proven-Commons/protobuf",
+      "layer": "L5",
+      "kind": "target",
+      "role": "Protobuf wire format codec.",
+      "status": "First slice merged; nothing verified.",
+      "evidence": null,
+      "read": false,
+      "status_cite": {
+        "repo": "Proven-Commons/mission",
+        "path": "CANDIDATES.md",
+        "find": "| Protobuf wire format codec |",
+        "line": 52
+      }
+    }
+  ],
+  "edges": [
+    {
+      "src": "Foundation-0/incentre-lattices",
+      "dst": "aska-physical/fibral-rigidity",
+      "type": "builds_on",
+      "cite": {
+        "repo": "aska-physical/fibral-rigidity",
+        "path": "README.md",
+        "find": "extending the unit-spring rigidity theory of [Foundation-0/incentre-lattices]",
+        "line": 5
+      }
+    },
+    {
+      "src": "aska-physical/cfrp-strengthening",
+      "dst": "aska-physical/cfrp-truss",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`cfrp-truss`](https://github.com/aska-physical/cfrp-truss)**",
+        "line": 13
+      }
+    },
+    {
+      "src": "aska-physical/fibral-rigidity",
+      "dst": "aska-physical/cfrp-truss",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`cfrp-truss`](https://github.com/aska-physical/cfrp-truss)**",
+        "line": 13
+      }
+    },
+    {
+      "src": "Foundation-0/nhanes-bioimpedance",
+      "dst": "aska-physical/cfrp-truss",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`cfrp-truss`](https://github.com/aska-physical/cfrp-truss)**",
+        "line": 13
+      }
+    },
+    {
+      "src": "Foundation-0/incentre-lattices",
+      "dst": "aska-physical/cfrp-masts",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`cfrp-masts`](https://github.com/aska-physical/cfrp-masts)**",
+        "line": 14
+      }
+    },
+    {
+      "src": "aska-physical/fibral-rigidity",
+      "dst": "aska-physical/cfrp-masts",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`cfrp-masts`](https://github.com/aska-physical/cfrp-masts)**",
+        "line": 14
+      }
+    },
+    {
+      "src": "Foundation-0/rigid-realizations",
+      "dst": "aska-physical/cfrp-masts",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`cfrp-masts`](https://github.com/aska-physical/cfrp-masts)**",
+        "line": 14
+      }
+    },
+    {
+      "src": "Foundation-0/ductricity",
+      "dst": "aska-physical/venturi-collars",
+      "type": "direction",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`venturi-collars`](https://github.com/aska-physical/venturi-collars)**",
+        "line": 15
+      },
+      "note": "The upstream is a project definition with no results, so nothing is inherited but the question."
+    },
+    {
+      "src": "Foundation-0/thermal-capture",
+      "dst": "aska-physical/venturi-collars",
+      "type": "direction",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`venturi-collars`](https://github.com/aska-physical/venturi-collars)**",
+        "line": 15
+      },
+      "note": "The upstream is a research direction with no results."
+    },
+    {
+      "src": "Foundation-0/nhanes-bioimpedance",
+      "dst": "aska-physical/impedence-analyzers",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`impedence-analyzers`](https://github.com/aska-physical/impedence-analyzers)**",
+        "line": 16
+      }
+    },
+    {
+      "src": "Foundation-0/point-charges",
+      "dst": "aska-physical/impedence-analyzers",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`impedence-analyzers`](https://github.com/aska-physical/impedence-analyzers)**",
+        "line": 16
+      }
+    },
+    {
+      "src": "Foundation-0/incentre-lattices",
+      "dst": "aska-physical/impedence-analyzers",
+      "type": "builds_on",
+      "cite": {
+        "repo": "aska-physical/impedence-analyzers",
+        "path": "README.md",
+        "find": "is the exact incentre constant of",
+        "line": 23
+      }
+    },
+    {
+      "src": "aska-physical/fibral-rigidity",
+      "dst": "aska-physical/funi-floors",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`funi-floors`](/aska-physical/funi-floors)**",
+        "line": 12
+      }
+    },
+    {
+      "src": "aska-physical/cfrp-truss",
+      "dst": "aska-physical/funi-floors",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`funi-floors`](/aska-physical/funi-floors)**",
+        "line": 12
+      }
+    },
+    {
+      "src": "aska-physical/venturi-collars",
+      "dst": "aska-physical/funi-floors",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`funi-floors`](/aska-physical/funi-floors)**",
+        "line": 12
+      }
+    },
+    {
+      "src": "aska-physical/impedence-analyzers",
+      "dst": "aska-physical/funi-floors",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "| **[`funi-floors`](/aska-physical/funi-floors)**",
+        "line": 12
+      }
+    },
+    {
+      "src": "aska-physical/funi-floors",
+      "dst": "aska-physical/funi-frame",
+      "type": "builds_on",
+      "cite": {
+        "repo": "aska-physical/funi-frame",
+        "path": "README.md",
+        "find": "`funi-frame` unifies the",
+        "line": 5
+      }
+    },
+    {
+      "src": "aska-physical/cfrp-truss",
+      "dst": "aska-physical/funi-frame",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/funi-frame",
+        "path": "README.md",
+        "find": "`funi-frame` unifies the",
+        "line": 5
+      }
+    },
+    {
+      "src": "aska-physical/fibral-rigidity",
+      "dst": "aska-physical/funi-frame",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/funi-frame",
+        "path": "README.md",
+        "find": "`funi-frame` unifies the",
+        "line": 5
+      }
+    },
+    {
+      "src": "aska-physical/venturi-collars",
+      "dst": "aska-physical/funi-frame",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/funi-frame",
+        "path": "README.md",
+        "find": "`funi-frame` unifies the",
+        "line": 5
+      }
+    },
+    {
+      "src": "aska-physical/impedence-analyzers",
+      "dst": "aska-physical/funi-frame",
+      "type": "stated",
+      "cite": {
+        "repo": "aska-physical/funi-frame",
+        "path": "README.md",
+        "find": "`funi-frame` unifies the",
+        "line": 5
+      }
+    },
+    {
+      "src": "aska-physical/funi-floors",
+      "dst": "aska-physical/funi-frame",
+      "type": "consumes",
+      "cite": {
+        "repo": "aska-physical/funi-frame",
+        "path": "verify.py",
+        "find": "m_a = (2500.0 * (195.12 + roof_m) + p_m * h_a * wall_m) / 1000.0",
+        "line": 125
+      },
+      "note": "A value copied by hand into the downstream verifier. optifab now checks it against the upstream certificate."
+    },
+    {
+      "src": "aska-physical/funi-frame",
+      "dst": "aska-physical/optifab",
+      "type": "consumes",
+      "cite": {
+        "repo": "aska-physical/funi-frame",
+        "path": "verify.py",
+        "find": "Q_drv = Q_air / 0.62",
+        "line": 144
+      },
+      "note": "Certificate vendored; verifier literals pinned.",
+      "new": true
+    },
+    {
+      "src": "aska-physical/funi-floors",
+      "dst": "aska-physical/optifab",
+      "type": "consumes",
+      "cite": {
+        "repo": "aska-physical/funi-floors",
+        "path": "results/certificate.json",
+        "find": "\"dead_mass_kg_m2\": 195.12",
+        "line": 61
+      },
+      "note": "Certificate vendored for the margin vector and the interface checks.",
+      "new": true
+    },
+    {
+      "src": "aska-physical/venturi-collars",
+      "dst": "aska-physical/optifab",
+      "type": "consumes",
+      "cite": {
+        "repo": "aska-physical/venturi-collars",
+        "path": "README.md",
+        "find": "`> 80 uW` node",
+        "line": 21
+      },
+      "note": "Certificate vendored for the sensing-power margin.",
+      "new": true
+    },
+    {
+      "src": "Moissanite-Labs/weft",
+      "dst": "aska-physical/optifab",
+      "type": "consumes",
+      "cite": {
+        "repo": "Moissanite-Labs/weft",
+        "path": "weft/runtime/invariants/invariants.py",
+        "find": "def verify_weight_update_safety_ex(",
+        "line": 95
+      },
+      "note": "The gate predicate is re-implemented here, tested on Weft's vectors and checked against Weft's own function on generated inputs.",
+      "new": true
+    },
+    {
+      "src": "Foundation-0/f0",
+      "dst": "aska-physical/optifab",
+      "type": "governs",
+      "cite": {
+        "repo": "Foundation-0/f0",
+        "path": "docs/charter/page.js",
+        "find": "var EVID = { 'formally-verified': ['v', 5, 'Formally verified']",
+        "line": 317
+      },
+      "note": "Evidence scale and the rules for agents.",
+      "new": true
+    },
+    {
+      "src": "Moissanite-Labs/weft-corpus",
+      "dst": "aska-physical/optifab",
+      "type": "direction",
+      "cite": {
+        "repo": "Moissanite-Labs/weft-corpus",
+        "path": "weft/terrafab.md",
+        "find": "the other part of the loop is what the facility enables for the weft by providing a full end to end control loop for iteration, adaptation and evolution",
+        "line": 86
+      },
+      "note": "The idea of one structure, named in optifab issue 1. No figure from these documents is used as evidence.",
+      "new": true
+    },
+    {
+      "src": "Foundation-0/f0",
+      "dst": "aska-physical/.github",
+      "type": "mentions",
+      "cite": {
+        "repo": "aska-physical/.github",
+        "path": "profile/README.md",
+        "find": "theorems from `Foundation-0` into commercially manufacturable physical products",
+        "line": 5
+      },
+      "note": "The aska-physical profile says the organisation turns Foundation-0 results into products."
+    },
+    {
+      "src": "Foundation-0/.github",
+      "dst": "aska-physical/fibral-rigidity",
+      "type": "governs",
+      "cite": {
+        "repo": "aska-physical/fibral-rigidity",
+        "path": "README.md",
+        "find": "Every claim is labelled strictly per the",
+        "line": 17
+      },
+      "note": "fibral-rigidity labels its claims by the Foundation-0 repository standard."
+    },
+    {
+      "src": "Foundation-0/f0",
+      "dst": "Proven-Commons/mission",
+      "type": "governs",
+      "cite": {
+        "repo": "Proven-Commons/mission",
+        "path": "README.md",
+        "find": "It is a programme of Foundation-0",
+        "line": 5
+      }
+    },
+    {
+      "src": "Foundation-0/project-asma",
+      "dst": "Moissanite-Labs/weft",
+      "type": "builds_on",
+      "cite": {
+        "repo": "Moissanite-Labs/weft",
+        "path": "weft/runtime/plasm/identifiability_gate.py",
+        "find": "Foundation-0/project-asma",
+        "line": 7
+      },
+      "note": "Weft adapted two theorems into its identifiability gate. That module is separate from the gate optifab uses."
+    },
+    {
+      "src": "Foundation-0/rigid-realizations",
+      "dst": "Moissanite-Labs/weft",
+      "type": "mentions",
+      "cite": {
+        "repo": "Moissanite-Labs/weft",
+        "path": "tools/flex_burn_hardened/run_all_55_flex_burn_v2.py",
+        "find": "Foundation-0/rigid-realizations",
+        "line": 23
+      },
+      "note": "Named as a track in a budget tool. No data flows."
+    },
+    {
+      "src": "Moissanite-Labs/weft",
+      "dst": "Foundation-0/math0",
+      "type": "mentions",
+      "cite": {
+        "repo": "Foundation-0/math0",
+        "path": "studies/integer-mult/carbon-2026-11-13/base-math-convergence/research/conservation-quotient-bounds/PROOF.md",
+        "find": "certified neural morphogenesis in [`Moissanite-Labs/weft`]",
+        "line": 10
+      },
+      "note": "A math0 study names Weft as one instance of a shared structure. The study is claimed, pending review, and its Lean file does not compile."
+    },
+    {
+      "src": "Foundation-0/incentre-lattices",
+      "dst": "Moissanite-Labs/siliquant",
+      "type": "checked_unrelated",
+      "cite": {
+        "repo": "Moissanite-Labs/siliquant",
+        "path": "notes/brief-check.md",
+        "find": "| 17 | The 16,240 exact certificate coefficients | Real, unrelated |",
+        "line": 39
+      },
+      "note": "siliquant checked whether the certificate coefficients of incentre-lattices bear on weight rounding and found them unrelated. Its other proposed links to the lattice tracks are recorded there as proposals, not evaluated."
+    },
+    {
+      "src": "Foundation-0/incentre-lattices",
+      "dst": "Moissanite-Labs/exo-os",
+      "type": "mentions",
+      "cite": {
+        "repo": "Moissanite-Labs/exo-os",
+        "path": "docs/BANKAI.md",
+        "find": "incentre lattice (D-049)",
+        "line": 405
+      },
+      "note": "The lattice supplies the geometry of a visual figure. No result is used."
+    },
+    {
+      "src": "Foundation-0/f0",
+      "dst": "Moissanite-Labs/exo",
+      "type": "indexes",
+      "cite": {
+        "repo": "Foundation-0/f0",
+        "path": "docs/data/projects.json",
+        "find": "\"slug\": \"exo\"",
+        "line": 331
+      },
+      "note": "f0 lists Exo as an instrument, with Aska Digital as its owner."
+    },
+    {
+      "src": "Foundation-0/f0",
+      "dst": "Moissanite-Labs/.github",
+      "type": "mentions",
+      "cite": {
+        "repo": "Moissanite-Labs/.github",
+        "path": "profile/README.md",
+        "find": "The wider practice connects applied work at",
+        "line": 30
+      },
+      "note": "The lab profile names Foundation-0 and Proven Commons as connected efforts."
+    },
+    {
+      "src": "Moissanite-Labs/weft-corpus",
+      "dst": "Moissanite-Labs/weft",
+      "type": "builds_on",
+      "cite": {
+        "repo": "Moissanite-Labs/weft",
+        "path": "weft/runtime/invariants/invariants.py",
+        "find": "Repaired from `weft/terrafab-calc.md:50-100` (C header)",
+        "line": 11
+      },
+      "note": "Weft's gate was repaired from a header first written, in the Terrafab documents, as a fence for physical machines."
+    },
+    {
+      "src": "Moissanite-Labs/weft",
+      "dst": "Moissanite-Labs/weft-loom",
+      "type": "builds_on",
+      "cite": {
+        "repo": "Moissanite-Labs/weft",
+        "path": "README.md",
+        "find": "Experiment records, audits",
+        "line": 35
+      }
+    },
+    {
+      "src": "Moissanite-Labs/weft",
+      "dst": "Moissanite-Labs/siliquant",
+      "type": "mentions",
+      "cite": {
+        "repo": "Moissanite-Labs/siliquant",
+        "path": "README.md",
+        "find": "It sits beside [weft]",
+        "line": 3
+      }
+    },
+    {
+      "src": "Moissanite-Labs/abios",
+      "dst": "Moissanite-Labs/weft",
+      "type": "mentions",
+      "cite": {
+        "repo": "Moissanite-Labs/weft",
+        "path": "README.md",
+        "find": "The telemetry line here is an earlier dialect",
+        "line": 136
+      },
+      "note": "Weft's telemetry line predates the abios format; the move is an open Weft issue."
+    },
+    {
+      "src": "aska-physical/dock",
+      "dst": "aska-physical/optifab",
+      "type": "indexes",
+      "cite": {
+        "repo": "aska-physical/dock",
+        "path": "index.html",
+        "find": "api.github.com/orgs/aska-physical/repos",
+        "line": 789
+      },
+      "note": "The hub page lists every repository of the organisation, so optifab appears without a change to dock."
+    }
+  ],
+  "surveyed_not_connected": [
+    {
+      "repo": "Foundation-0/astr0",
+      "why": "Astronomy hub. Nothing in it bears on a data centre."
+    },
+    {
+      "repo": "Foundation-0/plate-eclipses",
+      "why": "Astronomy result, claimed. Not connected."
+    },
+    {
+      "repo": "Foundation-0/fractals",
+      "why": "Exploration with no new result claimed. Not connected."
+    },
+    {
+      "repo": "Moissanite-Labs/weft-eido",
+      "why": "Design language for interfaces. A later dashboard for the plant could use it; nothing to check today."
+    },
+    {
+      "repo": "Moissanite-Labs/exoframe",
+      "why": "Public intake pages for Exofab. Not connected."
+    },
+    {
+      "repo": "Moissanite-Labs/exorien",
+      "why": "Direction for shared physical and digital spaces. Its own notes say hardware is not implemented."
+    },
+    {
+      "repo": "Moissanite-Labs/tokenpage",
+      "why": "Charter only. No measurement to combine yet."
+    },
+    {
+      "repo": "Moissanite-Labs/scry",
+      "why": "Charter only. No measurement to combine yet."
+    },
+    {
+      "repo": "Moissanite-Labs/nullmodem",
+      "why": "Charter only. No measurement to combine yet."
+    },
+    {
+      "repo": "Proven-Commons/tar",
+      "why": "Pilot, built, not yet verified. Not on the telemetry path."
+    },
+    {
+      "repo": "Proven-Commons/redis",
+      "why": "Proofs done, specification review pending. Not on the telemetry path."
+    },
+    {
+      "repo": "Proven-Commons/site",
+      "why": "Alternative build of the programme site."
+    }
+  ]
+}

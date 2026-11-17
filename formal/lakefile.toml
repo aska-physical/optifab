@@ -1,0 +1,18 @@
+name = "plantgate"
+version = "0.1.0"
+defaultTargets = ["PlantGate", "PlantGateSpec", "PlantGateProofs", "plantgate"]
+
+[[lean_lib]]
+name = "PlantGate"
+
+[[lean_lib]]
+name = "PlantGateSpec"
+roots = ["PlantGate.Spec"]
+
+[[lean_lib]]
+name = "PlantGateProofs"
+roots = ["PlantGate.Proofs"]
+
+[[lean_exe]]
+name = "plantgate"
+root = "Main"

@@ -1,0 +1,131 @@
+{
+  "aci318_punching_collar_313psf": {
+    "baseline_250mm_pt_uncollared_fails": {
+      "Vu_313psf_kN": 2608.07,
+      "active_collar_passes": false,
+      "b0_mm": 2840.0,
+      "d_eff_flush_corner_mm": 210.0,
+      "phi_Vc_uncollared_kN": 933.56,
+      "phi_Vn_active_collar_kN": 767.42,
+      "uncollared_passes": false,
+      "utilization_active_collar": 3.3985
+    },
+    "funi_floor_with_collar": {
+      "Vu_313psf_kN": 2208.02,
+      "active_collar_passes": true,
+      "b0_mm": 3340.0,
+      "d_eff_flush_corner_mm": 335.0,
+      "phi_Vc_uncollared_kN": 1810.33,
+      "phi_Vn_active_collar_kN": 2756.4,
+      "uncollared_passes": false,
+      "utilization_active_collar": 0.8011
+    }
+  },
+  "certificate_version": "0.1.0",
+  "dg11_vibration_benchmark": {
+    "active_prestressed_cassette": {
+      "W_modal_kN": 153.39,
+      "ap_pct_g": 0.308,
+      "fn_Hz": 8.624,
+      "harmonic_cutoff_Hz": 8.0,
+      "office_limit_pct_g": 0.5,
+      "passes_dg11_office_and_server": true
+    },
+    "passive_cracked_shell_fails": {
+      "W_modal_kN": 153.39,
+      "ap_pct_g": 2.4154,
+      "fn_Hz": 3.261,
+      "harmonic_cutoff_Hz": 8.0,
+      "office_limit_pct_g": 0.5,
+      "passes_dg11_office_and_server": false
+    }
+  },
+  "embodied_carbon_and_eis_leak_twin": {
+    "ai_datacenter_310mm_pt_kgCO2e_m2": 120.6,
+    "ai_datacenter_313psf_funi_kgCO2e_m2": 38.79,
+    "ai_datacenter_carbon_reduction_pct": 67.84,
+    "eis_50khz_coolant_leak_reactance_shift_pct": 46.16,
+    "eis_50khz_rack_load_crosstalk_pct": 0.0,
+    "office_250mm_pt_kgCO2e_m2": 92.0,
+    "office_50psf_funi_kgCO2e_m2": 20.36,
+    "office_carbon_reduction_pct": 77.87
+  },
+  "funicular_cassette_9mx3m_313psf": {
+    "EI_2way_dyn_MNm2_per_m": 58.758,
+    "H_arch_service_kN": 1894.74,
+    "H_arch_uls_kN": 2856.82,
+    "M_crown_residual_service_kNm": 4.119,
+    "V_quarter_mep_demand_uls_kN": 185.6,
+    "concrete_rupture_modulus_fr_MPa": 4.384,
+    "concrete_volume_reduction_vs_310mm_pt_pct": 76.11,
+    "dead_mass_kg_m2": 195.12,
+    "dead_mass_reduction_vs_744kg_pt_pct": 73.77,
+    "equivalent_concrete_thickness_mm": 74.07,
+    "fc_crown_service_MPa": 13.669,
+    "fc_service_limit_0.45fc_MPa": 22.5,
+    "fe_sma_recovery_stress_MPa": 423.47,
+    "joule_activation_energy_kWh_m2": 0.3227,
+    "joule_activation_energy_per_27m2_cassette_kWh": 8.712,
+    "passive_gfrp_tie_crown_tensile_stress_MPa": 188.79,
+    "phi_V_45deg_octagonal_mep_hole_kN": 373.48,
+    "phi_V_unbraced_mep_hole_kN": 22.5,
+    "story_height_saved_vs_pt_plenum_mm": 280.0
+  },
+  "iso834_120min_fire_crossover": {
+    "H_cap_epoxy_only_120min_kN": 345.6,
+    "H_cap_hybrid_fesma_mortar_120min_kN": 3902.95,
+    "H_fire_120min_demand_kN": 1171.96,
+    "T_protected_channel_120min_C": 427.6,
+    "T_unprotected_20mm_epoxy_120min_C": 840.2,
+    "epoxy_only_survives_120min": false,
+    "hybrid_fesma_survives_120min": true
+  },
+  "must_fail_controls": [
+    {
+      "control": "passive_low_modulus_tie_prevents_funicular_crown_cracking",
+      "rejected": true
+    },
+    {
+      "control": "unbraced_200mm_rib_duct_hole_carries_quarter_span_uls_shear",
+      "rejected": true
+    },
+    {
+      "control": "lightweight_cracked_shell_passes_dg11_walking_vibration_without_active_tie",
+      "rejected": true
+    },
+    {
+      "control": "uncollared_250mm_flat_slab_survives_313psf_ai_datacenter_punching_shear",
+      "rejected": true
+    },
+    {
+      "control": "uncollared_funicular_column_seat_survives_313psf_without_active_collar",
+      "rejected": true
+    },
+    {
+      "control": "epoxy_bonded_cfrp_without_fesma_mortar_survives_120min_iso834_fire",
+      "rejected": true
+    },
+    {
+      "control": "crown_service_compression_exceeds_aci_0.45fc_sustained_limit",
+      "rejected": true
+    },
+    {
+      "control": "joule_heating_activation_exceeds_0.5_kwh_per_m2_floor_area",
+      "rejected": true
+    },
+    {
+      "control": "rack_axial_load_corrupts_50khz_eis_coolant_leak_detection",
+      "rejected": true
+    },
+    {
+      "control": "funicular_sip_cassette_misses_65pct_embodied_carbon_reduction",
+      "rejected": true
+    }
+  ],
+  "repository": "aska-physical/funi-floors",
+  "symbolic_theorems": {
+    "dg11_critical_frequency_hz": "5.7143",
+    "elastic_arch_tie_compatibility": "H = (H_rigid + chi*P_SMA) / (1 + chi)",
+    "funicular_zero_moment_identity": "M_beam(x) - (q*L^2/(8*f))*z(x) == 0"
+  }
+}
