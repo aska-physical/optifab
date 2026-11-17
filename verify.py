@@ -41,7 +41,7 @@ FORMAL_SOURCES = ["PlantGate.lean", "PlantGate/Spec.lean", "PlantGate/Proofs.lea
                   "lakefile.toml", "lean-toolchain", "tests/oracle.py", "tests/run_tests.py"]
 KELVIN = 273.15
 PSF_TO_KPA = 0.04788026
-VERSION = "0.2.0"
+VERSION = "0.3.0"
 
 
 # --------------------------------------------------------------------------- inputs
@@ -720,22 +720,34 @@ LOOP_START = {"pcm_kwh": 2500, "capture_ppm": 850000, "wall_u_mw": 132, "floor_k
 LOOP_BUDGET = 64
 
 
+def _exact(x: float, scale: int, what: str) -> int:
+    """A pinned decimal as an integer in a finer unit. Fails if the unit is not fine enough."""
+    v = round(x * scale)
+    assert abs(x * scale - v) < 1e-6, f"{what} = {x} is not a whole number of 1/{scale}: use a finer unit"
+    return v
+
+
 def loop_plant(inp: dict, env: dict, margins: list[dict]) -> dict:
-    """The pinned upstream values the loop's plant model needs."""
+    """The pinned upstream values the loop's plant model needs, as exact integers."""
     ff, pins = inp["ff"], inp["pins"]
     cp = pins["ff.cooling_power"]["value"]
+    fixed = {m["limit_state"]: math.ceil(m["utilisation"] * 1e6 - 1e-9) for m in margins
+             if m["limit_state"] != "sorption_drive_heat"}  # the certified margins no gene of the loop can move
+    ua_roof = ff["domain_1_funicular_radiative_roof"]["U_roof_W_m2K"] * pin_value(pins, "ff.floor_mass", "floor_area_m2")
+    wall = pin_value(pins, "ff.geometry", "perimeter_m") * ff["domain_4_top_down_seismic_cellular_frame"]["total_building_height_m"]
     return {
-        "p_it_kw": ff["domain_5_6_three_tier_tes_and_closed_loop_cooling"]["P_it_MW"] * 1000.0,
-        "cop_ads": pin_value(pins, "ff.cop_ads", "cop_ads"),
-        "ua_roof_w_k": ff["domain_1_funicular_radiative_roof"]["U_roof_W_m2K"] * pin_value(pins, "ff.floor_mass", "floor_area_m2"),
-        "wall_area_m2": pin_value(pins, "ff.geometry", "perimeter_m") * ff["domain_4_top_down_seismic_cellular_frame"]["total_building_height_m"],
-        "design_dt_k": env["minimum_load"]["design_temperature_difference_K"],
-        "other_kw": env["minimum_load"]["other_overhead_MW"] * 1000.0,
-        "passive_kw": env["pue_reproduction"]["passive_sinks_MW"] * 1000.0,
-        "loop_cop": cp["ates_cop"], "aux_kw": cp["funi_aux_MW"] * 1000.0,
-        # the certified margins no gene of the loop can move
-        "fixed_margins_ppm": {m["limit_state"]: math.ceil(m["utilisation"] * 1e6 - 1e-9) for m in margins
-                              if m["limit_state"] != "sorption_drive_heat"},
+        "p_it_w": _exact(ff["domain_5_6_three_tier_tes_and_closed_loop_cooling"]["P_it_MW"], 10**6, "IT load in MW"),
+        "cop_ppm": _exact(pin_value(pins, "ff.cop_ads", "cop_ads"), 10**6, "sorption COP"),
+        "ua_roof_mw_k": _exact(ua_roof, 1000, "roof conductance in W/K"),
+        "wall_area_m2": _exact(wall, 1, "wall area in m2"),
+        "dt_mk": _exact(env["minimum_load"]["design_temperature_difference_K"], 1000, "design temperature difference in K"),
+        "other_w": _exact(env["minimum_load"]["other_overhead_MW"], 10**6, "other overhead in MW"),
+        "passive_w": _exact(env["pue_reproduction"]["passive_sinks_MW"], 10**6, "passive sinks in MW"),
+        "aux_w": _exact(cp["funi_aux_MW"], 10**6, "auxiliaries in MW"),
+        "loop_cop_milli": _exact(cp["ates_cop"], 1000, "loop COP"),
+        "fixed": list(fixed.values()), "fixed_names": list(fixed),
+        # what could be built or set: declared here, not derived
+        "lo": {k: loop.BOUNDS[k][0] for k in loop.oracle.GENES}, "hi": {k: loop.BOUNDS[k][1] for k in loop.oracle.GENES},
     }
 
 
@@ -777,7 +789,7 @@ def improvement_loop(inp: dict, env: dict, margins: list[dict]) -> tuple[dict, d
     frozen = loop.summary(loop.run_loop(plant, frozen_start, LOOP_BUDGET))
     below = dict(LOOP_START, floor_kw=500)  # a scheduler floor under the load floor of the plant
     base_m, below_m = loop.model(LOOP_START, plant), loop.model(below, plant)
-    refused = loop.oracle.gate(base_m["vector"], below_m["vector"], loop.oracle.headroom(loop.LIMIT, base_m["vector"]), LOOP_BUDGET, 1)
+    refused = (loop.decide(plant, LOOP_START, LOOP_BUDGET, below, "0" * 64)["verdict"],)
     keep = ("decisions", "admitted", "refused", "budget_left", "eta_final_ppm", "worst_margin_ever_admitted_ppm")
     report = {
         "scenario": loop.SCENARIO, "limit_ppm": loop.LIMIT, "proposer_reserve_ppm": reserve,
@@ -826,8 +838,7 @@ def run_formal(ledger: dict) -> int:
     field = lambda name: re.search(rf"^- {name}: (.+)$", results, flags=re.M).group(1)
     lines = loop.replay_lines(ledger)
     out = sh([str(FORMAL_DIR / ".lake" / "build" / "bin" / "plantgate")], input="\n".join(lines) + "\n").stdout.split("\n")
-    mismatches = [e["generation"] for e, got in zip(ledger["entries"], out)
-                  if got != f"{e['verdict']} {e['budget_after']}"]
+    mismatches = [i for i, (want, got) in enumerate(zip(loop.replay_expected(ledger), out)) if got != want]
     lean = sh(["lake", "env", "lean", "--version"]).stdout.strip()
     record = {
         "schema": "optifab-formal/1", "lean": lean,

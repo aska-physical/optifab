@@ -9,7 +9,13 @@
     "PlantGate.Spec.no_margin_rises_past_radius",
     "PlantGate.Spec.accepted_stays_within",
     "PlantGate.Spec.run_safe",
-    "PlantGate.Spec.run_bounded"
+    "PlantGate.Spec.run_bounded",
+    "PlantGate.Spec.step_complete",
+    "PlantGate.Spec.loop_safe",
+    "PlantGate.Spec.loop_in_bounds",
+    "PlantGate.Spec.loop_never_worse",
+    "PlantGate.Spec.loop_bounded",
+    "PlantGate.Spec.loop_keeps_physics"
   ],
   "comparator": {
     "command": "lake comparator --paranoid",
@@ -24,7 +30,7 @@
     ]
   },
   "differential_tests": {
-    "inputs": 300000,
+    "inputs": 400000,
     "seed": 20261117,
     "failures": 0,
     "passed": true
@@ -34,6 +40,6 @@
     "mismatches": 0
   },
   "bar": "Proven Commons bar check: items 2 to 6 pass; item 1 is open (no reviewer has approved the specification). See formal/BAR-REPORT.md.",
-  "sources_sha256": "dc427e448abf0d8d54a7a06e1f93ec408b520a93c6dd122c5c0b24fcf9db8d53",
-  "ledger_hash": "20e492cea1606034f0e6917df14ccb774a219c00748fae8104429939cfbc9532"
+  "sources_sha256": "4e3524530814a1778efc72a5ce684e5c0d08227f65993a7f8f962858219eed38",
+  "ledger_hash": "c60e31d13303a1605f91d1d19ab8800af07d211d5402e7baedd9a992997bd5fd"
 }

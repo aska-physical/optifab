@@ -1,22 +1,26 @@
 #!/usr/bin/env python3
 """The improvement loop: hardware and software of the campus changed together, one gated step at a time.
 
-A genome holds three hardware genes (thermal store size, liquid capture fraction, wall U-value), two
-software genes (the scheduler's load floor and the share of load it sheds in a cooling outage) and one
-gene of the proposer itself (its step scale). Each generation the proposer suggests changes, the plant
-model turns each candidate into a vector of margins, and the exact gate in formal/ decides. Hardware
-changes are scored by the headroom they open, software changes by the objective they gain. An admitted
-candidate becomes the baseline of the next generation. Every decision goes into a hash-chained ledger.
+A design holds three hardware genes (thermal store size, liquid capture fraction, wall U-value) and two
+software genes (the scheduler's load floor and the share of load it sheds in a cooling outage). The
+proposer adds one gene of its own, its step scale. Each generation something proposes a design. The plant
+model turns it into a vector of margins and an objective, and one step function decides: the design must
+lie within the bounds, pass the gate, and not lower the objective. A design that is taken up becomes the
+one held. Every decision goes into a hash-chained ledger.
 
-What is proved (in Lean, formal/): no list of proposals can push a margin past its limit or overdraw
-the change budget through the gate. What is not: the plant model, the objective, the proposer and this
-file. The scenario is a choice made here, so the efficiency figures are illustrations, not predictions.
+The model, the bounds, the gate, the objective and the step are exact integer arithmetic, written twice:
+in Lean (formal/PlantGate.lean), where the properties of the loop are proved for every list of proposals,
+and in Python (formal/tests/oracle.py), which this file calls and which is tested against the Lean
+executable. What is not proved: that the model describes a real plant, and the proposers. The scenario
+is a choice made here, so the efficiency figures are illustrations, not predictions.
+
+Two proposers use the loop. `run_loop` is a seeded search. `run_proposals` replays a recorded list of
+proposals made by anything else: a person, a model, an adversary.
 """
 from __future__ import annotations
 
 import hashlib
 import json
-import math
 import sys
 from pathlib import Path
 
@@ -33,50 +37,66 @@ STEP = {"pcm_kwh": 100, "capture_ppm": 5000, "wall_u_mw": 4, "floor_kw": 20, "sh
 BOUNDS = {"pcm_kwh": (500, 5000), "capture_ppm": (620000, 950000), "wall_u_mw": (100, 2400),
           "floor_kw": (0, 10000), "shed_ppm": (0, 1000000), "step_ppm": (125000, 8000000)}
 
-# The scenario the objective is scored on. These four numbers are choices made here.
-SCENARIO = {"outage_min": 20, "outages_per_year": 12, "low_demand_fraction_ppm": 30000, "low_demand_hours": 2000}
+MOVING = ("sorption_drive_heat", "load_floor", "outage_ride_through")  # the margins the genes move
+
+# The scenario the objective is scored on. The first four numbers are choices made here.
+SCENARIO = {"outage_min": 20, "outages_per_year": 12, "low_demand_fraction_ppm": 30000, "low_demand_hours": 2000,
+            "hours_per_year": 8760}
+
+
+def genes(genome: dict) -> dict:
+    """The design part of a genome: the five genes the model reads."""
+    return {k: genome[k] for k in oracle.GENES}
 
 
 def model(genome: dict, plant: dict) -> dict:
-    """Margins (ppm of limit) and the objective for one genome. `plant` holds the pinned upstream values."""
-    p_kw = plant["p_it_kw"]
-    alpha = genome["capture_ppm"] / 1e6
-    cop = plant["cop_ads"]
-    q_env_kw = (plant["ua_roof_w_k"] + genome["wall_u_mw"] / 1000.0 * plant["wall_area_m2"]) * plant["design_dt_k"] / 1000.0
-    q_fix_kw = q_env_kw + plant["other_kw"]
-    denom = (1.0 + cop) * alpha - 1.0
-    p_min_kw = math.inf if denom <= 0 else q_fix_kw / denom
-    shed = genome["shed_ppm"] / 1e6
-    outage_h = SCENARIO["outage_min"] / 60.0
-
-    def ppm(x: float) -> int:  # rounded up, so a margin is never understated
-        return 10 * LIMIT if not math.isfinite(x) else min(10 * LIMIT, math.ceil(x * 1e6 - 1e-9))
-
-    moving = {
-        "sorption_drive_heat": ppm(((1.0 - alpha) * p_kw + q_fix_kw) / cop / (alpha * p_kw)),
-        "load_floor": ppm(p_min_kw / genome["floor_kw"]) if genome["floor_kw"] > 0 else 10 * LIMIT,
-        "outage_ride_through": ppm(p_kw * (1.0 - shed) * outage_h / genome["pcm_kwh"]),
-    }
-    margins = dict(plant["fixed_margins_ppm"])
-    margins.update(moving)
-
-    # Objective: useful IT energy delivered per unit of utility energy over the scenario year.
-    hours, low_h = 8760.0, SCENARIO["low_demand_hours"]
-    low_kw = SCENARIO["low_demand_fraction_ppm"] / 1e6 * p_kw
-    it_low = max(low_kw, genome["floor_kw"])  # the scheduler fills up to its floor; the filler is not useful
-    lost = shed * p_kw * outage_h * SCENARIO["outages_per_year"]
-    useful = p_kw * (hours - low_h) + low_kw * low_h - lost
-
-    def utility(it_kw: float) -> float:  # the upstream plant model: cooling loop, auxiliaries, other overhead
-        return it_kw + (it_kw - plant["passive_kw"]) / plant["loop_cop"] + plant["aux_kw"] + plant["other_kw"]
-
-    used = utility(p_kw) * (hours - low_h) + utility(it_low) * low_h - utility(shed * p_kw) * outage_h * SCENARIO["outages_per_year"]
-    return {"margins": margins, "names": list(margins), "vector": list(margins.values()),
-            "eta_ppm": math.floor(useful / used * 1e6), "p_min_kw": round(p_min_kw, 1)}
+    """Margins (ppm of limit) and the objective for one design, from the exact model."""
+    vector = oracle.margins(plant, SCENARIO, genes(genome))
+    names = list(plant["fixed_names"]) + list(MOVING)
+    return {"margins": dict(zip(names, vector)), "names": names, "vector": vector,
+            "eta_ppm": oracle.objective(plant, SCENARIO, genes(genome))}
 
 
 def digest(entry: dict) -> str:
     return hashlib.sha256(json.dumps(entry, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def decide(plant: dict, held: dict, budget: int, cand: dict, prev: str, **extra) -> dict:
+    """One decision of the step function, as a ledger entry."""
+    base, m = model(held, plant), model(cand, plant)
+    (_, after), verdict = oracle.design_step(plant, SCENARIO, LIMIT, (genes(held), budget), genes(cand))
+    entry = {**extra, "held": genes(held), "proposed": genes(cand), "base_ppm": base["vector"], "cand_ppm": m["vector"],
+             "radius_ppm": oracle.headroom(LIMIT, base["vector"]), "eta_before_ppm": base["eta_ppm"],
+             "eta_after_ppm": m["eta_ppm"], "budget_before": budget, "cost": 1, "verdict": verdict,
+             "budget_after": after, "prev": prev}
+    entry["hash"] = digest(entry)
+    return entry
+
+
+def head_of(plant: dict, start: dict, budget: int, **extra) -> dict:
+    base = model(start, plant)
+    return {"start_genome": dict(start), "start_margins_ppm": base["margins"], "start_eta_ppm": base["eta_ppm"],
+            "budget": budget, "limit": LIMIT, "scenario": SCENARIO, "plant": plant, **extra}
+
+
+def run_proposals(plant: dict, start: dict, budget: int, proposals: list[dict]) -> dict:
+    """Replay a recorded list of proposals, whoever made them. Each proposal sets one or more genes."""
+    genome = genes(start)
+    ledger, prev = [], "0" * 64
+    for turn, prop in enumerate(proposals):
+        cand = dict(genome)
+        cand.update({k: int(v) for k, v in prop["set"].items() if k in oracle.GENES})
+        kinds = sorted({"hardware" if k in HARDWARE else "software" for k in prop["set"] if cand[k] != genome[k]})
+        entry = decide(plant, genome, budget, cand, prev, turn=turn, kind="+".join(kinds) or "none",
+                       set={k: cand[k] for k in prop["set"] if k in oracle.GENES})
+        ledger.append(entry)
+        prev = entry["hash"]
+        if entry["verdict"] == "ok":
+            genome, budget = cand, entry["budget_after"]
+    final = model(genome, plant)
+    return {"head": head_of(plant, genes(start), budget if not ledger else ledger[0]["budget_before"]),
+            "entries": ledger, "final_genome": genome, "final_margins_ppm": final["margins"],
+            "final_eta_ppm": final["eta_ppm"], "final_budget": budget, "final_hash": prev}
 
 
 def run_loop(plant: dict, start: dict, budget: int, generations: int = 400, seed: int = 20261117) -> dict:
@@ -91,8 +111,7 @@ def run_loop(plant: dict, start: dict, budget: int, generations: int = 400, seed
     genome = dict(start)
     base = model(genome, plant)
     ledger, prev = [], "0" * 64
-    head = {"start_genome": dict(genome), "start_margins_ppm": base["margins"], "start_eta_ppm": base["eta_ppm"],
-            "budget": budget, "limit": LIMIT, "scenario": SCENARIO, "seed": seed}
+    head = head_of(plant, genome, budget, seed=seed)
     idle = 0
     for gen in range(generations):
         if budget <= 0 or idle >= 40:
@@ -122,14 +141,11 @@ def run_loop(plant: dict, start: dict, budget: int, generations: int = 400, seed
             genome["step_ppm"] = max(BOUNDS["step_ppm"][0], genome["step_ppm"] // 2)  # nothing better: look closer
             continue
         cand, m, gene, delta, _ = best
-        radius = oracle.headroom(LIMIT, base["vector"])
-        verdict, remaining = oracle.gate(base["vector"], m["vector"], radius, budget, 1)
-        entry = {"generation": gen, "gene": gene, "kind": "hardware" if gene in HARDWARE else "software",
-                 "delta": delta, "step_ppm": genome["step_ppm"], "base_ppm": base["vector"], "cand_ppm": m["vector"],
-                 "radius_ppm": radius, "eta_before_ppm": base["eta_ppm"], "eta_after_ppm": m["eta_ppm"],
-                 "budget_before": budget, "cost": 1, "verdict": verdict, "budget_after": remaining, "prev": prev}
-        entry["hash"] = prev = digest(entry)
+        entry = decide(plant, genome, budget, cand, prev, generation=gen, gene=gene,
+                       kind="hardware" if gene in HARDWARE else "software", delta=delta, step_ppm=genome["step_ppm"])
+        prev = entry["hash"]
         ledger.append(entry)
+        verdict, remaining = entry["verdict"], entry["budget_after"]
         if verdict == "ok":
             step = min(BOUNDS["step_ppm"][1], genome["step_ppm"] * 2)  # it worked: reach further next time
             genome, base, budget, idle = dict(cand), m, remaining, 0
@@ -153,9 +169,16 @@ def check_chain(ledger: dict) -> bool:
 
 
 def replay_lines(ledger: dict) -> list[str]:
-    """One line per ledger decision, for the Lean executable to decide again."""
-    return [oracle.line("h", ledger["head"]["limit"], e["budget_before"], e["cost"], e["base_ppm"], e["cand_ppm"])
+    """One line per ledger decision, for the Lean executable to work out again from the two designs."""
+    h = ledger["head"]
+    return [oracle.design_line(h["limit"], e["budget_before"], h["plant"], h["scenario"], e["held"], e["proposed"])
             for e in ledger["entries"]]
+
+
+def replay_expected(ledger: dict) -> list[str]:
+    """What Lean must print for each line: verdict, budget left, both objectives and the proposed margins."""
+    return [f"{e['verdict']} {e['budget_after']} {e['eta_before_ppm']} {e['eta_after_ppm']} ; "
+            + " ".join(map(str, e["cand_ppm"])) for e in ledger["entries"]]
 
 
 def summary(ledger: dict) -> dict:
@@ -169,11 +192,12 @@ def summary(ledger: dict) -> dict:
         "decisions": len(ledger["entries"]), "admitted": len(ok), "refused": dict(sorted(refused.items())),
         "admitted_hardware_changes": sum(1 for e in ok if e["kind"] == "hardware"),
         "admitted_software_changes": sum(1 for e in ok if e["kind"] == "software"),
+        "admitted_changes_to_both_at_once": sum(1 for e in ok if e["kind"] == "hardware+software"),
         "budget_start": ledger["head"]["budget"], "budget_left": ledger["final_budget"],
         "eta_start_ppm": ledger["head"]["start_eta_ppm"], "eta_final_ppm": ledger["final_eta_ppm"],
         "eta_never_fell": all(e["eta_after_ppm"] >= e["eta_before_ppm"] for e in ok),
         "worst_margin_ever_admitted_ppm": worst, "every_admitted_state_within_limit": worst <= LIMIT,
         "start_genome": ledger["head"]["start_genome"], "final_genome": ledger["final_genome"],
-        "largest_step_scale_ppm": max([e["step_ppm"] for e in ledger["entries"]], default=0),
+        "largest_step_scale_ppm": max([e.get("step_ppm", 0) for e in ledger["entries"]], default=0),
         "chain_intact": check_chain(ledger), "final_hash": ledger["final_hash"],
     }

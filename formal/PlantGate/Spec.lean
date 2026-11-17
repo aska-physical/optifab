@@ -67,3 +67,58 @@ theorem PlantGate.Spec.run_safe (limit : Int) (steps : List (List Int × Int)) (
     changes the system can ever make to itself. -/
 theorem PlantGate.Spec.run_bounded (limit : Int) (steps : List (List Int × Int)) (s : List Int × Int) :
     (acceptedCount limit s steps : Int) + (run limit s steps).2 ≤ s.2 := sorry
+
+/-- Usefulness of the loop over designs: a design within the bounds that
+    stays within the headroom and does not lower the objective is taken
+    up, for one unit of budget. A loop that takes nothing up passes the
+    safety statements below and fails this one. -/
+theorem PlantGate.Spec.step_complete (p : Plant) (sc : Scenario) (limit : Int)
+    (s : Genome × Int) (cand : Genome)
+    (hb : 0 < s.2) (hin : inBounds p.lo p.hi cand = true)
+    (hw : ∀ x ∈ margins p sc s.1, x ≤ limit)
+    (hd : distSq (margins p sc s.1) (margins p sc cand)
+      ≤ headroom limit (margins p sc s.1) * headroom limit (margins p sc s.1))
+    (ho : objective p sc s.1 ≤ objective p sc cand) :
+    step p sc limit s cand = (cand, s.2 - 1) := sorry
+
+/-- The loop over designs is safe against any proposer. Start from a
+    design whose margins are within the limit, with a budget that is not
+    negative. After any list of proposed designs whatever, the margins of
+    the design held, as this model computes them, are still within the
+    limit, the budget is not negative and it has not grown. -/
+theorem PlantGate.Spec.loop_safe (p : Plant) (sc : Scenario) (limit : Int)
+    (cands : List Genome) (s : Genome × Int)
+    (hw : ∀ x ∈ margins p sc s.1, x ≤ limit) (hb : 0 ≤ s.2) :
+    (∀ x ∈ margins p sc (loop p sc limit s cands).1, x ≤ limit)
+      ∧ 0 ≤ (loop p sc limit s cands).2 ∧ (loop p sc limit s cands).2 ≤ s.2 := sorry
+
+/-- The design held never leaves the bounds it started in. -/
+theorem PlantGate.Spec.loop_in_bounds (p : Plant) (sc : Scenario) (limit : Int)
+    (cands : List Genome) (s : Genome × Int)
+    (h : inBounds p.lo p.hi s.1 = true) :
+    inBounds p.lo p.hi (loop p sc limit s cands).1 = true := sorry
+
+/-- The loop only improves. Whatever is proposed, the objective of the
+    design held at the end is at least the objective at the start. -/
+theorem PlantGate.Spec.loop_never_worse (p : Plant) (sc : Scenario) (limit : Int)
+    (cands : List Genome) (s : Genome × Int) :
+    objective p sc s.1 ≤ objective p sc (loop p sc limit s cands).1 := sorry
+
+/-- The number of designs taken up plus the budget left never exceeds the
+    budget at the start. -/
+theorem PlantGate.Spec.loop_bounded (p : Plant) (sc : Scenario) (limit : Int)
+    (cands : List Genome) (s : Genome × Int) :
+    (changes p sc limit s cands : Int) + (loop p sc limit s cands).2 ≤ s.2 := sorry
+
+/-- What the limit means. With the limit at 1,000,000 parts per million,
+    start from a design whose margins are within it. After any list of
+    proposed designs, the design held still has enough captured heat to
+    drive its chiller, still cools itself at the scheduler's load floor,
+    and still holds one outage in its store. These are exact
+    inequalities: the rounding of the margins plays no part. -/
+theorem PlantGate.Spec.loop_keeps_physics (p : Plant) (sc : Scenario)
+    (cands : List Genome) (s : Genome × Int)
+    (hw : ∀ x ∈ margins p sc s.1, x ≤ 1000000) :
+    DriveHeatSuffices p (loop p sc 1000000 s cands).1
+      ∧ SelfCoolsAtFloor p (loop p sc 1000000 s cands).1
+      ∧ RidesThrough p sc (loop p sc 1000000 s cands).1 := sorry

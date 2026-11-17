@@ -9,7 +9,17 @@
     "PlantGate.Spec.no_margin_rises_past_radius",
     "PlantGate.Spec.accepted_stays_within",
     "PlantGate.Spec.run_safe",
-    "PlantGate.Spec.run_bounded"
+    "PlantGate.Spec.run_bounded",
+    "PlantGate.Spec.step_complete",
+    "PlantGate.Spec.loop_safe",
+    "PlantGate.Spec.loop_in_bounds",
+    "PlantGate.Spec.loop_never_worse",
+    "PlantGate.Spec.loop_bounded",
+    "PlantGate.Spec.loop_keeps_physics"
   ],
-  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"]
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ]
 }
