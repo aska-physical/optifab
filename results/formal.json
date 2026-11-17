@@ -36,10 +36,33 @@
     "passed": true
   },
   "replay": {
-    "decisions": 50,
-    "mismatches": 0
+    "decisions": 3071,
+    "mismatches": 0,
+    "by_ledger": {
+      "seeded_search": {
+        "decisions": 50,
+        "mismatches": 0
+      },
+      "adversary": {
+        "decisions": 3006,
+        "mismatches": 0
+      },
+      "recorded_proposer": {
+        "decisions": 11,
+        "mismatches": 0
+      },
+      "recorded_proposer_given_lessons": {
+        "decisions": 4,
+        "mismatches": 0
+      }
+    }
   },
   "bar": "Proven Commons bar check: items 2 to 6 pass; item 1 is open (no reviewer has approved the specification). See formal/BAR-REPORT.md.",
   "sources_sha256": "4e3524530814a1778efc72a5ce684e5c0d08227f65993a7f8f962858219eed38",
-  "ledger_hash": "c60e31d13303a1605f91d1d19ab8800af07d211d5402e7baedd9a992997bd5fd"
+  "ledger_hashes": {
+    "seeded_search": "c60e31d13303a1605f91d1d19ab8800af07d211d5402e7baedd9a992997bd5fd",
+    "adversary": "89472e8ab980432bdd53f6be57b25d7414f77c802f5089f7b7a7f3a9bf144d85",
+    "recorded_proposer": "df96817f0e5e056b5c510312b895ed061ef20de99771a3d26447509d00fd1337",
+    "recorded_proposer_given_lessons": "280bf4d6d94659e3b2327f090e981942b0b430e969feee1be11b9b09e11f129f"
+  }
 }

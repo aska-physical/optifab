@@ -82,8 +82,8 @@ structure, where it sits, and whose work it rests on.
 | | Element | Where in the structure | Work it rests on | Status | Note |
 |---|---|---|---|---|---|
 | R1 | The gate | at each controller and in the scheduler | [weft](https://github.com/Moissanite-Labs/weft), [weft-corpus](https://github.com/Moissanite-Labs/weft-corpus) | checked | Weft's predicate, first written in the Terrafab documents as a fence for machines. It passes Weft's 15 vectors and runs here on plant numbers. |
-| R2 | A machine-checked proof of the gate and of the loop built on it | with the gate | [optifab](https://github.com/aska-physical/optifab), [mission](https://github.com/Proven-Commons/mission) | checked | formal/ proves eight theorems in Lean about an exact integer gate. The comparator accepts them under six kernels and Proven Commons bar items 2 to 6 pass. Item 1 is open: no reviewer has approved the specification, so it is not verified. Weft's own floating-point gate has no proof yet. |
-| R3 | The loop that changes hardware and software together | design office and scheduler | [optifab](https://github.com/aska-physical/optifab) | checked | Runs on a model of the plant. Every decision is made by the exact gate, recorded in a hash-chained ledger and replayed in Lean. No sensor, load or machine is involved. |
+| R2 | A machine-checked proof of the gate, the plant model and the loop | with the gate | [optifab](https://github.com/aska-physical/optifab), [mission](https://github.com/Proven-Commons/mission) | checked | formal/ proves fourteen theorems in Lean: eight about an exact integer gate, six about the plant model and the loop over designs. The comparator accepts them under six kernels and Proven Commons bar items 2 to 6 pass. Item 1 is open: no reviewer has approved the specification, so it is not verified. Weft's own floating-point gate has no proof yet. |
+| R3 | The loop that changes hardware and software together | design office and scheduler | [optifab](https://github.com/aska-physical/optifab) | checked | Runs on a model of the plant that is itself inside the proved code. Every decision is recorded in a hash-chained ledger and worked out again in Lean from the two designs. A seeded search, a language model and an adversary have each proposed through it. No sensor, load or machine is involved. |
 
 ### Mind
 
@@ -142,7 +142,7 @@ and the loads move the structure's margins, which are sensed again.
 | L7 | stores and structure | margins | checked | The margin vector from the certificates. It is static: no transient is modelled. |
 | L8 | gate | fabrication machines | idea | In the Terrafab documents only. |
 | L9 | every step | the record | designed | Certificates and pins are checked. Signed records are not connected. |
-| L10 | proposer | gate and ledger | checked | The improvement loop: each proposed change to hardware or software is decided by the exact gate, logged and replayed in Lean. On a model only. |
+| L10 | proposer | gate and ledger | checked | The improvement loop: each proposed design is checked against its bounds, the exact gate and the objective, logged, and replayed in Lean. A language model has proposed through it once. On a model only. |
 <!-- loop:end -->
 
 ## How far it is

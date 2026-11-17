@@ -2,6 +2,37 @@
 
 Machine-checked milestones for `aska-physical/optifab`.
 
+## [0.3.0] - 2026-11-17
+
+The proof now covers the plant model and the loop over designs, and two new proposers have used the loop.
+
+### Added
+
+- **The plant model in Lean.** `formal/PlantGate.lean` holds the model that turns a design into margins and an
+  objective, the bounds on each gene, and the step that takes a design up. Six theorems about designs
+  (`step_complete`, `loop_safe`, `loop_in_bounds`, `loop_never_worse`, `loop_bounded`, `loop_keeps_physics`)
+  join the eight about the gate. `lake comparator --paranoid` accepts all fourteen under six kernels.
+- **A proposer's command line**, `tools/propose.py`, and `loop.run_proposals`, which replays any recorded list
+  of proposals.
+- **A recorded run by a language model** (`results/model_run.json`, `results/model_ledger.json`): 11 proposals,
+  10 taken up, objective 0.919548. Its closing notes are in `results/model_lessons.md`.
+- **A second recorded run**, by a model given those notes (`results/model_run_2.json`): the same objective in
+  4 proposals. Its notes are in `results/model_lessons_2.md`.
+- **An adversarial proposer** (3,006 proposals) and a **first look at a network** (assumption A-4, section 13
+  of the model note).
+- Must-fail controls 25 to 27. Findings 16 to 19 in the README.
+
+### Changed
+
+- `loop.py` computes margins and the objective with the exact model in `formal/tests/oracle.py` in place of
+  floating point. The figures of the seeded run are unchanged.
+- The ledger records both designs of every decision. `--formal` replays three ledgers (3,071 decisions) by
+  giving Lean the designs, so the margins, the objective, the verdict and the budget are all worked out again.
+- The step over designs refuses a design outside the bounds (`bounds`) and one that lowers the objective
+  (`worse`), in addition to the gate's refusals.
+- Differential tests: 400,000 inputs (300,000 gate decisions and 100,000 proposed designs).
+- `results/formal.json` holds one hash per ledger.
+
 ## [0.2.0] - 2026-11-17
 
 Status: claimed. Prepared by an AI agent; not reviewed by a person. Nothing is called verified.

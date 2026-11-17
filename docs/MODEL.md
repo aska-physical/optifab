@@ -390,7 +390,67 @@ its search range. The ledger records both designs of every decision. `python3 ve
 two designs to the Lean executable, which works out the margins, the objective, the verdict and the budget
 again: no mismatch on any of the 50. The floating-point gate of section 6 gives the same verdict on all 50.
 
+Two other proposers have used the same step function.
+
+**A recorded run by a language model.** `tools/propose.py` prints the design held, its margins, the radius,
+the objective and the budget, and takes a proposal for one or more genes with a sentence of reasons. A
+language model was given that output and nothing else, with a limit of 40 proposals. It made 11. 10
+were taken up (4 hardware, 2 software, 4 changing both at once) and the rest were refused
+(1 as `worse`). The objective went from 0.914228 to 0.919548. A direct search over the software genes, with the
+hardware genes at their most generous bounds, finds 0.919548 to be the best any design within the limits can
+score, so the run reached 100.0% of the possible gain. The seeded search reached 89.9%. The proposals
+and the reasons are in `results/model_run.json`. `verify.py` replays them and must reproduce
+`results/model_ledger.json`.
+
+**A second run, given the first one's notes.** The first run's closing notes were saved word for word in
+`results/model_lessons.md`: three fitted formulas for the moving margins, the gain per kW of floor, and what
+its one refusal taught it. A second instance of the same model, with no memory of the first run, was given those notes and the same
+interface. It made 4 proposals and all 4 were taken up, 3 of them changing hardware and software
+together. It reached 0.919548, the same design in the two software genes. The first run needed 11
+proposals to reach that objective and the second 4. Its own notes are in `results/model_lessons_2.md`.
+
+These are two runs of one model. They show that the interface is enough to work from and that notes
+can be handed on. They do not measure how good a proposer a model is. Both runs end with the load-floor
+margin at 999,215 ppm, 785 from its limit: the objective rewards a lower floor and nothing
+rewards headroom, so a good proposer drives the design to where it can no longer change.
+
+**An adversary.** `adversary_run` makes 3,006 proposals meant to break the loop: a capture fraction of 200%,
+a negative store, a scheduler floor of zero and one below the plant's floor, a design that scores lower, then
+random designs, half of them anywhere in or just outside the bounds and half near the start. The verdicts were
+55 `bounds`, 1604 `budget`, 1278 `distance`, 64 `ok`, 5 `worse`. The budget of 64 was spent and not one change more was made. Every design held stayed within every
+limit and bound and the objective never fell. The theorems of section 11 say this must be so for the Lean
+code. This run checks it on the Python copy, and `--formal` replays all of it in Lean.
+
 [VISION.md](VISION.md) discusses what the loop shows and how far it is from the system it stands in for.
+
+## 13. A first look at a network: the load floor depends on the site
+
+**VERIFIED** under assumption A-4. A-4, made here: at any recooling temperature the sorption chiller reaches
+the same share of its reversible COP as at the design point. With 58 °C drive, 18 °C chilled water and 30 °C
+recooling the reversible COP is 2.051, so the claimed 0.62 is a share of 0.302. The 30 °C is the design value
+proposed in aska-physical/funi-frame#4. No certificate states one.
+
+Section 3 gave the load floor as `q_fix / ((1 + COP) α − 1)`. Under A-4 the COP falls as the recooling
+temperature rises, and the floor rises with it:
+
+| Recooling | Sorption COP | Load floor | Share of nameplate |
+|---|---|---|---|
+| 30 °C | 0.620 | 0.564 MW | 5.6% |
+| 34 °C | 0.399 | 1.127 MW | 11.3% |
+| 36 °C | 0.325 | 1.687 MW | 16.9% |
+| 38 °C | 0.266 | 2.804 MW | 28.0% |
+| 40 °C | 0.217 | 6.113 MW | 61.1% |
+| 41 °C | 0.196 | none: it cannot cool itself at any load | |
+
+So the 41.5 °C of section 2 is a limit of principle and not a working limit. Well below it the campus has to
+run most of its nameplate just to cool itself.
+
+For a network this gives two results. A cool campus and a warm one (30 °C and 38 °C) cannot idle below
+3.368 MW together, 16.8% of their nameplate, and the warm one's floor is 4.97 times the cool
+one's. And in the upstream plant model utility power is a straight line in IT load whose slope, 1.0357 MW
+per MW, does not depend on the site. Moving load from one campus to the other therefore changes no energy.
+The placement problem of proposal 8 has no single optimum in this model: any split that keeps both campuses
+above their floors uses the same energy. A useful network model needs a cost that differs by site first.
 
 ## Limits
 

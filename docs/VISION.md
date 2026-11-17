@@ -11,22 +11,28 @@ for anything.
 
 | Part of the vision | What exists | What is missing |
 |---|---|---|
-| **Formally verified** | Eight theorems about the gate and the loop built on it, proved in Lean with no dependencies ([formal/](../formal/README.md)). `lake comparator --paranoid` accepts them under six kernels with the standard axioms only. The Proven Commons bar check passes items 2 to 6. | A reviewer's approval of the specification, which is bar item 1 and cannot happen yet because the Proven Commons reviewer list is empty. Proofs about anything but the gate: the plant model, the margins, the proposer and the Python are unproved. |
-| **End to end** | One command re-runs a chain from pinned certificates to margins, to the gate, to a ledger, to a replay of every ledger decision in Lean (50 decisions, 0 mismatches). | Both ends. No sensor feeds the chain and no valve, load or machine obeys it. Four of the ten interfaces in [STRUCTURE.md](STRUCTURE.md) are checked. |
-| **Recursively improving** | A loop ([loop.py](../loop.py)) in which each admitted change becomes the baseline of the next generation. The proposer's own step scale is part of the genome: it doubles after a success, halves after a refusal, and is recorded. 45 of 50 proposals were admitted and the objective rose from 0.914228 to 0.919009 without ever falling. | The proposer is a seeded search, not an intelligence. It tunes one number about itself. It does not learn, and it does not improve the gate, the model or its own code. |
-| **Intelligence system** | Weft's adaptive models and Exo's agents have a place in the structure, and the floating-point gate here agrees with Weft's own on 100,000 generated cases. | No model runs in the loop. Neither Weft nor Exo proposes anything, and neither can yet shed load or report the energy it uses. |
+| **Formally verified** | Fourteen theorems, proved in Lean with no dependencies ([formal/](../formal/README.md)). Eight are about the gate. Six are about designs: the plant model, the bounds, the objective and the step are inside the proved code, so the margins are no longer handed to the gate from outside. `lake comparator --paranoid` accepts them under six kernels with the standard axioms only. The Proven Commons bar check passes items 2 to 6. | A reviewer's approval of the specification, which is bar item 1 and cannot happen yet because the Proven Commons reviewer list is empty. Any proof that the model describes the plant: its constants are claimed, and eleven of its fourteen margins are carried as constants. The proposers and the floating-point gate are unproved. |
+| **End to end** | One command re-runs a chain from pinned certificates to a design, to margins and an objective, to the step, to a ledger. A second works every recorded decision out again in Lean from the two designs (3,071 decisions across three ledgers, 0 mismatches). | Both ends. No sensor feeds the chain and no valve, load or machine obeys it. Four of the ten interfaces in [STRUCTURE.md](STRUCTURE.md) are checked. |
+| **Recursively improving** | A loop ([loop.py](../loop.py)) in which each admitted change becomes the baseline of the next generation. The proposer's own step scale is part of the genome: it doubles after a success, halves after a refusal, and is recorded. 45 of 50 proposals were admitted and the objective rose from 0.914228 to 0.919009. That it can never fall is now a theorem (`loop_never_worse`), for any proposer. And what one proposer learned has been handed to the next: a second instance given the first run's notes reached the same objective in 4 proposals where the first took 11. | The hand-over was done once, by hand, with notes written in prose. Nothing improves the gate, the plant model or the proposer's own code. The objective is a choice. |
+| **Intelligence system** | A language model has proposed through the loop's interface in two separate runs, seeing only the printed state. The first made 11 proposals, 10 taken up, and reached 0.919548 against 0.919009 for the seeded search. The second, given the first one's notes, reached it in 4. Their reasons are recorded with their proposals. Weft's adaptive models and Exo's agents have a place in the structure, and the floating-point gate here agrees with Weft's own on 100,000 generated cases. | These are two recorded runs of one model. Neither Weft nor Exo proposes anything, and neither can yet shed load or report the energy it uses. |
 | **Evolving hardware and software** | One genome with three hardware genes (thermal store, liquid capture, wall U-value) and two software genes (scheduler load floor, load shed in an outage), under one gate and in one ledger. 30 hardware and 15 software changes were admitted. Hardware changes open headroom and software changes use it. | The hardware is three numbers in a thermal model. The eleven certified structural margins are constants, because the verifiers that compute them were not run with changed inputs. Nothing is built. |
 | **Cohesive and unified** | One predicate for weights and plant, one 64-byte frame, one margin vector, one record. 32 of 41 repositories from four organisations have a place in one structure. | The organisations share no interface in code yet. Weft does not know the plant frame, Synmerit does not sign the ledger, and no Proven Commons parser is on the telemetry path. |
 
 ## What the proofs cover
 
 ```
-proved in Lean        gate, generation step, loop over any proposals        formal/PlantGate.lean
-tested against it     Python exact gate (300,000 cases), ledger replay      formal/tests/, results/formal.json
+proved in Lean        gate, plant model, bounds, objective, step,           formal/PlantGate.lean
+                      loop over any proposed designs
+tested against it     Python gate, model and step (400,000 cases),          formal/tests/, results/formal.json
+                      replay of three ledgers from the designs
 tested, not proved    floating-point gate against Weft's (100,000 cases)    verify.py
-computed, not proved  margins, load floor, thermal budget, objective        verify.py, loop.py
-taken on trust        the three upstream certificates                       data/upstream/
-absent                sensors, load control, machines, a model that proposes
+computed, not proved  the plant envelope, the eleven certified margins,     verify.py
+                      the site-dependent load floor
+recorded, not proved  what a language model proposed in two runs, why,     results/model_run*.json,
+                      and the notes one run left for the next               results/model_lessons*.md
+taken on trust        the three upstream certificates, the bounds,          data/upstream/, loop.py
+                      the scenario
+absent                sensors, load control, machines
 ```
 
 The two theorems that matter most for a system that changes itself:
@@ -37,9 +43,16 @@ The two theorems that matter most for a system that changes itself:
 - **`run_bounded`**: the number of changes the loop admits, plus the budget left, never exceeds the budget at
   the start. Whoever sets the budget sets the most changes the system can ever make to itself.
 
-Both are about the gate's arithmetic. They say nothing about whether the margins fed to the gate are true.
-That is the real gap between a proved gate and a safe plant, and it is why the margins need sensors and
-independent verifiers behind them.
+Both are about the gate's arithmetic, and take the margins as given. Three more are about designs, with the
+margins computed inside the proved code:
+
+- **`loop_safe`**: after any list of proposed designs, the margins of the design held are within the limit.
+- **`loop_never_worse`**: after any list of proposed designs, the objective is at least what it was. This is
+  what makes it an improvement loop. No proposer, however bad, can make the design held score lower.
+- **`loop_keeps_physics`**: what "within the limit" means, as three exact inequalities about heat and storage.
+
+They close the gap between the model and the gate. They do not close the gap between the model and the
+plant. Whether the model's constants are true is a question for sensors and independent verifiers.
 
 ## What running the loop showed
 
@@ -59,6 +72,23 @@ These come from the certificate (`improvement_loop`) and can be re-run. The scen
 4. **The most tempting change is the one the gate refuses.** Dropping the scheduler's floor below the plant's
    load floor raises the objective by 0.25% in one step. It puts a margin at 113% of its limit and is refused.
 5. **The loop stops where a person told it to.** With a budget of 3 it made exactly 3 changes.
+6. **A model proposes differently from a search.** Shown only the printed state, a language model made 11
+   proposals and 10 were taken up, 4 of them moving hardware and software in the same step. It reached
+   0.919548, which a direct search finds to be the best any design within the limits can score. The seeded
+   search reached 89.9% of that gain with 50 proposals. The model first probed each gene, then
+   fitted a formula to each margin, then planned its moves with the formulas. Its reasons are recorded.
+7. **What one proposer learned, the next could use.** The first run's closing notes, word for word, were
+   given to a second instance of the same model with no memory of that run. It reached the same objective in 4 proposals, all taken
+   up, where the first had needed 11 with 1 refused. It then wrote its own notes, which correct and add
+   to the first set. That is the smallest version of a system improving its own improver, and it was done by
+   hand, once.
+8. **A good proposer ends where it cannot move.** Both runs drove the load-floor margin to 999,215 ppm,
+   which leaves a radius of 785. The objective may not fall, so the design cannot back away from
+   the limit either. A loop that is proved safe and proved never to get worse comes to rest at the edge of
+   its envelope. To keep evolving, the objective has to give headroom a value, or the plant or its bounds
+   have to change.
+9. **An adversary gets nowhere.** 3,006 proposals built to break the loop ended as 55 `bounds`, 1604 `budget`, 1278 `distance`, 64 `ok`, 5 `worse`. The budget ran
+   out after 64 changes, and every design held was inside every limit and bound.
 
 ## The shortest path from here
 
@@ -81,8 +111,10 @@ Each step has a proposal in [PROPOSALS.md](PROPOSALS.md) and an issue on GitHub.
 - **"End to end"**: at least one margin in the vector comes from a sensor, and at least one admitted step
   changes something real.
 - **"Recursively improving intelligence"**: a model proposes, and what it learns from refusals changes what it
-  proposes next. Today the only thing that adapts is a step size.
+  proposes next. Within a recorded run this now happens, and once it has happened across two runs, through
+  notes passed by hand. Nothing yet does that without a person, and nothing improves the proposer itself.
 - **"Hardware and software"**: an admitted hardware change is one a machine could make, with its own process
   limits in the margin vector.
 
-None of these is true today. The gate, the loop and the record are in place for them to plug into.
+The first, second and fourth are not true today. The third is true of two recorded runs. The gate, the
+model, the loop and the record are in place for the rest to plug into.

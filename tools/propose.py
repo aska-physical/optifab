@@ -11,6 +11,10 @@ the run file. The run file is the whole state: every call replays it from the st
     python3 tools/propose.py RUN.json new --budget 64 --turns 40 --proposer "who or what proposes"
 
 `verify.py` replays the committed run file and checks that it gives the committed ledger.
+
+The rules printed by `show` were reworded after the two recorded runs, from what the proposers said was
+unclear: whole numbers, a refusal using a turn, the verdict words, and equal objectives being allowed.
+The two recorded runs saw the earlier wording.
 """
 from __future__ import annotations
 
@@ -42,14 +46,16 @@ def show(run: dict, pl: dict) -> str:
     m = loop.model(held, pl)
     room = loop.oracle.headroom(loop.LIMIT, m["vector"])
     out = ["THE LOOP", "",
-           "You hold one design of a data-centre campus and may propose another. A proposal is taken up when:",
-           "  1. every gene is within its bounds;",
+           "You hold one design of a data-centre campus and may propose another. Gene values are whole numbers.",
+           "A proposal is taken up, with the verdict `ok`, when:",
+           "  1. every gene is within its bounds (if not, the verdict is `bounds`);",
            "  2. the margin vector moves no farther than the radius, as a straight-line distance over all",
-           "     margins. The radius is the headroom of the design held: the smallest gap between any of its",
-           f"     margins and the limit of {loop.LIMIT:,};",
-           "  3. the objective does not fall.",
+           "     margins (if not, `distance`). The radius is the headroom of the design held: the smallest gap",
+           f"     between any of its margins and the limit of {loop.LIMIT:,};",
+           "  3. the objective, in whole parts per million, is not lower (if it is, `worse`). Equal is allowed.",
            "A proposal that is taken up costs 1 from the budget and becomes the design held. A refused one",
-           "costs nothing. Margins are demand over capacity in parts per million: lower is safer.",
+           "costs nothing from the budget, but it does use a turn. With no budget left the verdict is `budget`.",
+           "Margins are demand over capacity in parts per million, rounded up: lower is safer.",
            "", "DESIGN HELD", ""]
     for k in loop.oracle.GENES:
         kind = "hardware" if k in loop.HARDWARE else "software"
