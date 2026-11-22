@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic verifier for aska-physical/optifab v0.2.0.
+"""Deterministic verifier for aska-physical/optifab v0.3.0.
 
 optifab models one reference data-centre campus as a checked stack and states the contract between
 the physical plant and the digital workload. It adds no new measurement. Every number is derived
@@ -17,6 +17,7 @@ What it does not show: that the upstream models describe a real building. Nothin
 from __future__ import annotations
 
 import argparse
+import ast
 import copy
 import hashlib
 import json
@@ -49,6 +50,26 @@ VERSION = "0.3.0"
 
 
 # --------------------------------------------------------------------------- inputs
+def require(condition, message="") -> None:
+    """A check that cannot be switched off. `python3 -O` strips every `assert` statement, so none is used here."""
+    if not condition:
+        raise RuntimeError(f"verification failed: {message}")
+
+
+def count_asserts(source: str) -> int:
+    return sum(isinstance(node, ast.Assert) for node in ast.walk(ast.parse(source)))
+
+
+def bare_asserts() -> dict:
+    """Count `assert` statements in this repository's own Python files. There should be none."""
+    files = sorted(p for p in ROOT.rglob("*.py")
+                   if not {".lake", ".git", "data", "__pycache__"} & set(p.relative_to(ROOT).parts))
+    found = {str(p.relative_to(ROOT)): count_asserts(p.read_text(encoding="utf-8")) for p in files}
+    return {"python_files_scanned": len(files), "assert_statements": sum(found.values()),
+            "files_with_assert_statements": sorted(f for f, k in found.items() if k),
+            "scanner_finds_a_planted_assert": count_asserts("def f(x):\n    assert x\n") == 1}
+
+
 def read_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -95,31 +116,31 @@ def symbolic_theorems() -> dict[str, str]:
     """Five identities, each checked symbolically. They are algebra on the upstream model, not new physics."""
     P, pc, pf = sp.symbols("P PUE_c PUE_f", positive=True)
     extra_it = (P * pc) / pf - P  # same utility supply P*PUE_c, now run at PUE_f
-    assert sp.simplify(extra_it - P * (pc - pf) / pf) == 0
-    assert sp.simplify(extra_it / (P * (pc - pf)) - 1 / pf) == 0
+    require(sp.simplify(extra_it - P * (pc - pf) / pf) == 0, 'a symbolic identity does not hold')
+    require(sp.simplify(extra_it / (P * (pc - pf)) - 1 / pf) == 0, 'a symbolic identity does not hold')
     # the upstream plant model: cooling power (P - q)/c + a, other overhead o, with q, a and o fixed
     c, q0, a0, o0, P2 = sp.symbols("c q0 a0 o0 P2", positive=True)
     supply = P * pc
     used = lambda load: load + (load - q0) / c + a0 + o0
     grown = sp.solve(sp.Eq(used(P2), supply), P2)
-    assert len(grown) == 1 and sp.simplify((grown[0] - P) - (supply - used(P)) / (1 + 1 / c)) == 0
+    require(len(grown) == 1 and sp.simplify((grown[0] - P) - (supply - used(P)) / (1 + 1 / c)) == 0, 'a symbolic identity does not hold')
 
     Th, Ta, Tc, C = sp.symbols("T_h T_a T_c C", positive=True)
     cop_max = (Tc / (Ta - Tc)) * ((Th - Ta) / Th)  # reversible heat-driven chiller between three reservoirs
     ta_max = Tc * Th * (1 + C) / (C * Th + Tc)
-    assert sp.simplify(cop_max.subs(Ta, ta_max) - C) == 0
-    assert sp.simplify(sp.diff(cop_max, Ta) + Tc * (Th - Tc) / (Th * (Ta - Tc) ** 2)) == 0  # falls as T_a rises
+    require(sp.simplify(cop_max.subs(Ta, ta_max) - C) == 0, 'a symbolic identity does not hold')
+    require(sp.simplify(sp.diff(cop_max, Ta) + Tc * (Th - Tc) / (Th * (Ta - Tc) ** 2)) == 0, 'a symbolic identity does not hold')  # falls as T_a rises
 
     a, q, Pm = sp.symbols("alpha q_fix P_min", positive=True)
     sol = sp.solve(sp.Eq(a * Pm * C, (1 - a) * Pm + q), Pm)  # drive heat from liquid = air-side load / COP
-    assert len(sol) == 1 and sp.simplify(sol[0] - q / ((1 + C) * a - 1)) == 0
-    assert sp.simplify(sp.solve(sp.Eq((1 + C) * a - 1, 0), a)[0] - 1 / (1 + C)) == 0  # q_fix = 0: funi-frame Theorem 4
+    require(len(sol) == 1 and sp.simplify(sol[0] - q / ((1 + C) * a - 1)) == 0, 'a symbolic identity does not hold')
+    require(sp.simplify(sp.solve(sp.Eq((1 + C) * a - 1, 0), a)[0] - 1 / (1 + C)) == 0, 'a symbolic identity does not hold')  # q_fix = 0: funi-frame Theorem 4
 
     B, T, s = sp.symbols("B T s", positive=True)
     shed = sp.solve(sp.Eq(B / (P * (1 - s)), T), s)
-    assert len(shed) == 1 and sp.simplify(shed[0] - (1 - B / (P * T))) == 0
+    require(len(shed) == 1 and sp.simplify(shed[0] - (1 - B / (P * T))) == 0, 'a symbolic identity does not hold')
     phi = sp.symbols("phi", real=True)  # a tone minus its own copy delayed by phase phi
-    assert sp.simplify((1 - sp.cos(phi)) ** 2 + sp.sin(phi) ** 2 - 4 * sp.sin(phi / 2) ** 2) == 0
+    require(sp.simplify((1 - sp.cos(phi)) ** 2 + sp.sin(phi) ** 2 - 4 * sp.sin(phi / 2) ** 2) == 0, 'a symbolic identity does not hold')
     return {
         "substation_constrained_compute": "dP_IT = (freed utility power)/PUE_f if every overhead grows with load; (freed utility power)/(1 + 1/COP_loop) if only the cooling loop does",
         "tri_thermal_recooling_limit": "COP <= (T_c/(T_a - T_c))*((T_h - T_a)/T_h)  <=>  T_a <= T_c*T_h*(1 + COP)/(COP*T_h + T_c)",
@@ -727,7 +748,7 @@ LOOP_BUDGET = 64
 def _exact(x: float, scale: int, what: str) -> int:
     """A pinned decimal as an integer in a finer unit. Fails if the unit is not fine enough."""
     v = round(x * scale)
-    assert abs(x * scale - v) < 1e-6, f"{what} = {x} is not a whole number of 1/{scale}: use a finer unit"
+    require(abs(x * scale - v) < 1e-6, f"{what} = {x} is not a whole number of 1/{scale}: use a finer unit")
     return v
 
 
@@ -1146,9 +1167,17 @@ def _rejects(fn) -> bool:
     return False
 
 
+def _raises(fn) -> bool:
+    try:
+        fn()
+    except RuntimeError:
+        return True
+    return False
+
+
 def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, rank: dict, max_depth: int,
                        timing: dict, frames: dict, ledger: dict, evolution: dict, formal: dict,
-                       adversary: dict, recorded_runs: dict, network: dict) -> dict:
+                       adversary: dict, recorded_runs: dict, network: dict, asserts: dict) -> dict:
     pins, graph, sources = inp["pins"], inp["graph"], inp["sources"]
     sub, sl, ml = env["substation"], env["second_law"], env["minimum_load"]
     cop = pin_value(pins, "ff.cop_ads", "cop_ads")
@@ -1298,6 +1327,9 @@ def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, 
             and adversary["entries_follow_from_one_another"]
             and all(r["entries_follow_from_one_another"] for r in recorded_runs.values() if r["present"])
             and all(r.get("whole_run_through_lean_loop_agrees", False) for r in formal["replay"]["by_ledger"].values()),
+        "must_fail_29_check_that_python_O_would_strip":
+            asserts["assert_statements"] == 0 and asserts["scanner_finds_a_planted_assert"]
+            and _raises(lambda: require(False, "probe")),
         "must_fail_27_warm_site_campus_counted_with_the_design_load_floor":
             abs(network["sites"][0]["load_floor_MW"] - ml["P_min_envelope_plus_overhead_MW"]) < 0.001
             and network["two_campuses"]["warm_floor_over_cool_floor"] > 2.0
@@ -1352,20 +1384,21 @@ def build_certificate(with_ledger: bool = False, check: bool = True):
         }
     formal = formal_record(ledgers)
     network = network_first_look(inp, env, plant)
+    asserts = bare_asserts()
     controls = must_fail_controls(inp, env, margins, radius, rank, max_depth, timing, frames, ledger, evolution, formal,
-                                  adversary, recorded_runs, network)
+                                  adversary, recorded_runs, network, asserts)
 
-    assert env["pue_reproduction"]["liquid_plus_air_equals_it_load"] and env["pue_reproduction"]["matches_certificate"]
-    assert not env["second_law"]["certificate_has_a_recooling_field"], "funi-frame now carries a recooling field: revisit finding 2"
-    assert ball["all_within_limits"] and ball["fails_if_radius_grows_by_0.001"]
-    assert not conformance["failed"], conformance["failed"]
-    assert differential["mismatches"] == 0, differential["first_mismatches"]
-    assert all(r["agrees"] for r in interfaces), [r["quantity"] for r in interfaces if not r["agrees"]]
-    assert [a["accepted"] for a in admissions] == [True, False, True, True, False], admissions
-    assert graph["aska_physical_to_moissanite_links_before"] == 0 and graph["aska_physical_to_moissanite_links_added"] >= 1
-    assert frames["matches_weft_frame_layout"] and frames["gate_from_frame"]["design point"] == "ok"
-    assert not unit["loop_closed"], "the loop is reported closed; check data/unit.json before believing it"
-    assert not check or all(controls.values()), [k for k, v in controls.items() if not v]
+    require(env["pue_reproduction"]["liquid_plus_air_equals_it_load"] and env["pue_reproduction"]["matches_certificate"], 'the plant heat balance does not reproduce the upstream certificate')
+    require(not env["second_law"]["certificate_has_a_recooling_field"], "funi-frame now carries a recooling field: revisit finding 2")
+    require(ball["all_within_limits"] and ball["fails_if_radius_grows_by_0.001"], 'the ball of the plant radius does not stay within every limit, or the check cannot fail')
+    require(not conformance["failed"], conformance["failed"])
+    require(differential["mismatches"] == 0, differential["first_mismatches"])
+    require(all(r["agrees"] for r in interfaces), [r["quantity"] for r in interfaces if not r["agrees"]])
+    require([a["accepted"] for a in admissions] == [True, False, True, True, False], admissions)
+    require(graph["aska_physical_to_moissanite_links_before"] == 0 and graph["aska_physical_to_moissanite_links_added"] >= 1, 'the cross-organisation link count is not what the map claims')
+    require(frames["matches_weft_frame_layout"] and frames["gate_from_frame"]["design point"] == "ok", "the plant frame does not match Weft's layout, or the design point does not pass the gate")
+    require(not unit["loop_closed"], "the loop is reported closed; check data/unit.json before believing it")
+    require(not check or all(controls.values()), [k for k, v in controls.items() if not v])
 
     overhead_cut = (ts["PUE_conventional"] - ts["PUE_funi_frame"]) / (ts["PUE_conventional"] - 1.0) * 100.0
     data_files = ["pins.json", "graph.json", "sources.json", "unit.json", "upstream/MANIFEST.json"]
@@ -1399,6 +1432,7 @@ def build_certificate(with_ledger: bool = False, check: bool = True):
         "plant_frame": frames,
         "unit": unit,
         "graph": graph,
+        "checks_that_survive_python_O": asserts,
         "must_fail_controls": controls,
         "controls_passed": f"{sum(controls.values())}/{len(controls)}",
     }

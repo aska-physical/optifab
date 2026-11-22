@@ -78,9 +78,10 @@ pip install sympy
 python3 verify.py
 ```
 
-This recomputes every figure from the pinned inputs, runs the improvement loop, replays the recorded runs, runs 28 must-fail controls, and
+This recomputes every figure from the pinned inputs, runs the improvement loop, replays the recorded runs, runs 29 must-fail controls, and
 compares the result with [results/certificate.json](results/certificate.json) and the two ledgers in
-[results/](results/). It reads no network and needs no Lean. It checks that the committed
+[results/](results/). It reads no network and needs no Lean. Its checks are not `assert` statements, so `python3 -O` does not switch
+them off. It checks that the committed
 formal record matches the current Lean sources and ledger.
 
 To rebuild the proofs and replay the ledger in Lean (needs Linux, [elan](https://github.com/leanprover/elan)
@@ -125,7 +126,7 @@ python3 verify.py --upstream ../upstream
 ## Layout
 
 ```
-verify.py                 the verifier: derivations, the gates, the frame, the loop, graph and unit checks, 28 must-fail controls
+verify.py                 the verifier: derivations, the gates, the frame, the loop, graph and unit checks, 29 must-fail controls
 loop.py                   the improvement loop: the seeded proposer, the replay of recorded proposals, the ledger
 formal/                   the exact gate, the plant model and the loop, proved in Lean, in the Proven Commons layout
 results/certificate.json  what verify.py must reproduce

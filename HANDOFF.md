@@ -142,8 +142,10 @@ optifab's verifier fails on purpose (must-fail control 1 and the recooling-field
 
 ## 4. Artifacts
 
-- [verify.py](verify.py): the derivations, both gates, the plant frame, the loop, the graph and unit checks, 27
-  must-fail controls. `--formal` rebuilds the proofs and replays three ledgers in Lean.
+- [verify.py](verify.py): the derivations, both gates, the plant frame, the loop, the graph and unit checks, 29
+  must-fail controls. `--formal` rebuilds the proofs and replays four ledgers in Lean. Checks are written with
+  `require()`, never `assert`: `python3 -O` strips assert statements, and until v0.3.0 that let a failing
+  control write a certificate and exit 0. Control 29 fails if an assert statement comes back.
 - [loop.py](loop.py): the improvement loop. [formal/](formal/README.md): the Lean project, which now holds
   the plant model. [formal/tests/oracle.py](formal/tests/oracle.py) is its Python copy, and `loop.py` calls it.
 - [tools/propose.py](tools/propose.py): the proposer's command line. [results/model_run.json](results/model_run.json)

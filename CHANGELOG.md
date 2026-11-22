@@ -24,7 +24,16 @@ The proof now covers the plant model and the loop over designs, and two new prop
   4 proposals. Its notes are in `results/model_lessons_2.md`.
 - **An adversarial proposer** (3,006 proposals) and a **first look at a network** (assumption A-4, section 13
   of the model note).
-- Must-fail controls 25 to 28. Findings 16 to 19 in the README.
+- Must-fail controls 25 to 29. Findings 16 to 19 in the README.
+
+### Fixed
+
+- **`python3 -O verify.py` skipped every check.** The verifier's 21 checks were `assert` statements, which
+  Python strips under `-O`: a failing control wrote a certificate and exited 0. They are now calls to
+  `require()`, which raises `RuntimeError` whatever the flags. Must-fail control 29 fails if an `assert`
+  statement appears in any of this repository's own Python files. Found by the review of pull request 13.
+  This defect was also in v0.1.0 and v0.2.0.
+- The docstring of `verify.py` said v0.2.0.
 
 ### Known defects
 

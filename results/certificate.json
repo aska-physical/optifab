@@ -1093,6 +1093,12 @@
     "aska_physical_to_moissanite_links_added": 2,
     "checked_and_closed_links": 1
   },
+  "checks_that_survive_python_O": {
+    "python_files_scanned": 7,
+    "assert_statements": 0,
+    "files_with_assert_statements": [],
+    "scanner_finds_a_planted_assert": true
+  },
   "must_fail_controls": {
     "must_fail_01_upstream_revenue_is_computed_on_it_power": true,
     "must_fail_02_recooling_at_45C_keeps_the_claimed_cop_within_the_second_law": true,
@@ -1121,7 +1127,8 @@
     "must_fail_25_adversary_moves_the_design_out_of_its_envelope": true,
     "must_fail_26_recorded_run_of_an_outside_proposer_breaks_a_rule_or_can_be_edited_unseen": true,
     "must_fail_28_ledger_whose_entries_do_not_follow_from_one_another_passes": true,
+    "must_fail_29_check_that_python_O_would_strip": true,
     "must_fail_27_warm_site_campus_counted_with_the_design_load_floor": true
   },
-  "controls_passed": "28/28"
+  "controls_passed": "29/29"
 }
