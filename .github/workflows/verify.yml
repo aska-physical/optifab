@@ -15,11 +15,17 @@ jobs:
   verify:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        # The certificate must not depend on the interpreter. Python 3.12 changed how sum() rounds floats,
+        # and a count in the certificate once followed it, so versions on both sides of 3.12 are checked.
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: ${{ matrix.python-version }}
       - run: pip install sympy==1.14.0
       - run: python3 verify.py
       - name: The generated documents are up to date

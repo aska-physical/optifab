@@ -71,7 +71,9 @@ The left column is what `plant_gate` checks. All of the right column is claimed,
 
 ## Check it
 
-Needs Python 3.10 or newer and SymPy. Tested with Python 3.13 and SymPy 1.14 only.
+Needs Python 3.10 or newer and SymPy. The certificate is the same under Python 3.10, 3.11, 3.12, 3.13 and 3.14
+with SymPy 1.14, and CI checks each of them. Other SymPy versions, and platforms other than Linux on
+x86-64, are untested here.
 
 ```bash
 pip install sympy

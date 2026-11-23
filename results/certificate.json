@@ -256,12 +256,12 @@
       "mismatches": 0,
       "first_mismatches": [],
       "agreed_by_reason": {
-        "baseline_distance_exceeded": 18444,
+        "baseline_distance_exceeded": 18341,
         "insufficient_metabolic_budget": 3902,
         "non_finite_parameters": 8277,
         "non_finite_weights": 9369,
         "non_positive_budget_or_cost": 9936,
-        "ok": 41772,
+        "ok": 41875,
         "shape_mismatch": 4836
       },
       "both_raised_the_same_error": 3464

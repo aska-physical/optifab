@@ -70,6 +70,17 @@ def bare_asserts() -> dict:
             "scanner_finds_a_planted_assert": count_asserts("def f(x):\n    assert x\n") == 1}
 
 
+def _sum_sq(values) -> float:
+    """Sum of squares, added left to right, as the gates add them.
+
+    The builtin sum() must not be used on floats here: from Python 3.12 on it compensates for rounding, so
+    its last digit differs from 3.11, and a count in the certificate once depended on the interpreter."""
+    total = 0.0
+    for v in values:
+        total += v * v
+    return total
+
+
 def read_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -353,7 +364,7 @@ def ball_in_box_check(u0: list[float], radius: float, samples: int = 20000) -> d
         for _ in range(n):
             state = (state * 6364136223846793005 + 1442695040888963407) % (1 << 64)
             direction.append((state >> 11) / float(1 << 53) * 2.0 - 1.0)
-        norm = math.sqrt(sum(d * d for d in direction)) or 1.0
+        norm = math.sqrt(_sum_sq(direction)) or 1.0
         worst = max(worst, max(u + radius * d / norm for u, d in zip(u0, direction)))
     axis = max(u + radius for u in u0)
     return {"samples": samples, "max_coordinate_at_axis_points": round(axis, 6), "max_coordinate_sampled": round(worst, 6),
@@ -512,7 +523,7 @@ def differential_test(oracle_source: bytes, cases: int = 100000, seed: int = 202
             base, cand = [base[:1], base[1:]], [cand[:1], tuple(cand[1:])]
         try:
             flat_b, flat_c = _flat(base), _flat(cand)
-            true = math.sqrt(sum((q - p) ** 2 for p, q, m in zip(flat_b, flat_c, locked or [0] * len(flat_b)) if not m))
+            true = math.sqrt(_sum_sq(q - p for p, q, m in zip(flat_b, flat_c, locked or [0] * len(flat_b)) if not m))
         except (ValueError, OverflowError):
             true = 1.0
         if not math.isfinite(true):

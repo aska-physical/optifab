@@ -33,6 +33,14 @@ The proof now covers the plant model and the loop over designs, and two new prop
   `require()`, which raises `RuntimeError` whatever the flags. Must-fail control 29 fails if an `assert`
   statement appears in any of this repository's own Python files. Found by the review of pull request 13.
   This defect was also in v0.1.0 and v0.2.0.
+- **The certificate depended on the Python version.** The differential test built its boundary cases with the
+  builtin `sum()`, which rounds floats differently from Python 3.12 on. Under 3.11 two tallies in
+  `gate.differential_test.agreed_by_reason` differed from the committed ones by 103 cases, and
+  `python3 verify.py` reported a mismatch. The sums are now added left to right, as the gates add them, so the
+  boundary cases sit exactly on the gate's own distance in every version. The tallies change once (`ok` 41,772
+  to 41,875, `baseline_distance_exceeded` 18,444 to 18,341). Mismatches stay at 0. CI now runs the verifier
+  under Python 3.10 to 3.14. Reported in the review of pull request 13. This defect was also in v0.1.0 and
+  v0.2.0.
 - The docstring of `verify.py` said v0.2.0.
 
 ### Known defects
