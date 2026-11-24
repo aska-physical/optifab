@@ -395,7 +395,7 @@ class TestOptifabVerifyIntegration(unittest.TestCase):
 
             with mock.patch.object(verify, "CERT_PATH", c_path), mock.patch.object(
                 verify, "LEDGER_PATH", l_path
-            ), mock.patch.object(verify, "build_certificate", return_value=(cert, ledger)):
+            ), mock.patch.object(verify, "build_certificate", return_value=(cert, {"seeded_search": ledger})):
                 with mock.patch.object(sys, "argv", ["verify.py"]):
                     self.assertEqual(verify.main(), 0)
 
@@ -432,6 +432,74 @@ class TestOptifabVerifyIntegration(unittest.TestCase):
                 l_path.symlink_to(real_ledger)
                 with mock.patch.object(sys, "argv", ["verify.py"]):
                     self.assertEqual(verify.main(), 1)
+
+    def test_darwin_system_root_alias_normalization(self) -> None:
+        import stat
+        from types import SimpleNamespace
+
+        root_lnk = SimpleNamespace(st_mode=stat.S_IFLNK | 0o777, st_uid=0)
+        user_lnk = SimpleNamespace(st_mode=stat.S_IFLNK | 0o777, st_uid=1000)
+
+        def _fake_readlink(p: str) -> str:
+            if p == "/var":
+                return "private/var"
+            if p == "/tmp":
+                return "private/tmp"
+            if p == "/etc":
+                return "private/etc"
+            raise OSError("unexpected readlink")
+
+        with (
+            mock.patch.object(verify_guards.sys, "platform", "darwin"),
+            mock.patch.object(verify_guards.os, "lstat", return_value=root_lnk),
+            mock.patch.object(verify_guards.os, "readlink", side_effect=_fake_readlink),
+        ):
+            self.assertEqual(
+                verify_guards._normalize_darwin_system_prefix(Path("/var/folders/xx/cert.json")),
+                Path("/private/var/folders/xx/cert.json"),
+            )
+            self.assertEqual(
+                verify_guards._normalize_darwin_system_prefix(Path("/tmp/cert.json")),
+                Path("/private/tmp/cert.json"),
+            )
+            self.assertEqual(verify_guards._normalize_darwin_system_prefix(Path("/tmp")), Path("/tmp"))
+            self.assertEqual(
+                verify_guards._normalize_darwin_system_prefix(Path("/tmp/../etc/passwd")),
+                Path("/tmp/../etc/passwd"),
+            )
+            fake_symlinks = {Path("/var"), Path("/tmp"), Path("/private/var/folders/xx/evil_link")}
+            with mock.patch.object(Path, "is_symlink", autospec=True, side_effect=lambda p: p in fake_symlinks):
+                verify_guards.reject_symlinks_on_path(Path("/var/folders/xx/cert.json"))
+                verify_guards.reject_symlinks_on_path(Path("/tmp/cert.json"))
+                with self.assertRaisesRegex(ValueError, "symlink ancestor rejected"):
+                    verify_guards.reject_symlinks_on_path(Path("/var/folders/xx/evil_link/cert.json"))
+                with self.assertRaisesRegex(ValueError, "symlink path rejected"):
+                    verify_guards.reject_symlinks_on_path(Path("/tmp"))
+
+        with (
+            mock.patch.object(verify_guards.sys, "platform", "darwin"),
+            mock.patch.object(verify_guards.os, "lstat", return_value=user_lnk),
+            mock.patch.object(verify_guards.os, "readlink", side_effect=_fake_readlink),
+            mock.patch.object(Path, "is_symlink", autospec=True, side_effect=lambda p: p == Path("/var")),
+        ):
+            with self.assertRaisesRegex(ValueError, "symlink ancestor rejected"):
+                verify_guards.reject_symlinks_on_path(Path("/var/folders/xx/cert.json"))
+
+        with (
+            mock.patch.object(verify_guards.sys, "platform", "darwin"),
+            mock.patch.object(verify_guards.os, "lstat", return_value=root_lnk),
+            mock.patch.object(verify_guards.os, "readlink", return_value="private/evil"),
+            mock.patch.object(Path, "is_symlink", autospec=True, side_effect=lambda p: p == Path("/var")),
+        ):
+            with self.assertRaisesRegex(ValueError, "symlink ancestor rejected"):
+                verify_guards.reject_symlinks_on_path(Path("/var/folders/xx/cert.json"))
+
+        with (
+            mock.patch.object(verify_guards.sys, "platform", "linux"),
+            mock.patch.object(Path, "is_symlink", autospec=True, side_effect=lambda p: p == Path("/var")),
+        ):
+            with self.assertRaisesRegex(ValueError, "symlink ancestor rejected"):
+                verify_guards.reject_symlinks_on_path(Path("/var/folders/xx/cert.json"))
 
 
 if __name__ == "__main__":
