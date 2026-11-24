@@ -1,6 +1,6 @@
 {
   "repository": "aska-physical/optifab",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "inputs": {
     "vendored": {
       "aska-physical/funi-frame/certificate.json": "92e7bbcea389274d2967e463ec3881ec9311db7786c5e74559defcd936dfb9fa",
@@ -13,7 +13,7 @@
       "pins.json": "acb6db126f4fdf3901c6f9f64a9b2d03ee4edc48ec863ccfb170d14604e96d54",
       "graph.json": "3c0a2dd368a0f223c6aea43b621e131461037425001eb6bceaa7742b25034966",
       "sources.json": "0ec0cfd7d8aa05ab7a51fb77ac8e91fb06dc44ce66ee6333ed965f7368ecc2d6",
-      "unit.json": "a2d74c05ec334e8dc49c0f802d539dd545762dbed08bf89eac273dd23a9342fd",
+      "unit.json": "03784c1cb82610ce65998c4805b9c2a8364582aea70637cf8c91b0bac33cb861",
       "upstream/MANIFEST.json": "9dd0e7efbb39fb37bc542f86751becb3a6dc46fd348737e2b040a24598238541"
     },
     "pinned_repositories": 36,
@@ -109,6 +109,7 @@
       "pcm_budget_kWh_th": 2500.0,
       "wall_liner_budget_kWh_th": 353.75,
       "full_load_ride_through_min": 15.0,
+      "full_load_ride_through_min_with_fixed_heat_load": 14.69,
       "ride_through_min_by_shed_fraction": {
         "0.0": 15.0,
         "0.25": 20.0,
@@ -398,20 +399,20 @@
       ]
     },
     "margins_in_the_vector": 14,
-    "decisions": 50,
+    "decisions": 48,
     "admitted": 45,
     "refused": {
-      "distance": 5
+      "distance": 3
     },
-    "admitted_hardware_changes": 30,
-    "admitted_software_changes": 15,
+    "admitted_hardware_changes": 31,
+    "admitted_software_changes": 14,
     "admitted_changes_to_both_at_once": 0,
     "budget_start": 64,
     "budget_left": 19,
-    "eta_start_ppm": 914228,
-    "eta_final_ppm": 919009,
+    "eta_start_ppm": 914210,
+    "eta_final_ppm": 918990,
     "eta_never_fell": true,
-    "worst_margin_ever_admitted_ppm": 949058,
+    "worst_margin_ever_admitted_ppm": 948407,
     "every_admitted_state_within_limit": true,
     "start_genome": {
       "pcm_kwh": 2500,
@@ -422,7 +423,7 @@
       "step_ppm": 1000000
     },
     "final_genome": {
-      "pcm_kwh": 4350,
+      "pcm_kwh": 4262,
       "capture_ppm": 950000,
       "wall_u_mw": 100,
       "floor_kw": 413,
@@ -432,7 +433,7 @@
     "largest_step_scale_ppm": 8000000,
     "chain_intact": true,
     "entries_follow_from_one_another": true,
-    "final_hash": "c60e31d13303a1605f91d1d19ab8800af07d211d5402e7baedd9a992997bd5fd",
+    "final_hash": "a6faa3020cfb86bdfd695830da932b4c0e04b719b5c87d9009c1d728da17ca1e",
     "final_margins_ppm": {
       "rack_vibration": 179100,
       "storey_drift": 563000,
@@ -447,44 +448,45 @@
       "sensor_power_at_airflow_turndown": 769564,
       "sorption_drive_heat": 120734,
       "load_floor": 948407,
-      "outage_ride_through": 766284
+      "outage_ride_through": 798618
     },
     "float_gate_on_the_same_decisions": {
-      "decisions": 50,
-      "agree": 50,
+      "decisions": 48,
+      "agree": 48,
       "within_1e-9_of_boundary_skipped": 0
     },
     "variants": {
       "proposer_without_reserve": {
-        "decisions": 186,
-        "admitted": 60,
+        "decisions": 161,
+        "admitted": 62,
         "refused": {
-          "distance": 126
+          "distance": 99
         },
-        "budget_left": 4,
-        "eta_final_ppm": 916009,
-        "worst_margin_ever_admitted_ppm": 998923
+        "budget_left": 2,
+        "eta_final_ppm": 916016,
+        "worst_margin_ever_admitted_ppm": 999553
       },
       "budget_of_three": {
         "decisions": 3,
         "admitted": 3,
         "refused": {},
         "budget_left": 0,
-        "eta_final_ppm": 914355,
-        "worst_margin_ever_admitted_ppm": 938172
+        "eta_final_ppm": 914210,
+        "worst_margin_ever_admitted_ppm": 942838
       },
       "start_with_a_margin_exactly_at_its_limit": {
-        "decisions": 14,
+        "start_outage_margin_ppm": 1000000,
+        "decisions": 17,
         "admitted": 0,
         "refused": {
-          "distance": 14
+          "distance": 17
         },
         "budget_left": 64,
-        "eta_final_ppm": 914230,
+        "eta_final_ppm": 914211,
         "worst_margin_ever_admitted_ppm": 1000000
       },
       "scheduler_floor_below_the_plant_floor": {
-        "objective_gain_ppm": 2547,
+        "objective_gain_ppm": 2546,
         "load_floor_margin_ppm": 1128418,
         "verdict": "distance"
       }
@@ -554,54 +556,57 @@
     "placement_between_campuses_changes_energy_use": false
   },
   "adversarial_proposer": {
-    "proposals": 3006,
+    "proposals": 3007,
     "seed": 20261117,
     "verdicts": {
       "bounds": 55,
-      "budget": 1604,
-      "distance": 1278,
+      "budget": 456,
+      "distance": 2389,
       "ok": 64,
+      "same": 38,
       "worse": 5
     },
-    "first_six_verdicts": [
+    "opening_verdicts": [
       "bounds",
       "bounds",
       "distance",
       "distance",
       "worse",
-      "distance"
+      "distance",
+      "same"
     ],
     "taken_up": 64,
     "budget": 64,
     "budget_left": 0,
-    "eta_start_ppm": 914228,
-    "eta_final_ppm": 914737,
+    "eta_start_ppm": 914210,
+    "eta_final_ppm": 914718,
     "every_design_held_within_limit": true,
     "every_design_held_within_bounds": true,
     "objective_never_fell": true,
     "changes_within_budget": true,
     "chain_intact": true,
     "entries_follow_from_one_another": true,
-    "final_hash": "89472e8ab980432bdd53f6be57b25d7414f77c802f5089f7b7a7f3a9bf144d85"
+    "final_hash": "963a04d4dc9f5d8ea62e30b73360b65de162620147e199b850da5a6c3054fc69"
   },
   "recorded_proposer": {
     "present": true,
-    "proposer": "A language model (Claude, Anthropic) run as a sub-agent of the session that prepared this version. It was given the output of tools/propose.py and nothing else, and was told not to read the repository. That instruction was not enforced.",
+    "proposer": "A language model (Claude, Anthropic) run as a sub-agent of the session that prepared v0.3.1, with no memory of the runs recorded against v0.3.0. It was given the output of tools/propose.py and nothing else, and was told not to read the repository. That instruction was not enforced.",
     "run_file": "results/model_run.json",
     "turns_allowed": 40,
-    "proposals": 11,
+    "proposals": 12,
     "every_proposal_has_a_reason": true,
-    "admitted": 10,
+    "admitted": 7,
     "refused": {
+      "distance": 4,
       "worse": 1
     },
-    "admitted_hardware_changes": 4,
+    "admitted_hardware_changes": 3,
     "admitted_software_changes": 2,
-    "admitted_changes_to_both_at_once": 4,
+    "admitted_changes_to_both_at_once": 2,
     "budget_start": 64,
-    "budget_left": 54,
-    "eta_start_ppm": 914228,
-    "eta_final_ppm": 919548,
+    "budget_left": 57,
+    "eta_start_ppm": 914210,
+    "eta_final_ppm": 919529,
     "worst_margin_ever_admitted_ppm": 999215,
     "final_genome": {
       "pcm_kwh": 5000,
@@ -612,7 +617,7 @@
     },
     "chain_intact": true,
     "entries_follow_from_one_another": true,
-    "final_hash": "df96817f0e5e056b5c510312b895ed061ef20de99771a3d26447509d00fd1337",
+    "final_hash": "6cb930d4f3335fe8bace314d917f8205f3f9546f3f0bb3a61007a4a2cae76831",
     "every_design_held_within_limit": true,
     "every_design_held_within_bounds": true,
     "objective_never_fell": true,
@@ -631,10 +636,10 @@
       "sensor_power_at_airflow_turndown": 769564,
       "sorption_drive_heat": 120734,
       "load_floor": 999215,
-      "outage_ride_through": 666667
+      "outage_ride_through": 680742
     },
     "best_objective_found_by_direct_search": {
-      "objective_ppm": 919548,
+      "objective_ppm": 919529,
       "design": {
         "pcm_kwh": 5000,
         "capture_ppm": 950000,
@@ -646,15 +651,15 @@
     "share_of_the_possible_gain_reached": 1.0,
     "against_the_seeded_search": {
       "seeded": {
-        "proposals": 50,
+        "proposals": 48,
         "changes": 45,
-        "eta_final_ppm": 919009,
+        "eta_final_ppm": 918990,
         "share_of_the_possible_gain_reached": 0.8987
       },
       "recorded": {
-        "proposals": 11,
-        "changes": 10,
-        "eta_final_ppm": 919548,
+        "proposals": 12,
+        "changes": 7,
+        "eta_final_ppm": 919529,
         "share_of_the_possible_gain_reached": 1.0
       }
     },
@@ -662,24 +667,24 @@
   },
   "recorded_proposer_given_lessons": {
     "present": true,
-    "proposer": "A language model (Claude, Anthropic) run as a second sub-agent of the session that prepared this version, with no memory of the first run. It was given the output of tools/propose.py and the notes the first proposer left in results/model_lessons.md, and was told not to read anything else in the repository. That instruction was not enforced.",
+    "proposer": "A language model (Claude, Anthropic) run as a second sub-agent of the session that prepared v0.3.1, with no memory of the first run. It was given the output of tools/propose.py and the notes the first proposer left in results/model_lessons.md, and was told not to read anything else in the repository. That instruction was not enforced.",
     "run_file": "results/model_run_2.json",
     "lessons_file": "results/model_lessons.md",
     "turns_allowed": 40,
-    "proposals": 4,
+    "proposals": 5,
     "every_proposal_has_a_reason": true,
-    "admitted": 4,
+    "admitted": 5,
     "refused": {},
     "admitted_hardware_changes": 0,
     "admitted_software_changes": 1,
-    "admitted_changes_to_both_at_once": 3,
+    "admitted_changes_to_both_at_once": 4,
     "budget_start": 64,
-    "budget_left": 60,
-    "eta_start_ppm": 914228,
-    "eta_final_ppm": 919548,
+    "budget_left": 59,
+    "eta_start_ppm": 914210,
+    "eta_final_ppm": 919529,
     "worst_margin_ever_admitted_ppm": 999215,
     "final_genome": {
-      "pcm_kwh": 3800,
+      "pcm_kwh": 3935,
       "capture_ppm": 950000,
       "wall_u_mw": 100,
       "floor_kw": 392,
@@ -687,7 +692,7 @@
     },
     "chain_intact": true,
     "entries_follow_from_one_another": true,
-    "final_hash": "280bf4d6d94659e3b2327f090e981942b0b430e969feee1be11b9b09e11f129f",
+    "final_hash": "202752f3bf6be527afbc009fd116701c870706f2fb26124d73be5d25dfe55810",
     "every_design_held_within_limit": true,
     "every_design_held_within_bounds": true,
     "objective_never_fell": true,
@@ -706,10 +711,10 @@
       "sensor_power_at_airflow_turndown": 769564,
       "sorption_drive_heat": 120734,
       "load_floor": 999215,
-      "outage_ride_through": 877193
+      "outage_ride_through": 864983
     },
     "best_objective_found_by_direct_search": {
-      "objective_ppm": 919548,
+      "objective_ppm": 919529,
       "design": {
         "pcm_kwh": 5000,
         "capture_ppm": 950000,
@@ -721,28 +726,50 @@
     "share_of_the_possible_gain_reached": 1.0,
     "against_the_seeded_search": {
       "seeded": {
-        "proposals": 50,
+        "proposals": 48,
         "changes": 45,
-        "eta_final_ppm": 919009,
+        "eta_final_ppm": 918990,
         "share_of_the_possible_gain_reached": 0.8987
       },
       "recorded": {
-        "proposals": 4,
-        "changes": 4,
-        "eta_final_ppm": 919548,
+        "proposals": 5,
+        "changes": 5,
+        "eta_final_ppm": 919529,
         "share_of_the_possible_gain_reached": 1.0
       }
     },
     "edited_proposal_changes_the_ledger": true,
     "against_the_first_run": {
-      "objective_both_runs_reached_ppm": 919548,
-      "proposals_needed_first_run": 11,
-      "proposals_needed_with_lessons": 4,
-      "refused_first_run": 1,
+      "objective_both_runs_reached_ppm": 919529,
+      "proposals_needed_first_run": 12,
+      "proposals_needed_with_lessons": 5,
+      "refused_first_run": 5,
       "refused_with_lessons": 0,
-      "eta_final_first_run_ppm": 919548,
-      "eta_final_with_lessons_ppm": 919548,
-      "lessons_file_sha256": "e594d138237f9530171bb123bb956961878f6378e7dd26760e57ca44f6b98c21"
+      "eta_final_first_run_ppm": 919529,
+      "eta_final_with_lessons_ppm": 919529,
+      "lessons_file_sha256": "f09883f6bd2b8205aae07728878e7acfe43d5e1b76b9832b3d2673852f52296a"
+    }
+  },
+  "runs_recorded_against_v0_3_0": {
+    "first_run": {
+      "run_file": "results/v0.3.0/model_run.json",
+      "run_file_sha256": "0c5cf9323b4ec7bba0bf63842dbdaee9a7d061336606a8a26d4b7ae8a22a248d",
+      "ledger_file_sha256": "73f934cedad7e00cd7b6d3e2d17c318955b30e2eac6f4e7d6930179169dde343",
+      "proposals": 11,
+      "verdicts_unchanged_under_the_corrected_model": 2,
+      "final_design_unchanged": false,
+      "objective_as_recorded_ppm": 919548,
+      "objective_under_the_corrected_model_ppm": 914718
+    },
+    "run_given_lessons": {
+      "run_file": "results/v0.3.0/model_run_2.json",
+      "run_file_sha256": "71a98a02615db97f805f9dfee4118620df437613d50f22f72dee8cb60c93bf1f",
+      "ledger_file_sha256": "2de310a54096f50d04461eec75dafe512cfbbc4d9dec63a139f08d6ca551500f",
+      "proposals": 4,
+      "verdicts_unchanged_under_the_corrected_model": 0,
+      "final_design_unchanged": false,
+      "objective_as_recorded_ppm": 919548,
+      "objective_under_the_corrected_model_ppm": 914210
     }
   },
   "formal": {
@@ -758,6 +785,7 @@
       "PlantGate.Spec.run_safe",
       "PlantGate.Spec.run_bounded",
       "PlantGate.Spec.step_complete",
+      "PlantGate.Spec.same_design_not_taken_up",
       "PlantGate.Spec.step_refusal_changes_nothing",
       "PlantGate.Spec.loop_safe",
       "PlantGate.Spec.loop_in_bounds",
@@ -778,26 +806,26 @@
       ]
     },
     "replay": {
-      "decisions": 3071,
+      "decisions": 3072,
       "mismatches": 0,
       "by_ledger": {
         "seeded_search": {
-          "decisions": 50,
+          "decisions": 48,
           "mismatches": 0,
           "whole_run_through_lean_loop_agrees": true
         },
         "adversary": {
-          "decisions": 3006,
+          "decisions": 3007,
           "mismatches": 0,
           "whole_run_through_lean_loop_agrees": true
         },
         "recorded_proposer": {
-          "decisions": 11,
+          "decisions": 12,
           "mismatches": 0,
           "whole_run_through_lean_loop_agrees": true
         },
         "recorded_proposer_given_lessons": {
-          "decisions": 4,
+          "decisions": 5,
           "mismatches": 0,
           "whole_run_through_lean_loop_agrees": true
         }
@@ -1094,7 +1122,7 @@
     "checked_and_closed_links": 1
   },
   "checks_that_survive_python_O": {
-    "python_files_scanned": 9,
+    "python_files_scanned": 12,
     "assert_statements": 0,
     "files_with_assert_statements": [],
     "scanner_finds_a_planted_assert": true

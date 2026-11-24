@@ -12,9 +12,11 @@ the run file. The run file is the whole state: every call replays it from the st
 
 `verify.py` replays the committed run file and checks that it gives the committed ledger.
 
-The rules printed by `show` were reworded after the two recorded runs, from what the proposers said was
-unclear: whole numbers, a refusal using a turn, the verdict words, and equal objectives being allowed.
-The two recorded runs saw the earlier wording.
+The rules printed by `show` are reworded after each pair of recorded runs, from what the proposers said was
+unclear. After the runs against v0.3.0: whole numbers, a refusal using a turn, the verdict words, and equal
+objectives being allowed. After the runs against v0.3.1: that a margin may reach the limit, and that a refused
+proposal still prints the margins and the objective it would have had. Each pair of runs saw the wording
+before its own changes.
 """
 from __future__ import annotations
 
@@ -48,6 +50,7 @@ def show(run: dict, pl: dict) -> str:
     out = ["THE LOOP", "",
            "You hold one design of a data-centre campus and may propose another. Gene values are whole numbers.",
            "A proposal is taken up, with the verdict `ok`, when:",
+           "  0. it differs from the design held (if not, the verdict is `same`);",
            "  1. every gene is within its bounds (if not, the verdict is `bounds`);",
            "  2. the margin vector moves no farther than the radius, as a straight-line distance over all",
            "     margins (if not, `distance`). The radius is the headroom of the design held: the smallest gap",
@@ -55,7 +58,9 @@ def show(run: dict, pl: dict) -> str:
            "  3. the objective, in whole parts per million, is not lower (if it is, `worse`). Equal is allowed.",
            "A proposal that is taken up costs 1 from the budget and becomes the design held. A refused one",
            "costs nothing from the budget, but it does use a turn. With no budget left the verdict is `budget`.",
-           "Margins are demand over capacity in parts per million, rounded up: lower is safer.",
+           "Margins are demand over capacity in parts per million, rounded up: lower is safer. A margin may",
+           f"reach {loop.LIMIT:,} and no more. A refused proposal still prints the margins and the objective it",
+           "would have had.",
            "", "DESIGN HELD", ""]
     for k in loop.oracle.GENES:
         kind = "hardware" if k in loop.HARDWARE else "software"

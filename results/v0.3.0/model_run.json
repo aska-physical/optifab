@@ -1,0 +1,86 @@
+{
+ "schema": "optifab-proposals/1",
+ "proposer": "A language model (Claude, Anthropic) run as a sub-agent of the session that prepared this version. It was given the output of tools/propose.py and nothing else, and was told not to read the repository. That instruction was not enforced.",
+ "budget": 64,
+ "turns": 40,
+ "start": {
+  "pcm_kwh": 2500,
+  "capture_ppm": 850000,
+  "wall_u_mw": 132,
+  "floor_kw": 600,
+  "shed_ppm": 300000
+ },
+ "proposals": [
+  {
+   "set": {
+    "capture_ppm": 860000
+   },
+   "why": "First small probe. I expect capturing a little more heat in liquid to raise the objective and to ease the sorption drive heat margin. I want to see which margins move and by how much."
+  },
+  {
+   "set": {
+    "floor_kw": 580
+   },
+   "why": "The first probe showed capture eases two margins but leaves the objective unchanged. Now I lower the load floor a little, expecting less forced load to raise the objective while the load floor margin tightens."
+  },
+  {
+   "set": {
+    "shed_ppm": 340000
+   },
+   "why": "Lowering the load floor raised the objective and the load floor margin scaled as one over the floor. Now I probe shedding: I expect more shedding to ease the outage ride through margin, and I want to see whether the objective cares."
+  },
+  {
+   "set": {
+    "pcm_kwh": 2650
+   },
+   "why": "More shedding eased the outage margin but cost 2 ppm of objective, so shedding is not free. Now I try a bigger thermal store instead. I expect it to ease the outage margin and I want to see if it touches the objective or the other margins."
+  },
+  {
+   "set": {
+    "wall_u_mw": 150
+   },
+   "why": "The thermal store eased only the outage margin and left the objective alone. The wall is the last gene I have not probed. I raise its U-value a little to see which margins and whether the objective respond."
+  },
+  {
+   "set": {
+    "capture_ppm": 880000,
+    "wall_u_mw": 100,
+    "floor_kw": 555
+   },
+   "why": "Raising the wall U-value was the wrong way: it tightened the load floor margin a little and did nothing for the objective, so I take it to its lowest value. More capture should ease both the sorption and load floor margins, and I spend part of that on a lower load floor to raise the objective."
+  },
+  {
+   "set": {
+    "shed_ppm": 0,
+    "pcm_kwh": 4200
+   },
+   "why": "The earlier refusal showed that more shedding costs a little objective, so I expect no shedding to gain a little. On its own that would break the outage margin, so I enlarge the thermal store in the same step, which earlier eased that margin without touching the objective. The store is sized so the outage margin ends below the largest fixed margin."
+  },
+  {
+   "set": {
+    "capture_ppm": 925000,
+    "floor_kw": 500
+   },
+   "why": "Dropping all shedding gained 9 ppm, as the earlier refusal suggested. Now I raise capture again, which I expect to ease the sorption and load floor margins by amounts I can predict from earlier steps. I lower the load floor only part of the way so the load floor margin still falls and the radius grows for the next step."
+  },
+  {
+   "set": {
+    "capture_ppm": 950000,
+    "floor_kw": 450
+   },
+   "why": "The last step landed where I predicted, so I take capture to its upper bound, which should ease the sorption margin to about 121 thousand and allow the lowest load floor. I lower the floor to 450 for now, which I expect to lift the objective to about 918060 while leaving room to check the load floor margin before the final cut."
+  },
+  {
+   "set": {
+    "pcm_kwh": 5000
+   },
+   "why": "Before the final cut of the load floor uses up the radius, I check one loose end. Dropping shedding gained 9 ppm where the earlier refusal hinted at more, so the larger thermal store in that step may have cost a little. Enlarging the store alone should either leave the objective unchanged, which also makes the outage margin safer, or be refused and show me the cost."
+  },
+  {
+   "set": {
+    "floor_kw": 392
+   },
+   "why": "The thermal store test left the objective unchanged, so the store does not matter to it. The load floor margin has scaled as one over the floor all along, so 392 kW is the lowest whole number that keeps it under the limit, at about 999214. I expect the objective to reach about 919550, and this step uses nearly all the remaining radius."
+  }
+ ]
+}

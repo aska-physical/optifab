@@ -78,7 +78,7 @@ def floor_num(p, g):
 
 
 def outage_num(p, sc, g):
-    return p["p_it_w"] * (1_000_000 - g["shed_ppm"]) * sc["outage_min"]
+    return (p["p_it_w"] * (1_000_000 - g["shed_ppm"]) + q_fix(p, g)) * sc["outage_min"]
 
 
 def outage_den(g):
@@ -109,7 +109,8 @@ def objective(p, sc, g):
     t_low = sc["low_demand_hours"] * 60
     t_out = sc["outage_min"] * sc["outages_per_year"]
     useful = full * t_full + low * t_low - shed_p * t_out
-    used = utility(p, full) * t_full + utility(p, it_low) * t_low - utility(p, shed_p) * t_out
+    used = utility(p, full) * t_full + utility(p, it_low) * t_low \
+        - (utility(p, full) - utility(p, full - shed_p)) * t_out
     return 0 if used <= 0 else (1_000_000 * useful * p["loop_cop_milli"]) // used
 
 
@@ -122,7 +123,9 @@ def design_step(p, sc, limit, state, cand):
     held, budget = state
     base = margins(p, sc, held)
     verdict, remaining = gate(base, margins(p, sc, cand), headroom(limit, base), budget, 1)
-    if not in_bounds(p["lo"], p["hi"], cand):
+    if all(cand[k] == held[k] for k in GENES):
+        name = "same"
+    elif not in_bounds(p["lo"], p["hi"], cand):
         name = "bounds"
     elif verdict != "ok":
         name = verdict

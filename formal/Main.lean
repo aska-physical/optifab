@@ -57,6 +57,7 @@ def design (limit budget : Int) (p : Plant) (y : Scenario) (b c : Genome) : Stri
   let j := judge p y limit (b, budget) c
   let name :=
     if accepts p y limit (b, budget) c = true then "ok"
+    else if c = b then "same"
     else if inBounds p.lo p.hi c = false then "bounds"
     else if j.verdict ≠ Verdict.ok then verdictName j.verdict
     else "worse"

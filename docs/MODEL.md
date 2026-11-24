@@ -158,6 +158,9 @@ $t = B/(P(1-s))$. To bridge an outage of length $T$ the campus must shed $s_{min
 |---|---|---|---|---|
 | Load to shed | none | none | 50% | 75% |
 
+These figures count IT heat only, as funi-frame's 15 minutes does. The fixed heat load of section 3 also
+reaches the store when cooling stops. With it counted, full load lasts 14.69 minutes, not 15.
+
 The same budget covers a burst of 10% above cooling capacity for 2.5 hours. The wall liner adds 354 kWh_th on the
 air side (funi-frame's 28.3 min at a 750 kW heat leak).
 
@@ -334,11 +337,12 @@ margins in parts per million of their limit, and proves eight theorems about it.
 
 Those eight take the margins as given. Since v0.3.0 the plant model of section 12 is in the same Lean file,
 as exact integer arithmetic, with the bounds on each gene, the objective and the step that takes a design up.
-Seven more theorems are about designs. In them the three margins that move with the genes are computed
+Eight more theorems are about designs. In them the three margins that move with the genes are computed
 inside the proved code. The eleven carried as constants are still inputs.
 
-- `step_complete`: with budget left and the design held within the limit, a design within the bounds and the
-  headroom that does not lower the objective is taken up.
+- `step_complete`: with budget left and the design held within the limit, a different design within the
+  bounds and the headroom that does not lower the objective is taken up.
+- `same_design_not_taken_up`: a proposal identical to the design held is never taken up.
 - `step_refusal_changes_nothing`: a design that is not taken up leaves the design held and the budget as
   they were.
 - `loop_safe`, `loop_in_bounds`, `loop_bounded`: from a start within the limit and the bounds, after any list
@@ -348,40 +352,39 @@ inside the proved code. The eleven carried as constants are still inputs.
   It may be equal.
 - `loop_keeps_physics`: with the limit at 1,000,000 ppm and a start within it, the design held satisfies
   three exact inequalities. The cooling needed at full load is at most what the captured heat can drive. The
-  fixed heat load is at most the cooling gained at the scheduler's floor. The IT heat of one outage is at most
-  what the store holds. Rounding plays no part in them. The first follows from the second for any scheduler
+  fixed heat load is at most the cooling gained at the scheduler's floor. The heat of one outage, from the IT
+  load not shed and the fixed heat load, is at most what the store holds. Rounding plays no part in them. The first follows from the second for any scheduler
   floor up to the IT load.
 
-`lake comparator --paranoid` accepts all fifteen under six kernels with the standard axioms only. A Python
+`lake comparator --paranoid` accepts all sixteen under six kernels with the standard axioms only. A Python
 copy of the gate, the model and the step agrees with the Lean executable on 405,000 generated inputs: 300,000
 gate decisions, 100,000 proposed designs and 5,000 whole runs through the Lean `loop`. The Proven Commons bar check reports items 2 to 6 as passing
 ([formal/BAR-REPORT.md](../formal/BAR-REPORT.md)).
 
-What the seven do not say: that the model describes a real plant, or that it is free of mistakes. Its
+What the eight do not say: that the model describes a real plant, or that it is free of mistakes. Its
 constants are pinned from certificates that are claimed and not measured, eleven of its fourteen margins are
 carried as constants, and the bounds and the scenario are declared by a person.
 
-**Known defects.** A separate agent read the new statements against this prose and the earlier floating-point
-model. It confirmed the units and that the integer model matches the floating-point one. It also found five
-defects, each checked here by running the numbers, and listed in [formal/SPEC.md](../formal/SPEC.md):
+**Defects found, and what v0.3.1 did.** A separate agent read the statements against this prose and the
+earlier floating-point model. It confirmed the units and that the integer model matches the floating-point
+one. It also found five defects. A second, independent check reproduced all five in exact arithmetic.
 
-1. The objective subtracts the whole utility power of the shed load in an outage, including the part that
-   does not depend on load. Every objective in this note is about 18 ppm too high. The corrected start is
-   0.914210 (published 0.914228) and the corrected end of the seeded run is 0.918990 (published 0.919009).
-   The order of designs does not change, except between designs that tie.
-2. The outage margin counts IT heat and leaves out the fixed heat load, about 71 kWh in a 20-minute outage.
-3. A design that scores the same is taken up and charged, even one identical to the design held. 30 of the
-   45 changes in the seeded run left the objective unchanged. So "never worse" is what is proved, and a
-   proposer can spend the budget without improving anything.
-4. Nothing requires the plant, the bounds or the start to make sense.
-5. A large move towards safety is refused as too far, and a start past a limit can never be repaired.
+1. Fixed. The objective subtracted the whole utility power of the shed load in an outage, including the part
+   that does not depend on load. Every objective in v0.3.0 was about 18 ppm too high. The start was published
+   as 0.914228 and is 0.914210.
+2. Fixed. The outage margin counted IT heat and left out the fixed heat load, about 71 kWh in a 20-minute
+   outage. With it counted, the start design's outage margin is 961,695 ppm, not 933,334, and it becomes the
+   tightest margin at the start.
+3. Fixed in part. A proposal identical to the design held was taken up and charged. It is now refused as
+   `same`. A different design that scores the same is still taken up: the hardware changes that open headroom
+   all score the same, so demanding a strict gain would stop the loop. So "never worse" is what is proved.
+4. Open. Nothing requires the plant, the bounds or the start to make sense.
+5. Open. A large move towards safety is refused as too far, and a start past a limit can never be repaired.
 
-They are not fixed in this version. A fix to 1 or 2 changes every objective and margin figure and the
-ledgers of the recorded runs, whose notes quote the present figures.
-
-In the loop the radius is the headroom of the baseline: the smallest distance from any margin to its limit.
-Section 5's lemma, that a move within the headroom passes no limit, is one of the eight
-(`accepted_stays_within`), and here it needs no assumption about the baseline.
+The two fixes changed every objective and margin figure in this note, and the loop's path with them. The two
+runs recorded against v0.3.0 could not be carried over: replayed under the corrected model, only 2 of
+their 15 proposals are decided the same way. They are kept in `results/v0.3.0/` and both runs were made
+again.
 
 ## 12. The improvement loop
 
@@ -404,12 +407,12 @@ the one held. The step scale doubles after an admission and halves after a refus
 
 | | Run | Proposer with no reserve | Budget of 3 | Start on a limit |
 |---|---|---|---|---|
-| Proposals | 50 | 186 | 3 | 14 |
-| Admitted | 45 | 60 | 3 | 0 |
-| Refused by the gate | 5 | 126 | 0 | 14 |
-| Objective at the end | 0.919009 | 0.916009 | 0.914355 | 0.914230 |
+| Proposals | 48 | 161 | 3 | 17 |
+| Admitted | 45 | 62 | 3 | 0 |
+| Refused by the gate | 3 | 99 | 0 | 17 |
+| Objective at the end | 0.918990 | 0.916016 | 0.914210 | 0.914211 |
 
-The start is 0.914228, except in the last column, which starts at 0.914230 and does not move. The run ended
+The start is 0.914210, except in the last column, which starts at 0.914211 and does not move. The run ended
 with budget to spare because every hardware gene had reached the edge of
 its search range. The ledger records both designs of every decision. `python3 verify.py --formal` gives the
 two designs to the Lean executable, which works out the margins, the objective, the verdict and the budget
@@ -419,32 +422,33 @@ Two other proposers have used the same step function.
 
 **A recorded run by a language model.** `tools/propose.py` prints the design held, its margins, the radius,
 the objective and the budget, and takes a proposal for one or more genes with a sentence of reasons. A
-language model was given that output and nothing else, with a limit of 40 proposals. It made 11. 10
-were taken up (4 hardware, 2 software, 4 changing both at once) and the rest were refused
-(1 as `worse`). The objective went from 0.914228 to 0.919548. A direct search over the software genes, with the
-hardware genes at their most generous bounds, finds 0.919548 to be the best any design within the limits can
+language model was given that output and nothing else, with a limit of 40 proposals. It made 12. 7
+were taken up (3 hardware, 2 software, 2 changing both at once) and the rest were refused
+(4 as `distance`, 1 as `worse`). The objective went from 0.914210 to 0.919529. A direct search over the software genes, with the
+hardware genes at their most generous bounds, finds 0.919529 to be the best any design within the limits can
 score, so the run reached 100.0% of the possible gain. The seeded search reached 89.9%. The proposals
 and the reasons are in `results/model_run.json`. `verify.py` replays them and must reproduce
 `results/model_ledger.json`.
 
 **A second run, given the first one's notes.** The first run's closing notes were saved word for word in
-`results/model_lessons.md`: three fitted formulas for the moving margins, the gain per kW of floor, and what
-its one refusal taught it. A second instance of the same model, with no memory of the first run, was given those notes and the same
-interface. It made 4 proposals and all 4 were taken up, 3 of them changing hardware and software
-together. It reached 0.919548, the same design in the two software genes. The first run needed 11
-proposals to reach that objective and the second 4. Its own notes are in `results/model_lessons_2.md`.
+`results/model_lessons.md`. A second instance of the same model, with no memory of the first run, was given
+those notes and the same interface. It made 5 proposals and 5 were taken up, 4 of them changing
+hardware and software together. It reached 0.919529, which is 100.0% of the possible gain. To reach the
+objective both runs got to, the first needed 12 proposals and the second 5. Its own notes are in
+`results/model_lessons_2.md`.
 
-These are two runs of one model. They show that the interface is enough to work from and that notes
-can be handed on. They do not measure how good a proposer a model is. Both runs end with the load-floor
-margin at 999,215 ppm, 785 from its limit: the objective rewards a lower floor and nothing
-rewards headroom, so a good proposer drives the design to where it can no longer change.
+These are two runs of one model. They show that the interface is enough to work from and that notes can be
+handed on. They do not measure how good a proposer a model is. Both runs end with the `load_floor` margin at 999,215 ppm, 785 from its limit: the
+objective rewards a lower floor and nothing rewards headroom, so a good proposer drives the design to where it
+can no longer change.
 
-**An adversary.** `adversary_run` makes 3,006 proposals meant to break the loop: a capture fraction of 200%,
-a negative store, a scheduler floor of zero and one below the plant's floor, a design that scores lower, then
-random designs, half of them anywhere in or just outside the bounds and half near the start. The verdicts were
-55 `bounds`, 1604 `budget`, 1278 `distance`, 64 `ok`, 5 `worse`. The budget of 64 was spent and not one change more was made. Every design held stayed within every
-limit and bound and the objective never fell. The theorems of section 11 say this must be so for the Lean
-code. This run checks it on the Python copy, and `--formal` replays all of it in Lean.
+**An adversary.** `adversary_run` makes 3,007 proposals meant to break the loop: a capture fraction of 200%,
+a negative store, a scheduler floor of zero and one below the plant's floor, a design that scores lower, a
+store too small for one outage, a proposal that changes nothing, then random designs, half of them anywhere
+in or just outside the bounds and half near the start. The verdicts were 55 `bounds`, 456 `budget`, 2389 `distance`, 64 `ok`, 38 `same`, 5 `worse`. The budget of 64 was spent
+and not one change more was made. Every design held stayed within every limit and bound and the objective
+never fell. The theorems of section 11 say this must be so for the Lean code. This run checks it on the
+Python copy, and `--formal` replays all of it in Lean.
 
 [VISION.md](VISION.md) discusses what the loop shows and how far it is from the system it stands in for.
 

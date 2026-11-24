@@ -1,6 +1,6 @@
 {
  "schema": "optifab-proposals/1",
- "proposer": "A language model (Claude, Anthropic) run as a second sub-agent of the session that prepared this version, with no memory of the first run. It was given the output of tools/propose.py and the notes the first proposer left in results/model_lessons.md, and was told not to read anything else in the repository. That instruction was not enforced.",
+ "proposer": "A language model (Claude, Anthropic) run as a second sub-agent of the session that prepared v0.3.1, with no memory of the first run. It was given the output of tools/propose.py and the notes the first proposer left in results/model_lessons.md, and was told not to read anything else in the repository. That instruction was not enforced.",
  "budget": 64,
  "turns": 40,
  "start": {
@@ -13,34 +13,41 @@
  "proposals": [
   {
    "set": {
-    "pcm_kwh": 3672,
-    "capture_ppm": 864000,
+    "capture_ppm": 851000,
     "wall_u_mw": 100,
-    "floor_kw": 582,
+    "pcm_kwh": 3660,
     "shed_ppm": 0
    },
-   "why": "I expect the load floor and outage margins to fall to about 908000 each and the sorption margin to about 293000. That is a move of about 52000 against a radius of 59652, and it should grow the radius to about 92000. I rely on the three margin formulas in the earlier notes and on the note that only floor and shedding move the objective, so the lower floor and zero shedding should add about 470 ppm."
+   "why": "The start has only 38305 of room because the outage margin is high. I rely on the earlier notes three margin formulas to pick a move that should travel about 33700: a bigger store to pull the outage margin down to about 930000, the tightest wall and a little more capture to pull the load floor margin to about 929000. Shed goes to zero because the notes say that gains about 8 ppm and costs nothing else. I expect the objective to read 914218 and the radius to grow to about 70000."
   },
   {
    "set": {
-    "pcm_kwh": 3800,
-    "capture_ppm": 896000,
-    "floor_kw": 533
+    "capture_ppm": 870000,
+    "floor_kw": 571,
+    "pcm_kwh": 3772
    },
-   "why": "The first verdict matched the earlier notes' margin formulas to within 4 ppm, so I keep relying on them. I expect sorption near 225217 and both load floor and outage near 877200, a move of about 80600 against a radius of 92229, which should grow the radius to about 122700. The floor drops 49 kW, so I expect the objective to rise by roughly 1250 ppm."
+   "why": "The first move landed where the earlier notes formulas said, to within 1 ppm, and shed to zero gave exactly the 8 ppm the notes reported. Now I raise capture to 870000, which cuts the least load the plant needs to about 516 kW, and lower the floor to 571 so the load floor margin only falls to about 903000. A slightly bigger store brings the outage margin to about 902000 as well. I expect a move of about 56900 inside the radius of 70025, the objective near 914955, and the radius to grow to about 96900."
+  },
+  {
+   "set": {
+    "capture_ppm": 900000,
+    "floor_kw": 533,
+    "pcm_kwh": 3935
+   },
+   "why": "The second move again matched the earlier notes formulas exactly, and the objective matched the notes rate of about 25.5 ppm per kW of floor. Same pattern, larger step: capture to 900000 cuts the least load to about 461 kW, the floor follows down to 533 so the load floor margin lands near 864900, and the store grows so the outage margin lands near 865000. I expect a move of about 82700 inside the radius of 96871, the objective near 915922, and the radius to grow to about 135000."
   },
   {
    "set": {
     "capture_ppm": 950000,
-    "floor_kw": 446
+    "floor_kw": 430
    },
-   "why": "The second verdict matched my forecast to the ppm, so the earlier notes' formulas hold. Taking capture to its top bound should drop sorption to about 120734, and floor 446 should hold load floor near 878233, just above the outage margin, a move of about 104500 against a radius of 122738. The floor drops 87 kW, so I expect about 2200 ppm more objective, and the radius left should allow one last floor cut to 392."
+   "why": "Three moves in a row matched the earlier notes formulas and the objective followed the floor alone, as the notes said. Now capture goes to its upper bound, which by the notes cuts the least load to about 391.7 kW, and the floor drops to 430. That should take the sorption margin to about 120734 and lift the load floor margin to about 910900, a move of about 106800 inside the radius of 135017. The floor cannot go to 392 in this same move because that would travel about 165000. I leave the store alone so the outage margin stays below the load floor margin, which sets up a last move in the floor only. I expect the objective near 918554."
   },
   {
    "set": {
     "floor_kw": 392
    },
-   "why": "Only the floor changes, so only the load floor margin should move, from 878234 to about 999215, a move of about 120981 against a radius of 121766. The earlier notes say 392 is the lowest floor that stays under the limit with capture at its top and the wall at its bottom, and my own readings agree, since 391 would put the margin over the limit. I expect about 1380 ppm more objective."
+   "why": "The fourth move matched the earlier notes formulas again. With capture and wall at their bounds the least load the plant needs is about 391.7 kW, so 392 is the lowest whole floor. Only the load floor margin moves, from 910912 to about 999215, a move of about 88300 inside the radius of 89088. This works because the load floor margin is already the worst one, so the radius always covers its rise up to the limit. I expect the objective near 919529 and no further gain to be available after this, since the notes and my four moves show the objective follows only the floor and the shed share."
   }
  ],
  "lessons_file": "results/model_lessons.md"

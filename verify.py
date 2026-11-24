@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic verifier for aska-physical/optifab v0.3.0.
+"""Deterministic verifier for aska-physical/optifab v0.3.1.
 
 optifab models one reference data-centre campus as a checked stack and states the contract between
 the physical plant and the digital workload. It adds no new measurement. Every number is derived
@@ -41,13 +41,17 @@ LEDGER_PATH = ROOT / "results" / "ledger.json"
 # Recorded runs of outside proposers: certificate key -> (run file, ledger file), both in results/.
 RECORDED_RUNS = {"recorded_proposer": ("model_run.json", "model_ledger.json"),
                  "recorded_proposer_given_lessons": ("model_run_2.json", "model_ledger_2.json")}
+# Runs recorded against the model of v0.3.0, kept as they were. Its objective read about 18 ppm high and its
+# outage margin left out the fixed heat load, so these are replayed under the corrected model for comparison only.
+ARCHIVED_RUNS = {"first_run": ("v0.3.0/model_run.json", "v0.3.0/model_ledger.json"),
+                 "run_given_lessons": ("v0.3.0/model_run_2.json", "v0.3.0/model_ledger_2.json")}
 FORMAL_PATH = ROOT / "results" / "formal.json"
 FORMAL_DIR = ROOT / "formal"
 FORMAL_SOURCES = ["PlantGate.lean", "PlantGate/Spec.lean", "PlantGate/Proofs.lean", "Main.lean", "comparator.json",
                   "lakefile.toml", "lean-toolchain", "tests/oracle.py", "tests/run_tests.py"]
 KELVIN = 273.15
 PSF_TO_KPA = 0.04788026
-VERSION = "0.3.0"
+VERSION = "0.3.1"
 
 
 # --------------------------------------------------------------------------- inputs
@@ -292,6 +296,8 @@ def plant_envelope(inp: dict, design_dt_k: float = 20.0) -> dict:
         "pcm_budget_kWh_th": budget,
         "wall_liner_budget_kWh_th": round(liner, 2),
         "full_load_ride_through_min": round(budget / p_kw * 60.0, 2),
+        # funi-frame's 15 minutes counts IT heat only. The fixed heat load also reaches the store in an outage.
+        "full_load_ride_through_min_with_fixed_heat_load": round(budget / (p_kw + q_fix * 1000.0) * 60.0, 2),
         "ride_through_min_by_shed_fraction": {
             str(s): round(budget / (p_kw * (1.0 - s)) * 60.0, 2) for s in (0.0, 0.25, 0.5, 0.75)},
         "shed_fraction_to_bridge_outage_min": {
@@ -876,7 +882,9 @@ def improvement_loop(inp: dict, env: dict, margins: list[dict]) -> tuple[dict, d
     finally:
         loop.RESERVE = reserve
     small = loop.summary(loop.run_loop(plant, LOOP_START, 3))
-    frozen_start = dict(LOOP_START, shed_ppm=250000)  # the outage margin sits exactly on its limit
+    # With this wall and this shed the outage margin is exactly 1,000,000: the heat of one outage equals the store.
+    frozen_start = dict(LOOP_START, wall_u_mw=125, shed_ppm=271236)
+    frozen_margin = loop.model(frozen_start, plant)["margins"]["outage_ride_through"]
     frozen = loop.summary(loop.run_loop(plant, frozen_start, LOOP_BUDGET))
     below = dict(LOOP_START, floor_kw=500)  # a scheduler floor under the load floor of the plant
     base_m, below_m = loop.model(LOOP_START, plant), loop.model(below, plant)
@@ -892,7 +900,7 @@ def improvement_loop(inp: dict, env: dict, margins: list[dict]) -> tuple[dict, d
         "variants": {
             "proposer_without_reserve": {k: naive[k] for k in keep},
             "budget_of_three": {k: small[k] for k in keep},
-            "start_with_a_margin_exactly_at_its_limit": {k: frozen[k] for k in keep},
+            "start_with_a_margin_exactly_at_its_limit": {"start_outage_margin_ppm": frozen_margin, **{k: frozen[k] for k in keep}},
             "scheduler_floor_below_the_plant_floor": {"objective_gain_ppm": below_m["eta_ppm"] - base_m["eta_ppm"],
                                                       "load_floor_margin_ppm": below_m["margins"]["load_floor"],
                                                       "verdict": refused[0]},
@@ -937,7 +945,8 @@ def adversary_run(plant: dict, proposals: int = 3000, seed: int = 20261117) -> t
     rng = random.Random(seed)
     start = loop.genes(LOOP_START)
     props = [{"set": {"capture_ppm": 2_000_000}}, {"set": {"pcm_kwh": -1}}, {"set": {"floor_kw": 0}},
-             {"set": {"floor_kw": 500}}, {"set": {"floor_kw": 620}}, {"set": {"pcm_kwh": 2400, "shed_ppm": 200_000}}]
+             {"set": {"floor_kw": 500}}, {"set": {"floor_kw": 620}}, {"set": {"pcm_kwh": 2400, "shed_ppm": 200_000}},
+             {"set": {"floor_kw": start["floor_kw"]}}]  # the last one changes nothing
     for _ in range(proposals):
         chosen = rng.sample(loop.oracle.GENES, rng.randint(1, 5))
         if rng.random() < 0.5:  # anywhere, including just outside the bounds
@@ -949,7 +958,7 @@ def adversary_run(plant: dict, proposals: int = 3000, seed: int = 20261117) -> t
     for e in ledger["entries"]:
         verdicts[e["verdict"]] = verdicts.get(e["verdict"], 0) + 1
     report = {"proposals": len(props), "seed": seed, "verdicts": dict(sorted(verdicts.items())),
-              "first_six_verdicts": [e["verdict"] for e in ledger["entries"][:6]],
+              "opening_verdicts": [e["verdict"] for e in ledger["entries"][:7]],
               "taken_up": verdicts.get("ok", 0), "budget": LOOP_BUDGET, "budget_left": ledger["final_budget"],
               "eta_start_ppm": ledger["head"]["start_eta_ppm"], "eta_final_ppm": ledger["final_eta_ppm"],
               **held_states_ok(ledger, plant), "chain_intact": loop.check_chain(ledger),
@@ -994,6 +1003,28 @@ def proposer_run(plant: dict, seeded: dict, run_file: str) -> tuple[dict | None,
             loop.run_proposals(plant, run["start"], run["budget"], edited)["final_hash"] != ledger["final_hash"],
     }
     return ledger, report
+
+
+def archived_runs(plant: dict) -> dict:
+    """The two runs recorded against the model of v0.3.0, replayed under the corrected model.
+
+    They are kept as they were made. The proposers saw the earlier objective and outage margin, so the
+    replay only answers one question: would any of their proposals be decided differently now?"""
+    out = {}
+    for key, (run_file, ledger_file) in ARCHIVED_RUNS.items():
+        raw_run, raw_ledger = (ROOT / "results" / run_file).read_bytes(), (ROOT / "results" / ledger_file).read_bytes()
+        run, old = verify_guards.strict_parse_json_bytes(raw_run), verify_guards.strict_parse_json_bytes(raw_ledger)
+        new = loop.run_proposals(plant, run["start"], run["budget"], run["proposals"])
+        out[key] = {
+            "run_file": f"results/{run_file}", "run_file_sha256": sha256_bytes(raw_run),
+            "ledger_file_sha256": sha256_bytes(raw_ledger), "proposals": len(run["proposals"]),
+            "verdicts_unchanged_under_the_corrected_model":
+                sum(1 for a, b in zip(old["entries"], new["entries"]) if a["verdict"] == b["verdict"]),
+            "final_design_unchanged": loop.genes(old["final_genome"]) == loop.genes(new["final_genome"]),
+            "objective_as_recorded_ppm": old["final_eta_ppm"],
+            "objective_under_the_corrected_model_ppm": new["final_eta_ppm"],
+        }
+    return out
 
 
 def formal_record(ledgers: dict) -> dict:
@@ -1327,7 +1358,8 @@ def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, 
             and evolution["admitted"] + evolution["budget_left"] == evolution["budget_start"],
         "must_fail_22_design_with_a_margin_at_its_limit_can_still_change":
             variants["start_with_a_margin_exactly_at_its_limit"]["admitted"] == 0
-            and variants["start_with_a_margin_exactly_at_its_limit"]["decisions"] > 0,
+            and variants["start_with_a_margin_exactly_at_its_limit"]["decisions"] > 0
+            and variants["start_with_a_margin_exactly_at_its_limit"]["start_outage_margin_ppm"] == loop.LIMIT,
         "must_fail_23_edited_ledger_entry_keeps_the_chain": loop.check_chain(ledger) and not loop.check_chain(edited),
         "must_fail_24_formal_record_is_stale_or_missing":
             formal.get("present", False) and formal["matches_current_lean_sources"] and formal["matches_current_ledger"]
@@ -1335,7 +1367,7 @@ def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, 
             and formal["matches_current_ledgers"]
             and formal["replay"]["by_ledger"]["seeded_search"]["decisions"] == evolution["decisions"],
         "must_fail_25_adversary_moves_the_design_out_of_its_envelope":
-            adversary["first_six_verdicts"] == ["bounds", "bounds", "distance", "distance", "worse", "distance"]
+            adversary["opening_verdicts"] == ["bounds", "bounds", "distance", "distance", "worse", "distance", "same"]
             and adversary["taken_up"] > 0 and adversary["every_design_held_within_limit"]
             and adversary["every_design_held_within_bounds"] and adversary["objective_never_fell"]
             and adversary["changes_within_budget"] and adversary["chain_intact"],
@@ -1450,6 +1482,7 @@ def build_certificate(with_ledger: bool = False, check: bool = True):
         "network_first_look": network,
         "adversarial_proposer": adversary,
         **recorded_runs,
+        "runs_recorded_against_v0_3_0": archived_runs(plant),
         "formal": formal,
         "loop_timing": timing,
         "plant_frame": frames,
