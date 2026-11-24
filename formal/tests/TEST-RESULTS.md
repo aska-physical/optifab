@@ -11,6 +11,6 @@ Written by `tests/run_tests.py`. Rerun it to check these numbers.
 - Verdicts: budget 56291, cost 93741, distance 58205, ok 72974, radius 17382, shape 1407
 - Design inputs: 100000, each a proposed design run through the model, the bounds, the gate and the objective
 - Design edges: 88514 of the design inputs have a gene on or just past a bound, or a margin on or just past its limit
-- Design verdicts: bounds 21702, budget 19676, distance 17684, ok 7116, radius 33263, worse 559
-- Loop inputs: 5000, each a whole run through `loop` and `changes`: 27628 proposals in all, 3602 taken up
+- Design verdicts: bounds 21372, budget 17719, distance 17399, ok 4359, radius 30449, same 8145, worse 557
+- Loop inputs: 5000, each a whole run through `loop` and `changes`: 27628 proposals in all, 2799 taken up
 - Failures: 0

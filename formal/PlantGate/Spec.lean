@@ -68,18 +68,25 @@ theorem PlantGate.Spec.run_safe (limit : Int) (steps : List (List Int × Int)) (
 theorem PlantGate.Spec.run_bounded (limit : Int) (steps : List (List Int × Int)) (s : List Int × Int) :
     (acceptedCount limit s steps : Int) + (run limit s steps).2 ≤ s.2 := sorry
 
-/-- Usefulness of the loop over designs: a design within the bounds that
-    stays within the headroom and does not lower the objective is taken
-    up, for one unit of budget. A loop that takes nothing up passes the
+/-- Usefulness of the loop over designs: a different design within the
+    bounds that stays within the headroom and does not lower the objective
+    is taken up, for one unit of budget. A loop that takes nothing up passes the
     safety statements below and fails this one. -/
 theorem PlantGate.Spec.step_complete (p : Plant) (sc : Scenario) (limit : Int)
     (s : Genome × Int) (cand : Genome)
+    (hne : cand ≠ s.1)
     (hb : 0 < s.2) (hin : inBounds p.lo p.hi cand = true)
     (hw : ∀ x ∈ margins p sc s.1, x ≤ limit)
     (hd : distSq (margins p sc s.1) (margins p sc cand)
       ≤ headroom limit (margins p sc s.1) * headroom limit (margins p sc s.1))
     (ho : objective p sc s.1 ≤ objective p sc cand) :
     step p sc limit s cand = (cand, s.2 - 1) := sorry
+
+/-- A proposal identical to the design held is never taken up, so it
+    cannot be charged to the budget. -/
+theorem PlantGate.Spec.same_design_not_taken_up (p : Plant) (sc : Scenario) (limit : Int)
+    (s : Genome × Int) :
+    accepts p sc limit s s.1 = false := sorry
 
 /-- A proposed design that is not taken up changes nothing: the design
     held and the budget are as they were. -/

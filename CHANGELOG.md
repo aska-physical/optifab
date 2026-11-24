@@ -2,6 +2,43 @@
 
 Machine-checked milestones for `aska-physical/optifab`.
 
+## [0.3.1] - 2026-11-24
+
+Corrects the plant model. An independent read of v0.3.0 found five defects in it (issue 14). This version
+fixes two and part of a third. Every objective figure and the outage margin change.
+
+### Fixed
+
+- **The objective's outage term.** It subtracted the whole utility power of the shed load during an outage,
+  including the part that does not depend on load, so an outage with nothing shed raised the objective. It now
+  subtracts only what the shed load would have drawn. Every objective is about 18 ppm lower: the start is
+  0.914210 (was 0.914228).
+- **The outage margin left out the fixed heat load**, about 71 kWh in a twenty-minute outage. It is now counted.
+  The start design's outage margin is 961,695 ppm (was 933,334), which makes it the tightest margin at the
+  start and cuts the first radius from 59,652 to 38,305 ppm.
+- **A proposal identical to the design held was taken up and charged.** It is now refused as `same`. New
+  theorem `same_design_not_taken_up`, sixteen in all. `step_complete` gains the hypothesis that the proposed
+  design differs from the one held.
+
+### Changed
+
+- The seeded run: 45 of 48 proposals admitted, objective 0.914210 to 0.918990 (was 45 of 50, 0.914228 to 0.919009).
+- **Both recorded runs were made again.** Replayed under the corrected model, only 2 of the 15 proposals
+  recorded against v0.3.0 are decided the same way, so those runs could not be carried over. They are kept
+  unchanged in `results/v0.3.0/`. The new first run made 12 proposals and reached 0.919529; the new second run,
+  given the first one's notes, made 5 and reached 0.919529. The best a direct search finds is 0.919529.
+- The variant that starts with a margin exactly on its limit now uses a wall of 125 mW/m²K and 27.1236% shed,
+  which puts the corrected outage margin at exactly 1,000,000 ppm.
+- The adversarial proposer also sends a proposal that changes nothing, and expects `same`.
+- `plant.thermal_budget` gains the full-load ride-through with the fixed heat load counted: 14.69 minutes
+  against funi-frame's 15.
+
+### Still open
+
+Three of the five defects need a design decision and are unchanged: a different design that scores the same
+is taken up, nothing requires the inputs to make sense, and the loop can refuse a safer design and cannot
+repair an unsafe start. `formal/SPEC.md` lists them.
+
 ## [0.3.0] - 2026-11-17
 
 The proof now covers the plant model and the loop over designs, and two new proposers have used the loop.

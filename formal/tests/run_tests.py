@@ -92,7 +92,7 @@ def design_inputs(seed, count):
                 at = oracle.ceil_div(oracle.floor_num(plant, held), gain)
                 for f in (at - 1, at, at + 1):
                     push(limit, budget, plant, YEAR, held, dict(held, floor_kw=f), True)
-            need = oracle.ceil_div(oracle.outage_num(plant, YEAR, held), 60_000_000_000)
+            need = oracle.ceil_div(oracle.outage_num(plant, YEAR, held), 60_000_000_000)  # does not move with the store
             for store in (need - 1, need, need + 1):  # the store exactly at, above and below one outage
                 push(limit, budget, plant, YEAR, held, dict(held, pcm_kwh=store), True)
             push(limit, budget, plant, YEAR, held, dict(held), True)  # no change at all

@@ -21,9 +21,9 @@
    "sensor_power_at_airflow_turndown": 769564,
    "sorption_drive_heat": 324992,
    "load_floor": 940348,
-   "outage_ride_through": 933334
+   "outage_ride_through": 961695
   },
-  "start_eta_ppm": 914228,
+  "start_eta_ppm": 914210,
   "budget": 64,
   "limit": 1000000,
   "scenario": {
@@ -88,9 +88,9 @@
  "entries": [
   {
    "turn": 0,
-   "kind": "hardware",
+   "kind": "software",
    "set": {
-    "capture_ppm": 860000
+    "shed_ppm": 320000
    },
    "held": {
     "pcm_kwh": 2500,
@@ -101,7 +101,69 @@
    },
    "proposed": {
     "pcm_kwh": 2500,
-    "capture_ppm": 860000,
+    "capture_ppm": 850000,
+    "wall_u_mw": 132,
+    "floor_kw": 600,
+    "shed_ppm": 320000
+   },
+   "base_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    324992,
+    940348,
+    961695
+   ],
+   "cand_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    324992,
+    940348,
+    935028
+   ],
+   "radius_ppm": 38305,
+   "eta_before_ppm": 914210,
+   "eta_after_ppm": 914209,
+   "budget_before": 64,
+   "cost": 1,
+   "verdict": "worse",
+   "budget_after": 64,
+   "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+   "hash": "f0694be843ea0e4d9a14b9480fb97d7d378517dc9246eae71d33b326ca4bb9ef"
+  },
+  {
+   "turn": 1,
+   "kind": "hardware",
+   "set": {
+    "capture_ppm": 870000
+   },
+   "held": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 850000,
+    "wall_u_mw": 132,
+    "floor_kw": 600,
+    "shed_ppm": 300000
+   },
+   "proposed": {
+    "pcm_kwh": 2500,
+    "capture_ppm": 870000,
     "wall_u_mw": 132,
     "floor_kw": 600,
     "shed_ppm": 300000
@@ -120,7 +182,7 @@
     769564,
     324992,
     940348,
-    933334
+    961695
    ],
    "cand_ppm": [
     179100,
@@ -134,38 +196,38 @@
     300275,
     496948,
     769564,
-    302459,
-    901605,
-    933334
+    280443,
+    865929,
+    961695
    ],
-   "radius_ppm": 59652,
-   "eta_before_ppm": 914228,
-   "eta_after_ppm": 914228,
+   "radius_ppm": 38305,
+   "eta_before_ppm": 914210,
+   "eta_after_ppm": 914210,
    "budget_before": 64,
    "cost": 1,
-   "verdict": "ok",
-   "budget_after": 63,
-   "prev": "0000000000000000000000000000000000000000000000000000000000000000",
-   "hash": "44b1ebc46468243893567cc48bcfb2c1f20bda4a5754ce54fab96515a74ac8c2"
+   "verdict": "distance",
+   "budget_after": 64,
+   "prev": "f0694be843ea0e4d9a14b9480fb97d7d378517dc9246eae71d33b326ca4bb9ef",
+   "hash": "16699e78bf84c153370172f5f5033a7f91f1e272148c551cbf257b92f0fc0e15"
   },
   {
-   "turn": 1,
+   "turn": 2,
    "kind": "software",
    "set": {
-    "floor_kw": 580
+    "floor_kw": 590
    },
    "held": {
     "pcm_kwh": 2500,
-    "capture_ppm": 860000,
+    "capture_ppm": 850000,
     "wall_u_mw": 132,
     "floor_kw": 600,
     "shed_ppm": 300000
    },
    "proposed": {
     "pcm_kwh": 2500,
-    "capture_ppm": 860000,
+    "capture_ppm": 850000,
     "wall_u_mw": 132,
-    "floor_kw": 580,
+    "floor_kw": 590,
     "shed_ppm": 300000
    },
    "base_ppm": [
@@ -180,9 +242,9 @@
     300275,
     496948,
     769564,
-    302459,
-    901605,
-    933334
+    324992,
+    940348,
+    961695
    ],
    "cand_ppm": [
     179100,
@@ -196,100 +258,38 @@
     300275,
     496948,
     769564,
-    302459,
-    932695,
-    933334
+    324992,
+    956286,
+    961695
    ],
-   "radius_ppm": 66666,
-   "eta_before_ppm": 914228,
-   "eta_after_ppm": 914737,
-   "budget_before": 63,
+   "radius_ppm": 38305,
+   "eta_before_ppm": 914210,
+   "eta_after_ppm": 914464,
+   "budget_before": 64,
    "cost": 1,
    "verdict": "ok",
-   "budget_after": 62,
-   "prev": "44b1ebc46468243893567cc48bcfb2c1f20bda4a5754ce54fab96515a74ac8c2",
-   "hash": "5d9270e2870a930ac51b22aa6ad2c1310a93eca615e90548a9cf82be4e513fd9"
-  },
-  {
-   "turn": 2,
-   "kind": "software",
-   "set": {
-    "shed_ppm": 340000
-   },
-   "held": {
-    "pcm_kwh": 2500,
-    "capture_ppm": 860000,
-    "wall_u_mw": 132,
-    "floor_kw": 580,
-    "shed_ppm": 300000
-   },
-   "proposed": {
-    "pcm_kwh": 2500,
-    "capture_ppm": 860000,
-    "wall_u_mw": 132,
-    "floor_kw": 580,
-    "shed_ppm": 340000
-   },
-   "base_ppm": [
-    179100,
-    563000,
-    387879,
-    588180,
-    176100,
-    801052,
-    616000,
-    607511,
-    300275,
-    496948,
-    769564,
-    302459,
-    932695,
-    933334
-   ],
-   "cand_ppm": [
-    179100,
-    563000,
-    387879,
-    588180,
-    176100,
-    801052,
-    616000,
-    607511,
-    300275,
-    496948,
-    769564,
-    302459,
-    932695,
-    880000
-   ],
-   "radius_ppm": 66666,
-   "eta_before_ppm": 914737,
-   "eta_after_ppm": 914735,
-   "budget_before": 62,
-   "cost": 1,
-   "verdict": "worse",
-   "budget_after": 62,
-   "prev": "5d9270e2870a930ac51b22aa6ad2c1310a93eca615e90548a9cf82be4e513fd9",
-   "hash": "f20064d28b5597e4014545d60cea1e98a29d1f6347c707c762fe196b8468cb50"
+   "budget_after": 63,
+   "prev": "16699e78bf84c153370172f5f5033a7f91f1e272148c551cbf257b92f0fc0e15",
+   "hash": "8ac4803b71becade57927ec8b722ffc5f3a5d416640b8666fb693808b498fd60"
   },
   {
    "turn": 3,
    "kind": "hardware",
    "set": {
-    "pcm_kwh": 2650
+    "pcm_kwh": 2600
    },
    "held": {
     "pcm_kwh": 2500,
-    "capture_ppm": 860000,
+    "capture_ppm": 850000,
     "wall_u_mw": 132,
-    "floor_kw": 580,
+    "floor_kw": 590,
     "shed_ppm": 300000
    },
    "proposed": {
-    "pcm_kwh": 2650,
-    "capture_ppm": 860000,
+    "pcm_kwh": 2600,
+    "capture_ppm": 850000,
     "wall_u_mw": 132,
-    "floor_kw": 580,
+    "floor_kw": 590,
     "shed_ppm": 300000
    },
    "base_ppm": [
@@ -304,9 +304,9 @@
     300275,
     496948,
     769564,
-    302459,
-    932695,
-    933334
+    324992,
+    956286,
+    961695
    ],
    "cand_ppm": [
     179100,
@@ -320,38 +320,38 @@
     300275,
     496948,
     769564,
-    302459,
-    932695,
-    880504
+    324992,
+    956286,
+    924706
    ],
-   "radius_ppm": 66666,
-   "eta_before_ppm": 914737,
-   "eta_after_ppm": 914737,
-   "budget_before": 62,
+   "radius_ppm": 38305,
+   "eta_before_ppm": 914464,
+   "eta_after_ppm": 914464,
+   "budget_before": 63,
    "cost": 1,
    "verdict": "ok",
-   "budget_after": 61,
-   "prev": "f20064d28b5597e4014545d60cea1e98a29d1f6347c707c762fe196b8468cb50",
-   "hash": "235d140643bc49537f923cca0f570a6163c3fa5f626c75d6750d349935efa926"
+   "budget_after": 62,
+   "prev": "8ac4803b71becade57927ec8b722ffc5f3a5d416640b8666fb693808b498fd60",
+   "hash": "58d7abc94467ecb95190fa5eea5d6d869d6e15b6bf43883159135d40f92ade7b"
   },
   {
    "turn": 4,
    "kind": "hardware",
    "set": {
-    "wall_u_mw": 150
+    "capture_ppm": 950000
    },
    "held": {
-    "pcm_kwh": 2650,
-    "capture_ppm": 860000,
+    "pcm_kwh": 2600,
+    "capture_ppm": 850000,
     "wall_u_mw": 132,
-    "floor_kw": 580,
+    "floor_kw": 590,
     "shed_ppm": 300000
    },
    "proposed": {
-    "pcm_kwh": 2650,
-    "capture_ppm": 860000,
-    "wall_u_mw": 150,
-    "floor_kw": 580,
+    "pcm_kwh": 2600,
+    "capture_ppm": 950000,
+    "wall_u_mw": 132,
+    "floor_kw": 590,
     "shed_ppm": 300000
    },
    "base_ppm": [
@@ -366,9 +366,9 @@
     300275,
     496948,
     769564,
-    302459,
-    932695,
-    880504
+    324992,
+    956286,
+    924706
    ],
    "cand_ppm": [
     179100,
@@ -382,40 +382,39 @@
     300275,
     496948,
     769564,
-    302626,
-    936604,
-    880504
+    121003,
+    668868,
+    924706
    ],
-   "radius_ppm": 67305,
-   "eta_before_ppm": 914737,
-   "eta_after_ppm": 914737,
-   "budget_before": 61,
+   "radius_ppm": 43714,
+   "eta_before_ppm": 914464,
+   "eta_after_ppm": 914464,
+   "budget_before": 62,
    "cost": 1,
-   "verdict": "ok",
-   "budget_after": 60,
-   "prev": "235d140643bc49537f923cca0f570a6163c3fa5f626c75d6750d349935efa926",
-   "hash": "4e5dcf9886812fdbda1c604cc3d9292f01cceb5c166c54696f3dbae9e08d1e09"
+   "verdict": "distance",
+   "budget_after": 62,
+   "prev": "58d7abc94467ecb95190fa5eea5d6d869d6e15b6bf43883159135d40f92ade7b",
+   "hash": "9f685b0da95bbec70d536043a9647473a70602625f4da94880f46be0aeacd60d"
   },
   {
    "turn": 5,
-   "kind": "hardware+software",
+   "kind": "hardware",
    "set": {
-    "capture_ppm": 880000,
-    "wall_u_mw": 100,
-    "floor_kw": 555
+    "wall_u_mw": 2400,
+    "pcm_kwh": 5000
    },
    "held": {
-    "pcm_kwh": 2650,
-    "capture_ppm": 860000,
-    "wall_u_mw": 150,
-    "floor_kw": 580,
+    "pcm_kwh": 2600,
+    "capture_ppm": 850000,
+    "wall_u_mw": 132,
+    "floor_kw": 590,
     "shed_ppm": 300000
    },
    "proposed": {
-    "pcm_kwh": 2650,
-    "capture_ppm": 880000,
-    "wall_u_mw": 100,
-    "floor_kw": 555,
+    "pcm_kwh": 5000,
+    "capture_ppm": 850000,
+    "wall_u_mw": 2400,
+    "floor_kw": 590,
     "shed_ppm": 300000
    },
    "base_ppm": [
@@ -430,9 +429,9 @@
     300275,
     496948,
     769564,
-    302626,
-    936604,
-    880504
+    324992,
+    956286,
+    924706
    ],
    "cand_ppm": [
     179100,
@@ -446,165 +445,42 @@
     300275,
     496948,
     769564,
-    258637,
-    893797,
-    880504
+    346304,
+    1461215,
+    488335
    ],
-   "radius_ppm": 63396,
-   "eta_before_ppm": 914737,
-   "eta_after_ppm": 915372,
-   "budget_before": 60,
+   "radius_ppm": 43714,
+   "eta_before_ppm": 914464,
+   "eta_after_ppm": 914464,
+   "budget_before": 62,
    "cost": 1,
-   "verdict": "ok",
-   "budget_after": 59,
-   "prev": "4e5dcf9886812fdbda1c604cc3d9292f01cceb5c166c54696f3dbae9e08d1e09",
-   "hash": "062b75755553a81ef10122b5f3d798e43f2ebd7b36c91db14cceabbfbe57fdaf"
+   "verdict": "distance",
+   "budget_after": 62,
+   "prev": "9f685b0da95bbec70d536043a9647473a70602625f4da94880f46be0aeacd60d",
+   "hash": "253d78beda7ec94f7205b887a9c28b8f4583be34ce3053e4de3aefad05dafa01"
   },
   {
    "turn": 6,
    "kind": "hardware+software",
    "set": {
-    "shed_ppm": 0,
-    "pcm_kwh": 4200
+    "pcm_kwh": 5000,
+    "capture_ppm": 950000,
+    "wall_u_mw": 100,
+    "floor_kw": 392,
+    "shed_ppm": 0
    },
    "held": {
-    "pcm_kwh": 2650,
-    "capture_ppm": 880000,
-    "wall_u_mw": 100,
-    "floor_kw": 555,
+    "pcm_kwh": 2600,
+    "capture_ppm": 850000,
+    "wall_u_mw": 132,
+    "floor_kw": 590,
     "shed_ppm": 300000
    },
    "proposed": {
-    "pcm_kwh": 4200,
-    "capture_ppm": 880000,
-    "wall_u_mw": 100,
-    "floor_kw": 555,
-    "shed_ppm": 0
-   },
-   "base_ppm": [
-    179100,
-    563000,
-    387879,
-    588180,
-    176100,
-    801052,
-    616000,
-    607511,
-    300275,
-    496948,
-    769564,
-    258637,
-    893797,
-    880504
-   ],
-   "cand_ppm": [
-    179100,
-    563000,
-    387879,
-    588180,
-    176100,
-    801052,
-    616000,
-    607511,
-    300275,
-    496948,
-    769564,
-    258637,
-    893797,
-    793651
-   ],
-   "radius_ppm": 106203,
-   "eta_before_ppm": 915372,
-   "eta_after_ppm": 915381,
-   "budget_before": 59,
-   "cost": 1,
-   "verdict": "ok",
-   "budget_after": 58,
-   "prev": "062b75755553a81ef10122b5f3d798e43f2ebd7b36c91db14cceabbfbe57fdaf",
-   "hash": "934e8011506abaeedffd192a9a518b630f09a17f9892518073a0d208b73cc37c"
-  },
-  {
-   "turn": 7,
-   "kind": "hardware+software",
-   "set": {
-    "capture_ppm": 925000,
-    "floor_kw": 500
-   },
-   "held": {
-    "pcm_kwh": 4200,
-    "capture_ppm": 880000,
-    "wall_u_mw": 100,
-    "floor_kw": 555,
-    "shed_ppm": 0
-   },
-   "proposed": {
-    "pcm_kwh": 4200,
-    "capture_ppm": 925000,
-    "wall_u_mw": 100,
-    "floor_kw": 500,
-    "shed_ppm": 0
-   },
-   "base_ppm": [
-    179100,
-    563000,
-    387879,
-    588180,
-    176100,
-    801052,
-    616000,
-    607511,
-    300275,
-    496948,
-    769564,
-    258637,
-    893797,
-    793651
-   ],
-   "cand_ppm": [
-    179100,
-    563000,
-    387879,
-    588180,
-    176100,
-    801052,
-    616000,
-    607511,
-    300275,
-    496948,
-    769564,
-    167589,
-    847030,
-    793651
-   ],
-   "radius_ppm": 106203,
-   "eta_before_ppm": 915381,
-   "eta_after_ppm": 916783,
-   "budget_before": 58,
-   "cost": 1,
-   "verdict": "ok",
-   "budget_after": 57,
-   "prev": "934e8011506abaeedffd192a9a518b630f09a17f9892518073a0d208b73cc37c",
-   "hash": "08cbb77f48e243288e5e0617560be0e7fab92de6934226a2a90facc3aecbab89"
-  },
-  {
-   "turn": 8,
-   "kind": "hardware+software",
-   "set": {
-    "capture_ppm": 950000,
-    "floor_kw": 450
-   },
-   "held": {
-    "pcm_kwh": 4200,
-    "capture_ppm": 925000,
-    "wall_u_mw": 100,
-    "floor_kw": 500,
-    "shed_ppm": 0
-   },
-   "proposed": {
-    "pcm_kwh": 4200,
+    "pcm_kwh": 5000,
     "capture_ppm": 950000,
     "wall_u_mw": 100,
-    "floor_kw": 450,
+    "floor_kw": 392,
     "shed_ppm": 0
    },
    "base_ppm": [
@@ -619,9 +495,9 @@
     300275,
     496948,
     769564,
-    167589,
-    847030,
-    793651
+    324992,
+    956286,
+    924706
    ],
    "cand_ppm": [
     179100,
@@ -636,30 +512,223 @@
     496948,
     769564,
     120734,
-    870427,
-    793651
+    999215,
+    680742
    ],
-   "radius_ppm": 152970,
-   "eta_before_ppm": 916783,
-   "eta_after_ppm": 918061,
-   "budget_before": 57,
+   "radius_ppm": 43714,
+   "eta_before_ppm": 914464,
+   "eta_after_ppm": 919529,
+   "budget_before": 62,
+   "cost": 1,
+   "verdict": "distance",
+   "budget_after": 62,
+   "prev": "253d78beda7ec94f7205b887a9c28b8f4583be34ce3053e4de3aefad05dafa01",
+   "hash": "920c3ca4aeb33013618b57df61e88b44faf6674ffdf2731a359c2954060c3afb"
+  },
+  {
+   "turn": 7,
+   "kind": "hardware",
+   "set": {
+    "pcm_kwh": 2620,
+    "capture_ppm": 858000,
+    "wall_u_mw": 100
+   },
+   "held": {
+    "pcm_kwh": 2600,
+    "capture_ppm": 850000,
+    "wall_u_mw": 132,
+    "floor_kw": 590,
+    "shed_ppm": 300000
+   },
+   "proposed": {
+    "pcm_kwh": 2620,
+    "capture_ppm": 858000,
+    "wall_u_mw": 100,
+    "floor_kw": 590,
+    "shed_ppm": 300000
+   },
+   "base_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    324992,
+    956286,
+    924706
+   ],
+   "cand_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    306625,
+    917617,
+    917446
+   ],
+   "radius_ppm": 43714,
+   "eta_before_ppm": 914464,
+   "eta_after_ppm": 914464,
+   "budget_before": 62,
    "cost": 1,
    "verdict": "ok",
-   "budget_after": 56,
-   "prev": "08cbb77f48e243288e5e0617560be0e7fab92de6934226a2a90facc3aecbab89",
-   "hash": "eed9a062e98fdcede1ef97371a49165ae3200abb5b520a04996022b45e8888ff"
+   "budget_after": 61,
+   "prev": "920c3ca4aeb33013618b57df61e88b44faf6674ffdf2731a359c2954060c3afb",
+   "hash": "64ee8ba2c873be9946071e917e2d16f1ad011b9022cbf18b70a225737e208fb8"
+  },
+  {
+   "turn": 8,
+   "kind": "hardware",
+   "set": {
+    "pcm_kwh": 2778,
+    "capture_ppm": 873000
+   },
+   "held": {
+    "pcm_kwh": 2620,
+    "capture_ppm": 858000,
+    "wall_u_mw": 100,
+    "floor_kw": 590,
+    "shed_ppm": 300000
+   },
+   "proposed": {
+    "pcm_kwh": 2778,
+    "capture_ppm": 873000,
+    "wall_u_mw": 100,
+    "floor_kw": 590,
+    "shed_ppm": 300000
+   },
+   "base_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    306625,
+    917617,
+    917446
+   ],
+   "cand_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    273644,
+    863791,
+    865266
+   ],
+   "radius_ppm": 82383,
+   "eta_before_ppm": 914464,
+   "eta_after_ppm": 914464,
+   "budget_before": 61,
+   "cost": 1,
+   "verdict": "ok",
+   "budget_after": 60,
+   "prev": "64ee8ba2c873be9946071e917e2d16f1ad011b9022cbf18b70a225737e208fb8",
+   "hash": "7dc5fed0bc91b86a61fea1e602328bc3d10bd0d0fda07eda70434f91e24e34b0"
   },
   {
    "turn": 9,
-   "kind": "hardware",
+   "kind": "hardware+software",
    "set": {
-    "pcm_kwh": 5000
+    "pcm_kwh": 4300,
+    "capture_ppm": 900000,
+    "shed_ppm": 0
    },
    "held": {
-    "pcm_kwh": 4200,
-    "capture_ppm": 950000,
+    "pcm_kwh": 2778,
+    "capture_ppm": 873000,
     "wall_u_mw": 100,
-    "floor_kw": 450,
+    "floor_kw": 590,
+    "shed_ppm": 300000
+   },
+   "proposed": {
+    "pcm_kwh": 4300,
+    "capture_ppm": 900000,
+    "wall_u_mw": 100,
+    "floor_kw": 590,
+    "shed_ppm": 0
+   },
+   "base_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    273644,
+    863791,
+    865266
+   ],
+   "cand_ppm": [
+    179100,
+    563000,
+    387879,
+    588180,
+    176100,
+    801052,
+    616000,
+    607511,
+    300275,
+    496948,
+    769564,
+    217047,
+    781297,
+    791560
+   ],
+   "radius_ppm": 134734,
+   "eta_before_ppm": 914464,
+   "eta_after_ppm": 914472,
+   "budget_before": 60,
+   "cost": 1,
+   "verdict": "ok",
+   "budget_after": 59,
+   "prev": "7dc5fed0bc91b86a61fea1e602328bc3d10bd0d0fda07eda70434f91e24e34b0",
+   "hash": "7ce496660405ece73413cb00ce97c90a118d01a41257475c7d3c2aab66741dc3"
+  },
+  {
+   "turn": 10,
+   "kind": "hardware+software",
+   "set": {
+    "pcm_kwh": 5000,
+    "capture_ppm": 950000,
+    "floor_kw": 450
+   },
+   "held": {
+    "pcm_kwh": 4300,
+    "capture_ppm": 900000,
+    "wall_u_mw": 100,
+    "floor_kw": 590,
     "shed_ppm": 0
    },
    "proposed": {
@@ -681,9 +750,9 @@
     300275,
     496948,
     769564,
-    120734,
-    870427,
-    793651
+    217047,
+    781297,
+    791560
    ],
    "cand_ppm": [
     179100,
@@ -699,20 +768,20 @@
     769564,
     120734,
     870427,
-    666667
+    680742
    ],
-   "radius_ppm": 129573,
-   "eta_before_ppm": 918061,
-   "eta_after_ppm": 918061,
-   "budget_before": 56,
+   "radius_ppm": 198948,
+   "eta_before_ppm": 914472,
+   "eta_after_ppm": 918042,
+   "budget_before": 59,
    "cost": 1,
    "verdict": "ok",
-   "budget_after": 55,
-   "prev": "eed9a062e98fdcede1ef97371a49165ae3200abb5b520a04996022b45e8888ff",
-   "hash": "784c37a311ab75e482b11c58cde6796cc58784f28f33472ff76d823e37a2dd2f"
+   "budget_after": 58,
+   "prev": "7ce496660405ece73413cb00ce97c90a118d01a41257475c7d3c2aab66741dc3",
+   "hash": "6467fc7e5308a4dc6a355233c13cb614dfbb2bc81baf42a8c96491b78dca86db"
   },
   {
-   "turn": 10,
+   "turn": 11,
    "kind": "software",
    "set": {
     "floor_kw": 392
@@ -745,7 +814,7 @@
     769564,
     120734,
     870427,
-    666667
+    680742
    ],
    "cand_ppm": [
     179100,
@@ -761,17 +830,17 @@
     769564,
     120734,
     999215,
-    666667
+    680742
    ],
    "radius_ppm": 129573,
-   "eta_before_ppm": 918061,
-   "eta_after_ppm": 919548,
-   "budget_before": 55,
+   "eta_before_ppm": 918042,
+   "eta_after_ppm": 919529,
+   "budget_before": 58,
    "cost": 1,
    "verdict": "ok",
-   "budget_after": 54,
-   "prev": "784c37a311ab75e482b11c58cde6796cc58784f28f33472ff76d823e37a2dd2f",
-   "hash": "df96817f0e5e056b5c510312b895ed061ef20de99771a3d26447509d00fd1337"
+   "budget_after": 57,
+   "prev": "6467fc7e5308a4dc6a355233c13cb614dfbb2bc81baf42a8c96491b78dca86db",
+   "hash": "6cb930d4f3335fe8bace314d917f8205f3f9546f3f0bb3a61007a4a2cae76831"
   }
  ],
  "final_genome": {
@@ -795,9 +864,9 @@
   "sensor_power_at_airflow_turndown": 769564,
   "sorption_drive_heat": 120734,
   "load_floor": 999215,
-  "outage_ride_through": 666667
+  "outage_ride_through": 680742
  },
- "final_eta_ppm": 919548,
- "final_budget": 54,
- "final_hash": "df96817f0e5e056b5c510312b895ed061ef20de99771a3d26447509d00fd1337"
+ "final_eta_ppm": 919529,
+ "final_budget": 57,
+ "final_hash": "6cb930d4f3335fe8bace314d917f8205f3f9546f3f0bb3a61007a4a2cae76831"
 }
