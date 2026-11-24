@@ -28,6 +28,25 @@
     "floor_kw": 590
    },
    "why": "Capture moved two margins a long way but left the objective flat, so the step was too far. Now I test the load floor alone. I expect a lower floor to raise the load floor margin a little and to change the objective, and I want to see which way."
+  },
+  {
+   "set": {
+    "pcm_kwh": 2600
+   },
+   "why": "Lowering the load floor by 10 kW raised the objective by 254 ppm and raised the load floor margin in proportion to 600 over 590. Now I test the thermal store alone. I expect a bigger store to lower the outage margin, and I want to see whether it touches the objective."
+  },
+  {
+   "set": {
+    "capture_ppm": 950000
+   },
+   "why": "A bigger thermal store cut the outage margin in proportion to 2500 over 2600 and left the objective alone. This proposal is a probe that I expect to be refused for distance. I want to read the sorption and load floor margins at the top of the capture range so I can plan the steps towards it."
+  },
+  {
+   "set": {
+    "wall_u_mw": 2400,
+    "pcm_kwh": 5000
+   },
+   "why": "At full capture the sorption margin would be 121003 and the load floor margin 668868, with the objective unchanged, so capture frees room without paying anything itself. This is another probe that I expect to be refused for distance because of the large store. I want to see what the wall value does to the margins and the objective at the far end of its range."
   }
  ]
 }
