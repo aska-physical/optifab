@@ -66,6 +66,14 @@ run is compared with the seeded search on the same budget. A second slice lets a
 **Rests on.** `loop.py`, abios for the message format, the model's API. **Boundary:** the model proposes and
 the gate decides. Nothing here gives a model authority to act.
 
+**Status, v0.3.0.** The interface exists (`tools/propose.py`) and the first slice is done twice. A language
+model made 11 proposals, 10 were taken up, and the ledger replays in Lean
+([results/model_run.json](../results/model_run.json)). A second instance of the same model, given the first run's notes
+([results/model_lessons.md](../results/model_lessons.md)), reached the same objective in 4. Open: many runs
+with a stated protocol, so that a comparison means something; a Weft cell or an Exo agent as the proposer;
+a format for the notes that a program can check; and an objective that does not drive the design onto a
+limit, where it can no longer change.
+
 ## 4. Structural genes
 
 **The gap.** The loop changes three thermal parameters. The eleven certified structural margins are constants
@@ -143,3 +151,11 @@ optimum breaks a load floor.
 
 **Rests on.** The contract in this repository. funi-frame's open issue on dispatch against negative prices
 is the natural second slice.
+
+**Status, v0.3.0.** A first look is in the certificate (`network_first_look`, section 13 of the model note).
+It changes the first slice. In the upstream plant model utility power is a straight line in IT load with the
+same slope at every site (1.0357 MW per MW), so moving load between campuses changes no energy and the
+linear programme has no single optimum. What does differ by site is the load floor: 0.564 MW at 30 °C
+recooling and 2.804 MW at 38 °C, if the chiller keeps its design share of the reversible COP. So the
+first slice should be one of: a loop COP that depends on the site, a choice to switch a campus off (which
+no certificate covers), or a cost for moving work. The owners should pick.

@@ -1,8 +1,8 @@
-# Handoff: aska-physical/optifab v0.2.0
+# Handoff: aska-physical/optifab v0.3.0
 
 Written under the group ethos: leave everything the next agent needs so nothing has to be derived twice.
 
-optifab v0.1.0 and v0.2.0 were prepared by an AI agent on 2026-11-17. They are claimed work. No person has
+optifab v0.1.0, v0.2.0 and v0.3.0 were prepared by an AI agent on 2026-11-17. They are claimed work. No person has
 reviewed them.
 
 ## 1. What was learned and checked
@@ -36,6 +36,18 @@ The fifteen findings are in [README.md](README.md) and derived in [docs/MODEL.md
     admitted, the objective up from 0.914228 to 0.919009, every decision replayed in Lean.
 15. A design that sits exactly on a limit cannot change under this gate, and a proposer with no reserve slows
     itself.
+16. v0.3.0: the plant model, the bounds, the objective and the step are in Lean beside the gate, and seven more
+    theorems are about designs (fifteen in all). For any proposer the design held stays within the model's
+    limits and its bounds, its objective never falls, and a margin within the limit is proved to mean three
+    exact inequalities about heat and storage.
+17. A language model proposed through `tools/propose.py`, seeing only the printed state: 11 proposals, 10
+    taken up, objective 0.919548, the best a direct search finds (the seeded search reached 89.9% of that
+    gain). A second instance of the same model, given the first run's notes, got there in 4 proposals. Two runs, not an experiment.
+    Both end 785 ppm from a limit, where the loop can change nothing more.
+18. 3,006 adversarial proposals could not move the design out of its envelope or past its budget.
+19. Under assumption A-4 the load floor rises steeply with recooling temperature: 0.564 MW at 30 °C,
+    2.804 MW at 38 °C, no self-cooling at 41 °C. Placement between campuses is degenerate in the
+    current plant model.
 
 [docs/VISION.md](docs/VISION.md) sets these against the vision, part by part.
 
@@ -130,11 +142,18 @@ optifab's verifier fails on purpose (must-fail control 1 and the recooling-field
 
 ## 4. Artifacts
 
-- [verify.py](verify.py): the derivations, both gates, the plant frame, the loop, the graph and unit checks, 24
-  must-fail controls. `--formal` rebuilds the proofs and replays the ledger in Lean.
-- [loop.py](loop.py): the improvement loop. [formal/](formal/README.md): the Lean project.
+- [verify.py](verify.py): the derivations, both gates, the plant frame, the loop, the graph and unit checks, 29
+  must-fail controls. `--formal` rebuilds the proofs and replays four ledgers in Lean. Checks are written with
+  `require()`, never `assert`: `python3 -O` strips assert statements, and until v0.3.0 that let a failing
+  control write a certificate and exit 0. Control 29 fails if an assert statement comes back. Do not use the
+  builtin `sum()` on floats either: its rounding changed in Python 3.12 and made the certificate depend on the
+  interpreter. Use `_sum_sq` or an explicit loop. CI runs five Python versions to catch a relapse.
+- [loop.py](loop.py): the improvement loop. [formal/](formal/README.md): the Lean project, which now holds
+  the plant model. [formal/tests/oracle.py](formal/tests/oracle.py) is its Python copy, and `loop.py` calls it.
+- [tools/propose.py](tools/propose.py): the proposer's command line. [results/model_run.json](results/model_run.json)
+  is the recorded run of a language model and [results/model_ledger.json](results/model_ledger.json) its ledger.
 - [results/ledger.json](results/ledger.json) and [results/formal.json](results/formal.json): every decision of
-  the loop, and the record of the last formal run.
+  the seeded loop, and the record of the last formal run.
 - [results/certificate.json](results/certificate.json): the outputs `verify.py` must reproduce.
 - [data/](data/): vendored inputs with hashes, 48 pins, the graph, the unit, and the commit of each of 36
   repositories.
@@ -160,7 +179,15 @@ Items 1 to 4 close the open places in the loop ([docs/STRUCTURE.md](docs/STRUCTU
 and L8).
 
 To change the formal project: edit `formal/`, then run `python3 verify.py --formal --write`. Any change to a
-Lean source, the oracle or the ledger makes must-fail control 24 fail until the formal run is repeated.
+Lean source, the oracle or a ledger makes must-fail control 24 fail until the formal run is repeated. A change
+to the model has to be made twice, in `formal/PlantGate.lean` and in `formal/tests/oracle.py`. The differential
+tests fail if the two differ. After a change, commit, then rerun the bar check, because it compares the test
+record with the committed one.
+
+A recorded run is never edited. To make another, use a new file with `tools/propose.py NEW.json new`
+and add it to `RECORDED_RUNS` in `verify.py`. The wording of the rules that `show` prints was changed after
+the two recorded runs, from what the proposers found unclear. A third run would see the new wording and
+could be given `results/model_lessons_2.md`.
 
 1. **Agree the plant frame with Weft (interface L2, element W1).** The 16 slots are defined and tested here.
    Weft's owners decide whether the frame shares their telemetry bus or travels as an abios line. Done when one
@@ -184,9 +211,10 @@ Lean source, the oracle or the ledger makes must-fail control 24 fail until the 
    today, so no project can yet pass bar item 1.
 8. **A second verifier that shares no code (optifab).** The Foundation-0 physics rule asks for two. A different
    agent, or a different language, should recompute sections 1 to 5 of the model note from the same pins.
-9. **A network of campuses (optifab).** v0.1.0 models one. With N campuses, each with a load floor, a thermal
-   budget and a margin radius, placing work becomes an optimisation: most compute per unit of utility energy,
-   subject to every gate. State that problem and solve a small case exactly.
+9. **A network of campuses (optifab).** v0.3.0 has a first look (section 13 of the model note). The placement
+   problem is degenerate in the current plant model, because utility power has the same slope at every site.
+   Before solving anything, give the model a cost that differs by site, or a decision to switch a campus off.
+   See the status note under proposal 8.
 10. **Replicate the top of the stack (Foundation-0, aska-physical).** incentre-lattices' results sit under 6
     repositories of the stack and nhanes-bioimpedance under 5. An independent replication there lifts the most
     work. See the evidence table in [docs/CONVERGENCE.md](docs/CONVERGENCE.md).
@@ -204,7 +232,13 @@ Lean source, the oracle or the ledger makes must-fail control 24 fail until the 
 - **Whether the plant gate is a direction worth pursuing.** Its arithmetic is now proved, and it has been run
   on a model. It has never seen a sensor or a machine.
 - **Who reviews `formal/SPEC.md`.** Until a person who did not write it approves it, nothing here may be
-  called verified.
+  called verified. The specification grew in v0.3.0 (the model and seven statements), so its hash changed.
+- **The five known defects in the model** (`formal/SPEC.md`). Fixing the objective and the outage margin changes
+  every published objective figure and the ledgers of the two recorded runs. The owner should say whether to fix
+  and re-run, or fix and keep the runs with a note.
+- **A branch rule.** Bar item 7 is open in CI: `main` does not require the `bar / bar` check. Only a repository
+  admin can add that rule.
+- **Assumption A-4.** The site-dependence of the load floor rests on it. A chiller datasheet would replace it.
 - **Sign-off.** Nothing here counts until a named person reviews it.
 
 ## 7. How this session worked
