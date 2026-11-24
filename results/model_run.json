@@ -57,6 +57,43 @@
     "shed_ppm": 0
    },
    "why": "A leaky wall raised all three margins and did nothing for the objective, so I want the tightest wall. This is the design I am aiming for, and I expect it to be refused for distance from here. I want to check my fitted margin formulas at that point and see what objective it would give before I plan the steps."
+  },
+  {
+   "set": {
+    "pcm_kwh": 2620,
+    "capture_ppm": 858000,
+    "wall_u_mw": 100
+   },
+   "why": "The probe of the target matched my formulas and showed an objective of 919529, about 5000 ppm above the design held. The gain comes from a lower load floor, which more capture and a tighter wall make room for. This first step lowers the two margins nearest the limit by about the same amount so the radius roughly doubles. I expect a move of about 43400 and no change in the objective."
+  },
+  {
+   "set": {
+    "pcm_kwh": 2778,
+    "capture_ppm": 873000
+   },
+   "why": "The first step landed on the margins I predicted, so I trust the formulas. This step again lowers the load floor and outage margins together, by more capture and a bigger store, so the radius grows to about 135000. I expect a move of about 81900 and no change in the objective, since the floor and shed stay put."
+  },
+  {
+   "set": {
+    "pcm_kwh": 4300,
+    "capture_ppm": 900000,
+    "shed_ppm": 0
+   },
+   "why": "The second step also matched my prediction. Now I stop shedding load in an outage and pay for it with a much bigger store, so the outage margin still falls to about 791600. Capture goes up as well, which should take the load floor margin to about 781300. I expect a move of about 124000 and a small rise in the objective, which will show what shed alone is worth."
+  },
+  {
+   "set": {
+    "pcm_kwh": 5000,
+    "capture_ppm": 950000,
+    "floor_kw": 450
+   },
+   "why": "Ending the shed was worth 8 ppm, so shed matters little and the load floor is the real lever. The radius is now as wide as the fixed margins allow. This step takes capture and the store to the top of their ranges and brings the load floor down to 450 kW, which the higher capture makes room for. I expect a move of about 171800, a load floor margin near 870400 and an objective near 918000."
+  },
+  {
+   "set": {
+    "floor_kw": 392
+   },
+   "why": "Dropping the floor from 590 to 450 kW gave 3570 ppm, which is 25.5 ppm per kW, the same rate as the first small step. Capture, wall and store are now at the ends of their ranges, so the least load the plant needs is just under 392 kW. This last step takes the floor down to 392, the lowest whole number that keeps the load floor margin under the limit. I expect that margin to be 999215 and the objective 919529, as the earlier probe showed."
   }
  ]
 }
