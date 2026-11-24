@@ -2,7 +2,7 @@
 
 Modelling the ideal datacenter.
 
-**Status: v0.2.0, claimed.** An AI agent wrote this version and no person has reviewed it. Nothing in it is
+**Status: v0.3.0, claimed.** An AI agent wrote this version and no person has reviewed it. Nothing in it is
 measured. Every number is derived from the certificates of other repositories, which are themselves models.
 
 optifab is the design of one physical structure that holds the work of four organisations, so that the digital
@@ -26,7 +26,7 @@ that improves its own hardware and software, part by part. The work it joins:
 
 The reference campus is funi-frame's: 10 MW of IT load on a 2,500 m² plan, two storeys.
 
-## What v0.1.0 finds
+## What it finds
 
 Each line is derived in [docs/MODEL.md](docs/MODEL.md) and recomputed by `verify.py`. Labels follow the
 Foundation-0 standard: PROVEN (written proof, checked symbolically), VERIFIED (finite check).
@@ -45,9 +45,13 @@ Foundation-0 standard: PROVEN (written proof, checked symbolically), VERIFIED (f
 | 10 | **The contract fits in one 64-byte frame.** The 12 margins, the budget, the load, the recooling temperature and the time fill the 16 floats of the frame Weft already uses for telemetry. The design point as certified cannot fill the recooling slot. | VERIFIED. The slot meanings are a proposal. |
 | 11 | **The Terrafab latency figures hold in direction, and this campus does not need them.** A 15 ms loop can counter none of the four plant vibration tones within its cycle; a 0.5 ms loop can counter all four. Passive isolation already holds rack vibration at 17.9% of its limit, and every term of the contract moves over seconds to minutes. | PROVEN (identity), VERIFIED |
 | 12 | **Every repository has a place, and the loop is open.** 32 of 41 repositories are placed in the structure and 9 are listed as having no place. Of the 10 interfaces that would close the loop between structure and intelligence, 4 are checked. | VERIFIED (the accounting). Statuses were assigned here. |
-| 13 | **The gate and the loop built on it are proved in Lean.** Eight theorems about an exact integer gate, accepted by `lake comparator --paranoid` under six kernels. Whatever is proposed, no margin passes its limit and the budget is never overdrawn; the number of changes is at most the budget a person set. The Proven Commons bar check passes items 2 to 6. It is not verified: no reviewer has approved the specification. | Machine-checked proof. Bar item 1 open. |
-| 14 | **Hardware and software improve together under that gate.** A loop proposed 50 changes to three hardware and two software parameters. 45 were admitted (30 hardware, 15 software) and 5 refused. The objective rose from 0.914228 to 0.919009 and never fell, and every decision was replayed in Lean with no mismatch. It runs on a model: no sensor, load or machine is involved. | VERIFIED on a model. The scenario is a choice, so the figures are illustrations. |
+| 13 | **The gate and the loop over designs are proved in Lean, with the plant model inside the proved code.** Fifteen theorems, accepted by `lake comparator --paranoid` under six kernels. Eight are about an exact integer gate. Seven are about designs, with the three moving margins and the objective computed inside the proved code. From a start within its limits and bounds, whatever designs are proposed, the design held stays within every modelled limit and within its bounds, its objective never falls, and the number of changes is at most the budget a person set. The model itself is defined, not proved, and an independent read found five defects in it, listed in [formal/SPEC.md](formal/SPEC.md). The Proven Commons bar check passes items 2 to 6. It is not verified: no reviewer has approved the specification. | Machine-checked proof. Bar item 1 open. |
+| 14 | **Hardware and software improve together under that gate.** A loop proposed 50 changes to three hardware and two software parameters. 45 were admitted (30 hardware, 15 software) and 5 refused. The objective rose from 0.914228 to 0.919009 and never fell, and every decision was worked out again in Lean from the two designs with no mismatch. It runs on a model: no sensor, load or machine is involved. | VERIFIED on a model. The scenario is a choice, so the figures are illustrations. |
 | 15 | **A design that sits exactly on a limit cannot change.** Started with one margin at its limit, the loop admitted nothing. A proposer with no reserve had 126 of 186 proposals refused and finished lower. Headroom is what makes change possible. | VERIFIED on a model |
+| 16 | **A margin within its limit means a physical inequality, with no rounding in it.** Proved for every design the loop can reach from a start within its limits: the captured heat can drive the cooling needed at full load, the plant cools itself at the scheduler's load floor, and the store holds the IT heat of one outage. The first follows from the second for any floor up to the IT load, so these are two independent facts, not three. This is a statement about the model. Its constants are claimed, not measured. | Machine-checked proof about a model |
+| 17 | **A language model has proposed through the same interface, and a second run built on the first one's notes.** Given only the loop's printed state, the first made 11 proposals in a limit of 40. 10 were taken up, 4 of them changing hardware and software in one step. The objective reached 0.919548, the best a direct search finds possible. The seeded search reached 0.919009 (89.9% of that gain) with 50 proposals. A second instance of the same model, with no memory of the first run, was given the notes the first left. It reached the same 0.919548 in 4 proposals with 0 refused. The proposals, reasons and notes are in [results/](results/), and both ledgers replay in Lean. | VERIFIED (the replays). Two runs are anecdotes, not an experiment. |
+| 18 | **An adversary cannot move the design out of its envelope.** 3,006 proposals built to break the loop: genes out of bounds, margins past limits, designs that score lower, then random ones. 64 were taken up, which is the whole budget, and no more. Every design held stayed within every limit and every bound, and the objective never fell. | VERIFIED on the Python copy. The property itself is proved in Lean. |
+| 19 | **A campus's load floor is a property of its site.** If the chiller keeps its design share of the reversible COP, the floor is 0.564 MW with recooling at 30 °C, 2.804 MW at 38 °C and 6.113 MW at 40 °C. At 41 °C the campus cannot cool itself at any load, though 41 °C is under the limit of finding 2. One cool and one warm campus cannot idle below 3.368 MW, 16.8% of their nameplate. In the plant model, moving load between campuses changes no energy, so a placement optimum needs a model with a site-dependent cost first. | VERIFIED under assumption A-4 |
 
 Findings 1 and 2 concern funi-frame and are written up for its maintainers in [HANDOFF.md](HANDOFF.md).
 
@@ -67,16 +71,19 @@ The left column is what `plant_gate` checks. All of the right column is claimed,
 
 ## Check it
 
-Needs Python 3.10 or newer and SymPy. Tested with Python 3.13 and SymPy 1.14 only.
+Needs Python 3.10 or newer and SymPy. The certificate is the same under Python 3.10, 3.11, 3.12, 3.13 and 3.14
+with SymPy 1.14, and CI checks each of them. Other SymPy versions, and platforms other than Linux on
+x86-64, are untested here.
 
 ```bash
 pip install sympy
 python3 verify.py
 ```
 
-This recomputes every figure from the pinned inputs, runs the improvement loop, runs 24 must-fail controls, and
-compares the result with [results/certificate.json](results/certificate.json) and
-[results/ledger.json](results/ledger.json). It reads no network and needs no Lean. It checks that the committed
+This recomputes every figure from the pinned inputs, runs the improvement loop, replays the recorded runs, runs 29 must-fail controls, and
+compares the result with [results/certificate.json](results/certificate.json) and the two ledgers in
+[results/](results/). It reads no network and needs no Lean. Its checks are not `assert` statements, so `python3 -O` does not switch
+them off. It checks that the committed
 formal record matches the current Lean sources and ledger.
 
 To rebuild the proofs and replay the ledger in Lean (needs Linux, [elan](https://github.com/leanprover/elan)
@@ -84,8 +91,15 @@ and bubblewrap):
 
 ```bash
 python3 verify.py --formal
-# [FORMAL] comparator accepts 8 theorems under 6 kernels; 300000 differential tests, 0 failures;
-#          ledger replay 50 decisions, 0 mismatches
+# [FORMAL] comparator accepts 15 theorems under 6 kernels; 405000 differential tests, 0 failures;
+#          ledger replay 3071 decisions, 0 mismatches
+```
+
+To propose a design yourself, or to let a model do it:
+
+```bash
+python3 tools/propose.py my_run.json new
+python3 tools/propose.py my_run.json try pcm_kwh=2700 shed_ppm=250000 --why "more store, so shed less"
 ```
 
 To re-read every cited line from the source repositories:
@@ -104,17 +118,26 @@ python3 verify.py --upstream ../upstream
 - Anything about more than one campus. A network of campuses is the next step, not this one.
 - That the gate is safe to put in control of a plant. Its arithmetic is proved. The margins it is fed are not,
   and it can only refuse a step. Nothing here commands anything.
-- That the loop's gains are real. Its plant model, objective and scenario are unproved choices.
+- That the loop's gains are real. The loop is proved to keep its model within the model's limits. The model's
+  constants, the objective and the scenario are choices, and none is measured. The objective has a known
+  error of about 18 ppm that is the same for every design ([formal/SPEC.md](formal/SPEC.md), known defects).
+- That a language model is a good proposer, or that notes always help the next one. Two recorded runs show
+  the interface and the hand-over work. They measure nothing.
 - Anything the Terrafab documents claim. They are the source of the idea and are not used as evidence.
 
 ## Layout
 
 ```
-verify.py                 the verifier: derivations, the gates, the frame, the loop, graph and unit checks, 24 must-fail controls
-loop.py                   the improvement loop: genome, plant model, proposer, ledger
-formal/                   the exact gate and the loop, proved in Lean, in the Proven Commons layout
+verify.py                 the verifier: derivations, the gates, the frame, the loop, graph and unit checks, 29 must-fail controls
+loop.py                   the improvement loop: the seeded proposer, the replay of recorded proposals, the ledger
+formal/                   the exact gate, the plant model and the loop, proved in Lean, in the Proven Commons layout
 results/certificate.json  what verify.py must reproduce
 results/ledger.json       every decision of the loop, hash-chained
+results/model_run.json    the proposals a language model made through the interface, each with its reason
+results/model_ledger.json the decisions on them, hash-chained
+results/model_lessons.md  the notes that proposer left, word for word
+results/model_run_2.json  a second run, by an instance that was given those notes; model_ledger_2.json and
+                          model_lessons_2.md are its ledger and its own notes
 results/formal.json       the record of the last formal run: comparator, differential tests, Lean replay
 data/upstream/            byte-exact copies of three certificates, Weft's vectors and Weft's gate (the test oracle)
 data/pins.json            every literal and line read from another repository
@@ -122,11 +145,11 @@ data/graph.json           the cross-organisation map: repositories, links, citat
 data/unit.json            the structure: each element, where it sits, whose work it rests on, and its status
 data/sources.json         pinned commit and file hashes for each repository
 docs/VISION.md            how close this is to the vision, part by part
-docs/PROPOSALS.md         eight systems proposed for the open gaps
+docs/PROPOSALS.md         eight systems proposed for the open gaps, and how far each has got
 docs/STRUCTURE.md         one structure: the unit, the loop, the plant frame, and the Terrafab claims one by one
 docs/MODEL.md             each result, its derivation and its assumptions
 docs/CONVERGENCE.md       the map as tables, generated from data/graph.json
-tools/                    fetch_upstream.py and render_map.py
+tools/                    propose.py (the proposer's command line), fetch_upstream.py and render_map.py
 HANDOFF.md                what was learned, what failed, and what to do next
 ```
 

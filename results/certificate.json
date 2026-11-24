@@ -1,6 +1,6 @@
 {
   "repository": "aska-physical/optifab",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "inputs": {
     "vendored": {
       "aska-physical/funi-frame/certificate.json": "92e7bbcea389274d2967e463ec3881ec9311db7786c5e74559defcd936dfb9fa",
@@ -13,7 +13,7 @@
       "pins.json": "acb6db126f4fdf3901c6f9f64a9b2d03ee4edc48ec863ccfb170d14604e96d54",
       "graph.json": "3c0a2dd368a0f223c6aea43b621e131461037425001eb6bceaa7742b25034966",
       "sources.json": "0ec0cfd7d8aa05ab7a51fb77ac8e91fb06dc44ce66ee6333ed965f7368ecc2d6",
-      "unit.json": "c2cb8e74da3ecb9c18ede97c00d5b1f1c65a9238dc5865d6aff751073ea96f4a",
+      "unit.json": "a2d74c05ec334e8dc49c0f802d539dd545762dbed08bf89eac273dd23a9342fd",
       "upstream/MANIFEST.json": "9dd0e7efbb39fb37bc542f86751becb3a6dc46fd348737e2b040a24598238541"
     },
     "pinned_repositories": 36,
@@ -256,12 +256,12 @@
       "mismatches": 0,
       "first_mismatches": [],
       "agreed_by_reason": {
-        "baseline_distance_exceeded": 18444,
+        "baseline_distance_exceeded": 18341,
         "insufficient_metabolic_budget": 3902,
         "non_finite_parameters": 8277,
         "non_finite_weights": 9369,
         "non_positive_budget_or_cost": 9936,
-        "ok": 41772,
+        "ok": 41875,
         "shape_mismatch": 4836
       },
       "both_raised_the_same_error": 3464
@@ -378,7 +378,8 @@
       "outage_min": 20,
       "outages_per_year": 12,
       "low_demand_fraction_ppm": 30000,
-      "low_demand_hours": 2000
+      "low_demand_hours": 2000,
+      "hours_per_year": 8760
     },
     "limit_ppm": 1000000,
     "proposer_reserve_ppm": 950000,
@@ -404,6 +405,7 @@
     },
     "admitted_hardware_changes": 30,
     "admitted_software_changes": 15,
+    "admitted_changes_to_both_at_once": 0,
     "budget_start": 64,
     "budget_left": 19,
     "eta_start_ppm": 914228,
@@ -429,7 +431,8 @@
     },
     "largest_step_scale_ppm": 8000000,
     "chain_intact": true,
-    "final_hash": "20e492cea1606034f0e6917df14ccb774a219c00748fae8104429939cfbc9532",
+    "entries_follow_from_one_another": true,
+    "final_hash": "c60e31d13303a1605f91d1d19ab8800af07d211d5402e7baedd9a992997bd5fd",
     "final_margins_ppm": {
       "rack_vibration": 179100,
       "storey_drift": 563000,
@@ -487,6 +490,261 @@
       }
     }
   },
+  "network_first_look": {
+    "assumption": "A-4: the chiller keeps its design share of the reversible COP at every recooling temperature",
+    "share_of_reversible_cop_at_design": 0.3022,
+    "sites": [
+      {
+        "recooling_C": 30.0,
+        "sorption_cop": 0.62,
+        "load_floor_MW": 0.564,
+        "load_floor_share_of_nameplate": 0.056,
+        "cools_itself_at_some_load": true
+      },
+      {
+        "recooling_C": 34.0,
+        "sorption_cop": 0.399,
+        "load_floor_MW": 1.127,
+        "load_floor_share_of_nameplate": 0.113,
+        "cools_itself_at_some_load": true
+      },
+      {
+        "recooling_C": 36.0,
+        "sorption_cop": 0.325,
+        "load_floor_MW": 1.687,
+        "load_floor_share_of_nameplate": 0.169,
+        "cools_itself_at_some_load": true
+      },
+      {
+        "recooling_C": 38.0,
+        "sorption_cop": 0.266,
+        "load_floor_MW": 2.804,
+        "load_floor_share_of_nameplate": 0.28,
+        "cools_itself_at_some_load": true
+      },
+      {
+        "recooling_C": 40.0,
+        "sorption_cop": 0.217,
+        "load_floor_MW": 6.113,
+        "load_floor_share_of_nameplate": 0.611,
+        "cools_itself_at_some_load": true
+      },
+      {
+        "recooling_C": 41.0,
+        "sorption_cop": 0.196,
+        "load_floor_MW": null,
+        "load_floor_share_of_nameplate": null,
+        "cools_itself_at_some_load": false
+      }
+    ],
+    "two_campuses": {
+      "recooling_C": [
+        30.0,
+        38.0
+      ],
+      "load_floors_MW": [
+        0.564,
+        2.804
+      ],
+      "network_load_floor_MW": 3.368,
+      "network_load_floor_share_of_nameplate": 0.168,
+      "warm_floor_over_cool_floor": 4.97
+    },
+    "utility_MW_per_MW_of_IT_load_at_every_site": 1.0357,
+    "placement_between_campuses_changes_energy_use": false
+  },
+  "adversarial_proposer": {
+    "proposals": 3006,
+    "seed": 20261117,
+    "verdicts": {
+      "bounds": 55,
+      "budget": 1604,
+      "distance": 1278,
+      "ok": 64,
+      "worse": 5
+    },
+    "first_six_verdicts": [
+      "bounds",
+      "bounds",
+      "distance",
+      "distance",
+      "worse",
+      "distance"
+    ],
+    "taken_up": 64,
+    "budget": 64,
+    "budget_left": 0,
+    "eta_start_ppm": 914228,
+    "eta_final_ppm": 914737,
+    "every_design_held_within_limit": true,
+    "every_design_held_within_bounds": true,
+    "objective_never_fell": true,
+    "changes_within_budget": true,
+    "chain_intact": true,
+    "entries_follow_from_one_another": true,
+    "final_hash": "89472e8ab980432bdd53f6be57b25d7414f77c802f5089f7b7a7f3a9bf144d85"
+  },
+  "recorded_proposer": {
+    "present": true,
+    "proposer": "A language model (Claude, Anthropic) run as a sub-agent of the session that prepared this version. It was given the output of tools/propose.py and nothing else, and was told not to read the repository. That instruction was not enforced.",
+    "run_file": "results/model_run.json",
+    "turns_allowed": 40,
+    "proposals": 11,
+    "every_proposal_has_a_reason": true,
+    "admitted": 10,
+    "refused": {
+      "worse": 1
+    },
+    "admitted_hardware_changes": 4,
+    "admitted_software_changes": 2,
+    "admitted_changes_to_both_at_once": 4,
+    "budget_start": 64,
+    "budget_left": 54,
+    "eta_start_ppm": 914228,
+    "eta_final_ppm": 919548,
+    "worst_margin_ever_admitted_ppm": 999215,
+    "final_genome": {
+      "pcm_kwh": 5000,
+      "capture_ppm": 950000,
+      "wall_u_mw": 100,
+      "floor_kw": 392,
+      "shed_ppm": 0
+    },
+    "chain_intact": true,
+    "entries_follow_from_one_another": true,
+    "final_hash": "df96817f0e5e056b5c510312b895ed061ef20de99771a3d26447509d00fd1337",
+    "every_design_held_within_limit": true,
+    "every_design_held_within_bounds": true,
+    "objective_never_fell": true,
+    "changes_within_budget": true,
+    "final_margins_ppm": {
+      "rack_vibration": 179100,
+      "storey_drift": 563000,
+      "roof_crown_compression": 387879,
+      "roof_tornado_uplift_factored": 588180,
+      "roof_service_deflection_mm": 176100,
+      "floor_punching_collar": 801052,
+      "floor_walking_vibration": 616000,
+      "floor_crown_compression": 607511,
+      "floor_fire_120min_thrust": 300275,
+      "floor_duct_hole_shear": 496948,
+      "sensor_power_at_airflow_turndown": 769564,
+      "sorption_drive_heat": 120734,
+      "load_floor": 999215,
+      "outage_ride_through": 666667
+    },
+    "best_objective_found_by_direct_search": {
+      "objective_ppm": 919548,
+      "design": {
+        "pcm_kwh": 5000,
+        "capture_ppm": 950000,
+        "wall_u_mw": 100,
+        "floor_kw": 392,
+        "shed_ppm": 0
+      }
+    },
+    "share_of_the_possible_gain_reached": 1.0,
+    "against_the_seeded_search": {
+      "seeded": {
+        "proposals": 50,
+        "changes": 45,
+        "eta_final_ppm": 919009,
+        "share_of_the_possible_gain_reached": 0.8987
+      },
+      "recorded": {
+        "proposals": 11,
+        "changes": 10,
+        "eta_final_ppm": 919548,
+        "share_of_the_possible_gain_reached": 1.0
+      }
+    },
+    "edited_proposal_changes_the_ledger": true
+  },
+  "recorded_proposer_given_lessons": {
+    "present": true,
+    "proposer": "A language model (Claude, Anthropic) run as a second sub-agent of the session that prepared this version, with no memory of the first run. It was given the output of tools/propose.py and the notes the first proposer left in results/model_lessons.md, and was told not to read anything else in the repository. That instruction was not enforced.",
+    "run_file": "results/model_run_2.json",
+    "lessons_file": "results/model_lessons.md",
+    "turns_allowed": 40,
+    "proposals": 4,
+    "every_proposal_has_a_reason": true,
+    "admitted": 4,
+    "refused": {},
+    "admitted_hardware_changes": 0,
+    "admitted_software_changes": 1,
+    "admitted_changes_to_both_at_once": 3,
+    "budget_start": 64,
+    "budget_left": 60,
+    "eta_start_ppm": 914228,
+    "eta_final_ppm": 919548,
+    "worst_margin_ever_admitted_ppm": 999215,
+    "final_genome": {
+      "pcm_kwh": 3800,
+      "capture_ppm": 950000,
+      "wall_u_mw": 100,
+      "floor_kw": 392,
+      "shed_ppm": 0
+    },
+    "chain_intact": true,
+    "entries_follow_from_one_another": true,
+    "final_hash": "280bf4d6d94659e3b2327f090e981942b0b430e969feee1be11b9b09e11f129f",
+    "every_design_held_within_limit": true,
+    "every_design_held_within_bounds": true,
+    "objective_never_fell": true,
+    "changes_within_budget": true,
+    "final_margins_ppm": {
+      "rack_vibration": 179100,
+      "storey_drift": 563000,
+      "roof_crown_compression": 387879,
+      "roof_tornado_uplift_factored": 588180,
+      "roof_service_deflection_mm": 176100,
+      "floor_punching_collar": 801052,
+      "floor_walking_vibration": 616000,
+      "floor_crown_compression": 607511,
+      "floor_fire_120min_thrust": 300275,
+      "floor_duct_hole_shear": 496948,
+      "sensor_power_at_airflow_turndown": 769564,
+      "sorption_drive_heat": 120734,
+      "load_floor": 999215,
+      "outage_ride_through": 877193
+    },
+    "best_objective_found_by_direct_search": {
+      "objective_ppm": 919548,
+      "design": {
+        "pcm_kwh": 5000,
+        "capture_ppm": 950000,
+        "wall_u_mw": 100,
+        "floor_kw": 392,
+        "shed_ppm": 0
+      }
+    },
+    "share_of_the_possible_gain_reached": 1.0,
+    "against_the_seeded_search": {
+      "seeded": {
+        "proposals": 50,
+        "changes": 45,
+        "eta_final_ppm": 919009,
+        "share_of_the_possible_gain_reached": 0.8987
+      },
+      "recorded": {
+        "proposals": 4,
+        "changes": 4,
+        "eta_final_ppm": 919548,
+        "share_of_the_possible_gain_reached": 1.0
+      }
+    },
+    "edited_proposal_changes_the_ledger": true,
+    "against_the_first_run": {
+      "objective_both_runs_reached_ppm": 919548,
+      "proposals_needed_first_run": 11,
+      "proposals_needed_with_lessons": 4,
+      "refused_first_run": 1,
+      "refused_with_lessons": 0,
+      "eta_final_first_run_ppm": 919548,
+      "eta_final_with_lessons_ppm": 919548,
+      "lessons_file_sha256": "e594d138237f9530171bb123bb956961878f6378e7dd26760e57ca44f6b98c21"
+    }
+  },
   "formal": {
     "present": true,
     "lean": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
@@ -498,7 +756,14 @@
       "PlantGate.Spec.no_margin_rises_past_radius",
       "PlantGate.Spec.accepted_stays_within",
       "PlantGate.Spec.run_safe",
-      "PlantGate.Spec.run_bounded"
+      "PlantGate.Spec.run_bounded",
+      "PlantGate.Spec.step_complete",
+      "PlantGate.Spec.step_refusal_changes_nothing",
+      "PlantGate.Spec.loop_safe",
+      "PlantGate.Spec.loop_in_bounds",
+      "PlantGate.Spec.loop_never_worse",
+      "PlantGate.Spec.loop_bounded",
+      "PlantGate.Spec.loop_keeps_physics"
     ],
     "comparator": {
       "command": "lake comparator --paranoid",
@@ -513,17 +778,40 @@
       ]
     },
     "replay": {
-      "decisions": 50,
-      "mismatches": 0
+      "decisions": 3071,
+      "mismatches": 0,
+      "by_ledger": {
+        "seeded_search": {
+          "decisions": 50,
+          "mismatches": 0,
+          "whole_run_through_lean_loop_agrees": true
+        },
+        "adversary": {
+          "decisions": 3006,
+          "mismatches": 0,
+          "whole_run_through_lean_loop_agrees": true
+        },
+        "recorded_proposer": {
+          "decisions": 11,
+          "mismatches": 0,
+          "whole_run_through_lean_loop_agrees": true
+        },
+        "recorded_proposer_given_lessons": {
+          "decisions": 4,
+          "mismatches": 0,
+          "whole_run_through_lean_loop_agrees": true
+        }
+      }
     },
     "differential_tests": {
-      "inputs": 300000,
+      "inputs": 405000,
       "seed": 20261117,
       "failures": 0,
       "passed": true
     },
     "bar": "Proven Commons bar check: items 2 to 6 pass; item 1 is open (no reviewer has approved the specification). See formal/BAR-REPORT.md.",
     "matches_current_lean_sources": true,
+    "matches_current_ledgers": true,
     "matches_current_ledger": true
   },
   "loop_timing": {
@@ -805,6 +1093,12 @@
     "aska_physical_to_moissanite_links_added": 2,
     "checked_and_closed_links": 1
   },
+  "checks_that_survive_python_O": {
+    "python_files_scanned": 7,
+    "assert_statements": 0,
+    "files_with_assert_statements": [],
+    "scanner_finds_a_planted_assert": true
+  },
   "must_fail_controls": {
     "must_fail_01_upstream_revenue_is_computed_on_it_power": true,
     "must_fail_02_recooling_at_45C_keeps_the_claimed_cop_within_the_second_law": true,
@@ -829,7 +1123,12 @@
     "must_fail_21_loop_makes_more_changes_than_its_budget": true,
     "must_fail_22_design_with_a_margin_at_its_limit_can_still_change": true,
     "must_fail_23_edited_ledger_entry_keeps_the_chain": true,
-    "must_fail_24_formal_record_is_stale_or_missing": true
+    "must_fail_24_formal_record_is_stale_or_missing": true,
+    "must_fail_25_adversary_moves_the_design_out_of_its_envelope": true,
+    "must_fail_26_recorded_run_of_an_outside_proposer_breaks_a_rule_or_can_be_edited_unseen": true,
+    "must_fail_28_ledger_whose_entries_do_not_follow_from_one_another_passes": true,
+    "must_fail_29_check_that_python_O_would_strip": true,
+    "must_fail_27_warm_site_campus_counted_with_the_design_load_floor": true
   },
-  "controls_passed": "24/24"
+  "controls_passed": "29/29"
 }

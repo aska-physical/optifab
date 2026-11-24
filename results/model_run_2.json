@@ -1,0 +1,47 @@
+{
+ "schema": "optifab-proposals/1",
+ "proposer": "A language model (Claude, Anthropic) run as a second sub-agent of the session that prepared this version, with no memory of the first run. It was given the output of tools/propose.py and the notes the first proposer left in results/model_lessons.md, and was told not to read anything else in the repository. That instruction was not enforced.",
+ "budget": 64,
+ "turns": 40,
+ "start": {
+  "pcm_kwh": 2500,
+  "capture_ppm": 850000,
+  "wall_u_mw": 132,
+  "floor_kw": 600,
+  "shed_ppm": 300000
+ },
+ "proposals": [
+  {
+   "set": {
+    "pcm_kwh": 3672,
+    "capture_ppm": 864000,
+    "wall_u_mw": 100,
+    "floor_kw": 582,
+    "shed_ppm": 0
+   },
+   "why": "I expect the load floor and outage margins to fall to about 908000 each and the sorption margin to about 293000. That is a move of about 52000 against a radius of 59652, and it should grow the radius to about 92000. I rely on the three margin formulas in the earlier notes and on the note that only floor and shedding move the objective, so the lower floor and zero shedding should add about 470 ppm."
+  },
+  {
+   "set": {
+    "pcm_kwh": 3800,
+    "capture_ppm": 896000,
+    "floor_kw": 533
+   },
+   "why": "The first verdict matched the earlier notes' margin formulas to within 4 ppm, so I keep relying on them. I expect sorption near 225217 and both load floor and outage near 877200, a move of about 80600 against a radius of 92229, which should grow the radius to about 122700. The floor drops 49 kW, so I expect the objective to rise by roughly 1250 ppm."
+  },
+  {
+   "set": {
+    "capture_ppm": 950000,
+    "floor_kw": 446
+   },
+   "why": "The second verdict matched my forecast to the ppm, so the earlier notes' formulas hold. Taking capture to its top bound should drop sorption to about 120734, and floor 446 should hold load floor near 878233, just above the outage margin, a move of about 104500 against a radius of 122738. The floor drops 87 kW, so I expect about 2200 ppm more objective, and the radius left should allow one last floor cut to 392."
+  },
+  {
+   "set": {
+    "floor_kw": 392
+   },
+   "why": "Only the floor changes, so only the load floor margin should move, from 878234 to about 999215, a move of about 120981 against a radius of 121766. The earlier notes say 392 is the lowest floor that stays under the limit with capture at its top and the wall at its bottom, and my own readings agree, since 391 would put the margin over the limit. I expect about 1380 ppm more objective."
+  }
+ ],
+ "lessons_file": "results/model_lessons.md"
+}

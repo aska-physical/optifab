@@ -332,9 +332,52 @@ margins in parts per million of their limit, and proves eight theorems about it.
   the limit and the budget is not negative.
 - `run_bounded`: the number of admitted changes plus the budget left never exceeds the budget at the start.
 
-`lake comparator --paranoid` accepts all eight under six kernels with the standard axioms only. A Python copy
-of the gate agrees with the Lean executable on 300,000 generated inputs. The Proven Commons bar check reports
-items 2 to 6 as passing ([formal/BAR-REPORT.md](../formal/BAR-REPORT.md)).
+Those eight take the margins as given. Since v0.3.0 the plant model of section 12 is in the same Lean file,
+as exact integer arithmetic, with the bounds on each gene, the objective and the step that takes a design up.
+Seven more theorems are about designs. In them the three margins that move with the genes are computed
+inside the proved code. The eleven carried as constants are still inputs.
+
+- `step_complete`: with budget left and the design held within the limit, a design within the bounds and the
+  headroom that does not lower the objective is taken up.
+- `step_refusal_changes_nothing`: a design that is not taken up leaves the design held and the budget as
+  they were.
+- `loop_safe`, `loop_in_bounds`, `loop_bounded`: from a start within the limit and the bounds, after any list
+  of proposed designs, the margins of the design held are within the limit, its genes are within their bounds,
+  and the changes are within the budget.
+- `loop_never_worse`: after any list of proposed designs, the objective is at least what it was at the start.
+  It may be equal.
+- `loop_keeps_physics`: with the limit at 1,000,000 ppm and a start within it, the design held satisfies
+  three exact inequalities. The cooling needed at full load is at most what the captured heat can drive. The
+  fixed heat load is at most the cooling gained at the scheduler's floor. The IT heat of one outage is at most
+  what the store holds. Rounding plays no part in them. The first follows from the second for any scheduler
+  floor up to the IT load.
+
+`lake comparator --paranoid` accepts all fifteen under six kernels with the standard axioms only. A Python
+copy of the gate, the model and the step agrees with the Lean executable on 405,000 generated inputs: 300,000
+gate decisions, 100,000 proposed designs and 5,000 whole runs through the Lean `loop`. The Proven Commons bar check reports items 2 to 6 as passing
+([formal/BAR-REPORT.md](../formal/BAR-REPORT.md)).
+
+What the seven do not say: that the model describes a real plant, or that it is free of mistakes. Its
+constants are pinned from certificates that are claimed and not measured, eleven of its fourteen margins are
+carried as constants, and the bounds and the scenario are declared by a person.
+
+**Known defects.** A separate agent read the new statements against this prose and the earlier floating-point
+model. It confirmed the units and that the integer model matches the floating-point one. It also found five
+defects, each checked here by running the numbers, and listed in [formal/SPEC.md](../formal/SPEC.md):
+
+1. The objective subtracts the whole utility power of the shed load in an outage, including the part that
+   does not depend on load. Every objective in this note is about 18 ppm too high. The corrected start is
+   0.914210 (published 0.914228) and the corrected end of the seeded run is 0.918990 (published 0.919009).
+   The order of designs does not change, except between designs that tie.
+2. The outage margin counts IT heat and leaves out the fixed heat load, about 71 kWh in a 20-minute outage.
+3. A design that scores the same is taken up and charged, even one identical to the design held. 30 of the
+   45 changes in the seeded run left the objective unchanged. So "never worse" is what is proved, and a
+   proposer can spend the budget without improving anything.
+4. Nothing requires the plant, the bounds or the start to make sense.
+5. A large move towards safety is refused as too far, and a start past a limit can never be repaired.
+
+They are not fixed in this version. A fix to 1 or 2 changes every objective and margin figure and the
+ledgers of the recorded runs, whose notes quote the present figures.
 
 In the loop the radius is the headroom of the baseline: the smallest distance from any margin to its limit.
 Section 5's lemma, that a move within the headroom passes no limit, is one of the eight
@@ -342,8 +385,9 @@ Section 5's lemma, that a move within the headroom passes no limit, is one of th
 
 ## 12. The improvement loop
 
-**VERIFIED** on a model (deterministic, replayed in Lean). The plant model, the objective and the scenario are
-choices made in `loop.py`. The figures illustrate the mechanism and predict nothing.
+**VERIFIED** on a model (deterministic, replayed in Lean). Its safety, its bound and the fact that it never
+gets worse are **machine-checked** (section 11). The plant model, the objective and the scenario are choices.
+The figures illustrate the mechanism and predict nothing.
 
 A genome holds three hardware genes (thermal store in kWh_th, liquid capture fraction, wall U-value), two
 software genes (the scheduler's load floor, the share of load shed in a cooling outage) and the proposer's own
@@ -354,8 +398,9 @@ outages of 20 minutes and 2,000 hours at 3% demand.
 
 Each generation the proposer tries six single-gene changes. On even generations they are software changes,
 scored by the objective. On odd generations they are hardware changes, scored by the headroom they open. The
-best goes to the exact gate with a cost of one unit against a budget of 64. An admitted candidate becomes the
-baseline. The step scale doubles after an admission and halves after a refusal.
+best goes to the step function with a cost of one unit against a budget of 64. The step takes it up if it is
+within the bounds, passes the exact gate and does not lower the objective. A design that is taken up becomes
+the one held. The step scale doubles after an admission and halves after a refusal.
 
 | | Run | Proposer with no reserve | Budget of 3 | Start on a limit |
 |---|---|---|---|---|
@@ -366,10 +411,71 @@ baseline. The step scale doubles after an admission and halves after a refusal.
 
 The start is 0.914228, except in the last column, which starts at 0.914230 and does not move. The run ended
 with budget to spare because every hardware gene had reached the edge of
-its search range. `python3 verify.py --formal` replays all 50 decisions through the Lean executable: no
-mismatch. The floating-point gate of section 6 gives the same verdict on all 50.
+its search range. The ledger records both designs of every decision. `python3 verify.py --formal` gives the
+two designs to the Lean executable, which works out the margins, the objective, the verdict and the budget
+again: no mismatch on any of the 50. The floating-point gate of section 6 gives the same verdict on all 50.
+
+Two other proposers have used the same step function.
+
+**A recorded run by a language model.** `tools/propose.py` prints the design held, its margins, the radius,
+the objective and the budget, and takes a proposal for one or more genes with a sentence of reasons. A
+language model was given that output and nothing else, with a limit of 40 proposals. It made 11. 10
+were taken up (4 hardware, 2 software, 4 changing both at once) and the rest were refused
+(1 as `worse`). The objective went from 0.914228 to 0.919548. A direct search over the software genes, with the
+hardware genes at their most generous bounds, finds 0.919548 to be the best any design within the limits can
+score, so the run reached 100.0% of the possible gain. The seeded search reached 89.9%. The proposals
+and the reasons are in `results/model_run.json`. `verify.py` replays them and must reproduce
+`results/model_ledger.json`.
+
+**A second run, given the first one's notes.** The first run's closing notes were saved word for word in
+`results/model_lessons.md`: three fitted formulas for the moving margins, the gain per kW of floor, and what
+its one refusal taught it. A second instance of the same model, with no memory of the first run, was given those notes and the same
+interface. It made 4 proposals and all 4 were taken up, 3 of them changing hardware and software
+together. It reached 0.919548, the same design in the two software genes. The first run needed 11
+proposals to reach that objective and the second 4. Its own notes are in `results/model_lessons_2.md`.
+
+These are two runs of one model. They show that the interface is enough to work from and that notes
+can be handed on. They do not measure how good a proposer a model is. Both runs end with the load-floor
+margin at 999,215 ppm, 785 from its limit: the objective rewards a lower floor and nothing
+rewards headroom, so a good proposer drives the design to where it can no longer change.
+
+**An adversary.** `adversary_run` makes 3,006 proposals meant to break the loop: a capture fraction of 200%,
+a negative store, a scheduler floor of zero and one below the plant's floor, a design that scores lower, then
+random designs, half of them anywhere in or just outside the bounds and half near the start. The verdicts were
+55 `bounds`, 1604 `budget`, 1278 `distance`, 64 `ok`, 5 `worse`. The budget of 64 was spent and not one change more was made. Every design held stayed within every
+limit and bound and the objective never fell. The theorems of section 11 say this must be so for the Lean
+code. This run checks it on the Python copy, and `--formal` replays all of it in Lean.
 
 [VISION.md](VISION.md) discusses what the loop shows and how far it is from the system it stands in for.
+
+## 13. A first look at a network: the load floor depends on the site
+
+**VERIFIED** under assumption A-4. A-4, made here: at any recooling temperature the sorption chiller reaches
+the same share of its reversible COP as at the design point. With 58 °C drive, 18 °C chilled water and 30 °C
+recooling the reversible COP is 2.051, so the claimed 0.62 is a share of 0.302. The 30 °C is the design value
+proposed in aska-physical/funi-frame#4. No certificate states one.
+
+Section 3 gave the load floor as `q_fix / ((1 + COP) α − 1)`. Under A-4 the COP falls as the recooling
+temperature rises, and the floor rises with it:
+
+| Recooling | Sorption COP | Load floor | Share of nameplate |
+|---|---|---|---|
+| 30 °C | 0.620 | 0.564 MW | 5.6% |
+| 34 °C | 0.399 | 1.127 MW | 11.3% |
+| 36 °C | 0.325 | 1.687 MW | 16.9% |
+| 38 °C | 0.266 | 2.804 MW | 28.0% |
+| 40 °C | 0.217 | 6.113 MW | 61.1% |
+| 41 °C | 0.196 | none: it cannot cool itself at any load | |
+
+So the 41.5 °C of section 2 is a limit of principle and not a working limit. Well below it the campus has to
+run most of its nameplate just to cool itself.
+
+For a network this gives two results. A cool campus and a warm one (30 °C and 38 °C) cannot idle below
+3.368 MW together, 16.8% of their nameplate, and the warm one's floor is 4.97 times the cool
+one's. And in the upstream plant model utility power is a straight line in IT load whose slope, 1.0357 MW
+per MW, does not depend on the site. Moving load from one campus to the other therefore changes no energy.
+The placement problem of proposal 8 has no single optimum in this model: any split that keeps both campuses
+above their floors uses the same energy. A useful network model needs a cost that differs by site first.
 
 ## Limits
 

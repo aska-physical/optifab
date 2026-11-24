@@ -220,14 +220,14 @@
     {
       "id": "R2",
       "organ": "Reflex",
-      "element": "A machine-checked proof of the gate and of the loop built on it",
+      "element": "A machine-checked proof of the gate, the plant model and the loop",
       "where": "with the gate",
       "repos": [
         "aska-physical/optifab",
         "Proven-Commons/mission"
       ],
       "status": "checked",
-      "note": "formal/ proves eight theorems in Lean about an exact integer gate. The comparator accepts them under six kernels and Proven Commons bar items 2 to 6 pass. Item 1 is open: no reviewer has approved the specification, so it is not verified. Weft's own floating-point gate has no proof yet."
+      "note": "formal/ proves fifteen theorems in Lean: eight about an exact integer gate, seven about the loop over designs, with the plant model inside the proved code. The comparator accepts them under six kernels and Proven Commons bar items 2 to 6 pass. Item 1 is open: no reviewer has approved the specification, so it is not verified. Weft's own floating-point gate has no proof yet."
     },
     {
       "id": "R3",
@@ -238,7 +238,7 @@
         "aska-physical/optifab"
       ],
       "status": "checked",
-      "note": "Runs on a model of the plant. Every decision is made by the exact gate, recorded in a hash-chained ledger and replayed in Lean. No sensor, load or machine is involved."
+      "note": "Runs on a model of the plant that is itself inside the proved code. Every decision is recorded in a hash-chained ledger and worked out again in Lean from the two designs. A seeded search, a language model and an adversary have each proposed through it. No sensor, load or machine is involved."
     },
     {
       "id": "M1",
@@ -435,7 +435,7 @@
       "from": "proposer",
       "to": "gate and ledger",
       "status": "checked",
-      "note": "The improvement loop: each proposed change to hardware or software is decided by the exact gate, logged and replayed in Lean. On a model only."
+      "note": "The improvement loop: each proposed design is checked against its bounds, the exact gate and the objective, logged, and replayed in Lean. A language model has proposed through it once. On a model only."
     }
   ],
   "interface_statuses": [
