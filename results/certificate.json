@@ -1122,7 +1122,7 @@
     "checked_and_closed_links": 1
   },
   "checks_that_survive_python_O": {
-    "python_files_scanned": 7,
+    "python_files_scanned": 10,
     "assert_statements": 0,
     "files_with_assert_statements": [],
     "scanner_finds_a_planted_assert": true
