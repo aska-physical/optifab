@@ -66,12 +66,13 @@ run is compared with the seeded search on the same budget. A second slice lets a
 **Rests on.** `loop.py`, abios for the message format, the model's API. **Boundary:** the model proposes and
 the gate decides. Nothing here gives a model authority to act.
 
-**Status, v0.3.0.** The interface exists (`tools/propose.py`) and the first slice is done twice. A language
-model made 11 proposals, 10 were taken up, and the ledger replays in Lean
-([results/model_run.json](../results/model_run.json)). A second instance of the same model, given the first run's notes
-([results/model_lessons.md](../results/model_lessons.md)), reached the same objective in 4. Open: many runs
-with a stated protocol, so that a comparison means something; a Weft cell or an Exo agent as the proposer;
-a format for the notes that a program can check; and an objective that does not drive the design onto a
+**Status, v0.3.1.** The interface exists (`tools/propose.py`) and the first slice is done. A language
+model made 12 proposals, 7 were taken up, and the ledger replays in Lean
+([results/model_run.json](../results/model_run.json)). A second instance of the same model, given the first
+run's notes ([results/model_lessons.md](../results/model_lessons.md)), made 5. Both runs were made twice,
+because v0.3.1 corrected the model and the earlier runs could not be carried over. Open: many runs with a
+stated protocol, so that a comparison means something; a Weft cell or an Exo agent as the proposer; a
+format for the notes that a program can check; and an objective that does not drive the design onto a
 limit, where it can no longer change.
 
 ## 4. Structural genes

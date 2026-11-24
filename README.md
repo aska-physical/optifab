@@ -2,7 +2,7 @@
 
 Modelling the ideal datacenter.
 
-**Status: v0.3.0, claimed.** An AI agent wrote this version and no person has reviewed it. Nothing in it is
+**Status: v0.3.1, claimed.** An AI agent wrote this version and no person has reviewed it. Nothing in it is
 measured. Every number is derived from the certificates of other repositories, which are themselves models.
 
 optifab is the design of one physical structure that holds the work of four organisations, so that the digital
@@ -36,7 +36,7 @@ Foundation-0 standard: PROVEN (written proof, checked symbolically), VERIFIED (f
 | 1 | **Less compute is unlocked than the plant certificate implies.** funi-frame multiplies 3.06 MW of freed utility power by a value per MW of compute. The IT load that power can carry is 2.85 to 2.96 MW, depending on how much of the overhead grows with load. If the value is per MW of IT load, its revenue figures are 3.6% to 7.4% high. | PROVEN, VERIFIED |
 | 2 | **The plant model leaves out a temperature that decides whether it works.** A sorption chiller with the claimed COP of 0.62, driven at 58 °C and making water at 15 to 18 °C, must reject heat below 41.5 °C at best (40.1 °C if the water is 15 °C). No recooling temperature appears in the certificate. | PROVEN, VERIFIED |
 | 3 | **The workload has a load floor.** Below about 0.56 MW of IT load (5.6% of nameplate) the captured heat can no longer drive the chiller, and the campus stops cooling itself. With the steel-pinned wall that funi-frame rejects, the floor is 51% higher. | PROVEN under two stated assumptions |
-| 4 | **Thermal storage is a budget.** The PCM skid holds 2,500 kWh_th: 15 minutes at full load, 30 minutes if half the load is shed, or a 10% burst for 2.5 hours. | VERIFIED |
+| 4 | **Thermal storage is a budget.** The PCM skid holds 2,500 kWh_th: 15 minutes at full load, 30 minutes if half the load is shed, or a 10% burst for 2.5 hours. These count IT heat only, as funi-frame does. With the fixed heat load counted, the first figure is 14.69 minutes. | VERIFIED |
 | 5 | **The tightest margin in the building is in the floor.** Of 11 certified limit states, the floor punching collar sits at 80.1% of capacity. A twelfth margin derived here, sensor power at low airflow, is at 77.0%. A change that moves the margin vector by no more than 0.1989 stays inside every limit. | PROVEN, VERIFIED |
 | 6 | **One gate can guard weights and plant.** Weft's gate predicate, rewritten here, passes all 15 of Weft's weight-update vectors and agrees with Weft's own function on 100,000 generated cases. Until now its budget had no physical unit. Here the budget is finding 4 and the radius is finding 5. | VERIFIED. Its use on a plant is a proposal. |
 | 7 | **Hand-copied numbers are now checked.** Six values are repeated by hand across funi-frame, funi-floors and venturi-collars. All six agree today, and a change upstream now fails a test. | VERIFIED |
@@ -45,11 +45,11 @@ Foundation-0 standard: PROVEN (written proof, checked symbolically), VERIFIED (f
 | 10 | **The contract fits in one 64-byte frame.** The 12 margins, the budget, the load, the recooling temperature and the time fill the 16 floats of the frame Weft already uses for telemetry. The design point as certified cannot fill the recooling slot. | VERIFIED. The slot meanings are a proposal. |
 | 11 | **The Terrafab latency figures hold in direction, and this campus does not need them.** A 15 ms loop can counter none of the four plant vibration tones within its cycle; a 0.5 ms loop can counter all four. Passive isolation already holds rack vibration at 17.9% of its limit, and every term of the contract moves over seconds to minutes. | PROVEN (identity), VERIFIED |
 | 12 | **Every repository has a place, and the loop is open.** 32 of 41 repositories are placed in the structure and 9 are listed as having no place. Of the 10 interfaces that would close the loop between structure and intelligence, 4 are checked. | VERIFIED (the accounting). Statuses were assigned here. |
-| 13 | **The gate and the loop over designs are proved in Lean, with the plant model inside the proved code.** Fifteen theorems, accepted by `lake comparator --paranoid` under six kernels. Eight are about an exact integer gate. Seven are about designs, with the three moving margins and the objective computed inside the proved code. From a start within its limits and bounds, whatever designs are proposed, the design held stays within every modelled limit and within its bounds, its objective never falls, and the number of changes is at most the budget a person set. The model itself is defined, not proved, and an independent read found five defects in it, listed in [formal/SPEC.md](formal/SPEC.md). The Proven Commons bar check passes items 2 to 6. It is not verified: no reviewer has approved the specification. | Machine-checked proof. Bar item 1 open. |
-| 14 | **Hardware and software improve together under that gate.** A loop proposed 50 changes to three hardware and two software parameters. 45 were admitted (30 hardware, 15 software) and 5 refused. The objective rose from 0.914228 to 0.919009 and never fell, and every decision was worked out again in Lean from the two designs with no mismatch. It runs on a model: no sensor, load or machine is involved. | VERIFIED on a model. The scenario is a choice, so the figures are illustrations. |
-| 15 | **A design that sits exactly on a limit cannot change.** Started with one margin at its limit, the loop admitted nothing. A proposer with no reserve had 126 of 186 proposals refused and finished lower. Headroom is what makes change possible. | VERIFIED on a model |
-| 16 | **A margin within its limit means a physical inequality, with no rounding in it.** Proved for every design the loop can reach from a start within its limits: the captured heat can drive the cooling needed at full load, the plant cools itself at the scheduler's load floor, and the store holds the IT heat of one outage. The first follows from the second for any floor up to the IT load, so these are two independent facts, not three. This is a statement about the model. Its constants are claimed, not measured. | Machine-checked proof about a model |
-| 17 | **A language model has proposed through the same interface, and a second run built on the first one's notes.** Given only the loop's printed state, the first made 11 proposals in a limit of 40. 10 were taken up, 4 of them changing hardware and software in one step. The objective reached 0.919548, the best a direct search finds possible. The seeded search reached 0.919009 (89.9% of that gain) with 50 proposals. A second instance of the same model, with no memory of the first run, was given the notes the first left. It reached the same 0.919548 in 4 proposals with 0 refused. The proposals, reasons and notes are in [results/](results/), and both ledgers replay in Lean. | VERIFIED (the replays). Two runs are anecdotes, not an experiment. |
+| 13 | **The gate and the loop over designs are proved in Lean, with the plant model inside the proved code.** Sixteen theorems, accepted by `lake comparator --paranoid` under six kernels. Eight are about an exact integer gate. Eight are about designs, with the three moving margins and the objective computed inside the proved code. From a start within its limits and bounds, whatever designs are proposed, the design held stays within every modelled limit and within its bounds, its objective never falls, and the number of changes is at most the budget a person set. The model itself is defined, not proved. An independent read found five defects in it. v0.3.1 fixes two and part of a third, and [formal/SPEC.md](formal/SPEC.md) lists what is still open. The Proven Commons bar check passes items 2 to 6. It is not verified: no reviewer has approved the specification. | Machine-checked proof. Bar item 1 open. |
+| 14 | **Hardware and software improve together under that gate.** A loop proposed 48 changes to three hardware and two software parameters. 45 were admitted (31 hardware, 14 software) and 3 refused. The objective rose from 0.914210 to 0.918990 and never fell, and every decision was worked out again in Lean from the two designs with no mismatch. It runs on a model: no sensor, load or machine is involved. | VERIFIED on a model. The scenario is a choice, so the figures are illustrations. |
+| 15 | **A design that sits exactly on a limit cannot change.** Started with one margin at its limit, the loop admitted nothing. A proposer with no reserve had 99 of 161 proposals refused and finished lower. Headroom is what makes change possible. | VERIFIED on a model |
+| 16 | **A margin within its limit means a physical inequality, with no rounding in it.** Proved for every design the loop can reach from a start within its limits: the captured heat can drive the cooling needed at full load, the plant cools itself at the scheduler's load floor, and the store holds the heat of one outage. The first follows from the second for any floor up to the IT load, so these are two independent facts, not three. This is a statement about the model. Its constants are claimed, not measured. | Machine-checked proof about a model |
+| 17 | **A language model has proposed through the same interface, and a second run built on the first one's notes.** Given only the loop's printed state, the first made 12 proposals in a limit of 40. 7 were taken up, 2 of them changing hardware and software in one step. The objective reached 0.919529, the best a direct search finds possible. The seeded search reached 0.918990 (89.9%) with 48 proposals. A second instance of the same model, with no memory of the first run, was given the notes the first left. It reached 0.919529 in 5 proposals with 0 refused. Both runs were made again for v0.3.1, against the corrected model. The runs made against v0.3.0 are kept in [results/v0.3.0/](results/v0.3.0/): only 2 of their 15 proposals would be decided the same way now. | VERIFIED (the replays). Two runs are anecdotes, not an experiment. |
 | 18 | **An adversary cannot move the design out of its envelope.** 3,006 proposals built to break the loop: genes out of bounds, margins past limits, designs that score lower, then random ones. 64 were taken up, which is the whole budget, and no more. Every design held stayed within every limit and every bound, and the objective never fell. | VERIFIED on the Python copy. The property itself is proved in Lean. |
 | 19 | **A campus's load floor is a property of its site.** If the chiller keeps its design share of the reversible COP, the floor is 0.564 MW with recooling at 30 °C, 2.804 MW at 38 °C and 6.113 MW at 40 °C. At 41 °C the campus cannot cool itself at any load, though 41 °C is under the limit of finding 2. One cool and one warm campus cannot idle below 3.368 MW, 16.8% of their nameplate. In the plant model, moving load between campuses changes no energy, so a placement optimum needs a model with a site-dependent cost first. | VERIFIED under assumption A-4 |
 
@@ -63,7 +63,7 @@ and can rely on four in return.
 | The workload must | The plant offers, per its certificates |
 |---|---|
 | keep IT load above the load floor, or ask for the air-side load to move to the aquifer loop | PUE 1.074 and no water use, if recooling stays below about 41 °C |
-| charge every cooling outage and every burst above cooling capacity to the thermal budget | 15 minutes of ride-through at full load |
+| charge every cooling outage and every burst above cooling capacity to the thermal budget | 15 minutes of ride-through at full load, counting IT heat only |
 | keep the margin vector within 0.1989 of the certified design point | rack vibration at 17.9% of the switch limit |
 | plan capacity in IT power, not in utility power | 2.85 to 2.96 MW more IT load than a conventional plant on the same supply |
 
@@ -91,8 +91,8 @@ and bubblewrap):
 
 ```bash
 python3 verify.py --formal
-# [FORMAL] comparator accepts 15 theorems under 6 kernels; 405000 differential tests, 0 failures;
-#          ledger replay 3071 decisions, 0 mismatches
+# [FORMAL] comparator accepts 16 theorems under 6 kernels; 405000 differential tests, 0 failures;
+#          ledger replay 3072 decisions, 0 mismatches
 ```
 
 To propose a design yourself, or to let a model do it:
@@ -119,8 +119,8 @@ python3 verify.py --upstream ../upstream
 - That the gate is safe to put in control of a plant. Its arithmetic is proved. The margins it is fed are not,
   and it can only refuse a step. Nothing here commands anything.
 - That the loop's gains are real. The loop is proved to keep its model within the model's limits. The model's
-  constants, the objective and the scenario are choices, and none is measured. The objective has a known
-  error of about 18 ppm that is the same for every design ([formal/SPEC.md](formal/SPEC.md), known defects).
+  constants, the objective and the scenario are choices, and none is measured. Two mistakes in the model were
+  corrected in v0.3.1, and [formal/SPEC.md](formal/SPEC.md) lists the defects that are still open.
 - That a language model is a good proposer, or that notes always help the next one. Two recorded runs show
   the interface and the hand-over work. They measure nothing.
 - Anything the Terrafab documents claim. They are the source of the idea and are not used as evidence.
@@ -136,6 +136,7 @@ results/ledger.json       every decision of the loop, hash-chained
 results/model_run.json    the proposals a language model made through the interface, each with its reason
 results/model_ledger.json the decisions on them, hash-chained
 results/model_lessons.md  the notes that proposer left, word for word
+results/v0.3.0/           the same three kinds of file for the runs made against the model of v0.3.0, kept as they were
 results/model_run_2.json  a second run, by an instance that was given those notes; model_ledger_2.json and
                           model_lessons_2.md are its ledger and its own notes
 results/formal.json       the record of the last formal run: comparator, differential tests, Lean replay

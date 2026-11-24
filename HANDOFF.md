@@ -1,8 +1,8 @@
-# Handoff: aska-physical/optifab v0.3.0
+# Handoff: aska-physical/optifab v0.3.1
 
 Written under the group ethos: leave everything the next agent needs so nothing has to be derived twice.
 
-optifab v0.1.0, v0.2.0 and v0.3.0 were prepared by an AI agent on 2026-11-17. They are claimed work. No person has
+optifab v0.1.0, v0.2.0 and v0.3.0 were prepared by an AI agent on 2026-11-17, and v0.3.1 on 2026-11-24. They are claimed work. No person has
 reviewed them.
 
 ## 1. What was learned and checked
@@ -11,7 +11,7 @@ The aim, stated by the owner and in [issue 1](https://github.com/aska-physical/o
 physical structure that holds all four organisations' work, with digital and physical infrastructure as a
 single unit. [docs/STRUCTURE.md](docs/STRUCTURE.md) is the design of that unit as far as it can be checked today.
 
-The fifteen findings are in [README.md](README.md) and derived in [docs/MODEL.md](docs/MODEL.md). In one line each:
+The findings are in [README.md](README.md) and derived in [docs/MODEL.md](docs/MODEL.md). In one line each:
 
 1. The 3.06 MW of utility power that funi-frame's plant frees carries 2.85 to 2.96 MW of IT load, depending on
    how much of the overhead grows with load.
@@ -32,22 +32,26 @@ The fifteen findings are in [README.md](README.md) and derived in [docs/MODEL.md
     structure and intelligence, 4 are checked, and the loop is open in three places.
 13. An exact integer gate and the loop built on it are proved in Lean (eight theorems, six kernels, standard
     axioms). The Proven Commons bar check passes items 2 to 6. Item 1, a reviewer's approval, is open.
-14. A loop changed three hardware and two software parameters together under that gate: 45 of 50 proposals
-    admitted, the objective up from 0.914228 to 0.919009, every decision replayed in Lean.
+14. A loop changed three hardware and two software parameters together under that gate: 45 of 48 proposals
+    admitted, the objective up from 0.914210 to 0.918990, every decision replayed in Lean.
 15. A design that sits exactly on a limit cannot change under this gate, and a proposer with no reserve slows
     itself.
 16. v0.3.0: the plant model, the bounds, the objective and the step are in Lean beside the gate, and seven more
-    theorems are about designs (fifteen in all). For any proposer the design held stays within the model's
+    theorems are about designs (fifteen in all, sixteen since v0.3.1). For any proposer the design held stays within the model's
     limits and its bounds, its objective never falls, and a margin within the limit is proved to mean three
     exact inequalities about heat and storage.
-17. A language model proposed through `tools/propose.py`, seeing only the printed state: 11 proposals, 10
-    taken up, objective 0.919548, the best a direct search finds (the seeded search reached 89.9% of that
-    gain). A second instance of the same model, given the first run's notes, got there in 4 proposals. Two runs, not an experiment.
-    Both end 785 ppm from a limit, where the loop can change nothing more.
-18. 3,006 adversarial proposals could not move the design out of its envelope or past its budget.
+17. A language model proposed through `tools/propose.py`, seeing only the printed state: 12 proposals, 7
+    taken up, objective 0.919529, the best a direct search finds possible (the seeded search reached 89.9% of
+    that gain). A second instance of the same model, given the first run's notes, reached 0.919529 in 5.
+    Two runs, not an experiment. Both runs end with the `load_floor` margin at 999,215 ppm, 785 from its limit.
+18. 3,007 adversarial proposals could not move the design out of its envelope or past its budget.
 19. Under assumption A-4 the load floor rises steeply with recooling temperature: 0.564 MW at 30 °C,
     2.804 MW at 38 °C, no self-cooling at 41 °C. Placement between campuses is degenerate in the
     current plant model.
+20. v0.3.1 corrected two mistakes in the plant model that an independent read had found: the objective's
+    outage term and the outage margin, which left out the fixed heat load. Do not carry a recorded run across a
+    change to the model. Only 2 of the 15 proposals recorded against v0.3.0 are decided the same way
+    under v0.3.1, so both runs were made again and the old ones are in `results/v0.3.0/`.
 
 [docs/VISION.md](docs/VISION.md) sets these against the vision, part by part.
 
@@ -233,9 +237,10 @@ could be given `results/model_lessons_2.md`.
   on a model. It has never seen a sensor or a machine.
 - **Who reviews `formal/SPEC.md`.** Until a person who did not write it approves it, nothing here may be
   called verified. The specification grew in v0.3.0 (the model and seven statements), so its hash changed.
-- **The five known defects in the model** (`formal/SPEC.md`). Fixing the objective and the outage margin changes
-  every published objective figure and the ledgers of the two recorded runs. The owner should say whether to fix
-  and re-run, or fix and keep the runs with a note.
+- **The defects still open in the model** (`formal/SPEC.md`). v0.3.1 fixed the objective and the outage margin
+  and stopped identical proposals being charged. Three things need a design decision: whether a different
+  design that scores the same should be taken up, whether the statements should require well-formed inputs,
+  and whether a large move towards safety should be allowed.
 - **A branch rule.** Bar item 7 is open in CI: `main` does not require the `bar / bar` check. Only a repository
   admin can add that rule.
 - **Assumption A-4.** The site-dependence of the load floor rests on it. A chiller datasheet would replace it.
