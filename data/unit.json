@@ -43,7 +43,7 @@
         "aska-physical/funi-frame"
       ],
       "status": "designed",
-      "note": "The certificate gives their heat flows but no recooling temperature, which finding 2 needs."
+      "note": "The certificate gives their heat flows and, since funi-frame v0.1.1, a design recooling temperature of 30 °C. That value is a proposal the owner has not confirmed, and nothing measures it."
     },
     {
       "id": "G3",

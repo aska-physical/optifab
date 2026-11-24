@@ -41,7 +41,7 @@ structure, where it sits, and whose work it rests on.
 | | Element | Where in the structure | Work it rests on | Status | Note |
 |---|---|---|---|---|---|
 | G1 | Thermal budget: PCM skids holding 2,500 kWh_th | plant yard | [funi-frame](https://github.com/aska-physical/funi-frame) | checked | The budget the gate spends. |
-| G2 | Heat sinks: aquifer loop, 200 energy piles, sky-cooling roof | below and above the halls | [funi-frame](https://github.com/aska-physical/funi-frame) | designed | The certificate gives their heat flows but no recooling temperature, which finding 2 needs. |
+| G2 | Heat sinks: aquifer loop, 200 energy piles, sky-cooling roof | below and above the halls | [funi-frame](https://github.com/aska-physical/funi-frame) | designed | The certificate gives their heat flows and, since funi-frame v0.1.1, a design recooling temperature of 30 °C. That value is a proposal the owner has not confirmed, and nothing measures it. |
 | G3 | High-temperature store: crushed-basalt beds, 20 MWh_th | plant yard | [funi-frame](https://github.com/aska-physical/funi-frame) | designed | Sized by literals in the upstream verifier. The contract does not use it. |
 
 ### Skeleton
@@ -206,16 +206,17 @@ check on the result. The byte layout is Weft's. The meaning of the slots is a pr
 
 | Frame | What the contract check reports |
 |---|---|
-| design point, recooling at 30 C | nothing: every term holds |
-| design point as certified, no recooling temperature | `recooling_not_measured` |
+| design point as certified, recooling at its design value | nothing: every term holds |
+| frame with no recooling temperature | `recooling_not_measured` |
 | idle campus at 0.3 MW | `below_load_floor` |
 | recooling at 42 C | `recooling_above_limit` |
 | floor punching demand up 26 percent | `limit_exceeded` |
 | thermal budget spent | `thermal_budget_exhausted` |
 <!-- frame:end -->
 
-The second row is finding 2 in executable form. The design point as funi-frame certifies it cannot fill slot
-14, because the certificate has no recooling temperature.
+The second row is finding 2 in executable form: a frame with slot 14 empty is not a pass. Until funi-frame
+v0.1.1 the certified design point could not fill that slot. It now carries a design value of 30 °C, proposed
+and not yet confirmed, and no sensor measures it.
 
 ## What the Terrafab latency figures mean in this building
 

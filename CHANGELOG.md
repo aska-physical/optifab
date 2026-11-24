@@ -2,6 +2,28 @@
 
 Machine-checked milestones for `aska-physical/optifab`.
 
+## [0.3.2] - 2026-11-24
+
+Follows funi-frame v0.1.1, which adopted findings 1 and 2.
+
+### Changed
+
+- **The vendored funi-frame certificate and every pin are at funi-frame v0.1.1** (`17d05bb`), and the pins into
+  the organisation profile are at its current head. 130 citations and 1 search hold against fresh clones.
+- **Findings 1 and 2 are restated as adopted upstream.** `verify.py` used to stop if funi-frame's certificate
+  gained a recooling field, and control 1 used to pass only while upstream counted freed utility power as IT
+  power. Both now check the opposite: that the upstream certificate and the derivation here agree on the extra
+  IT power (2.85 to 2.96 MW), the low revenue figure (71.35) and the recooling limit (41.46 °C).
+- Must-fail controls 1 and 16 are renamed to say what they now guard.
+- The plant frame's design point takes its recooling temperature from the certificate. The case with that slot
+  empty is kept, and is no longer described as the certified design point.
+- Three pinned lines changed text upstream and have new search strings (`ff.cop_ads`, `ff.cooling_power`,
+  `ff.revenue_low`), as do two citations in the map.
+
+### Not changed
+
+- The loop, the ledgers, the recorded runs, the Lean sources and the formal record. No figure of the loop moves.
+
 ## [0.3.1] - 2026-11-24
 
 Corrects the plant model. An independent read of v0.3.0 found five defects in it (issue 14). This version

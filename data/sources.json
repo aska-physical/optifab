@@ -2,10 +2,10 @@
   "schema": "optifab-sources/1",
   "repos": {
     "aska-physical/.github": {
-      "commit": "0289ce8afa209f7ee8679622e2129fe8ace3746f",
+      "commit": "411110265539e803d8453b70de05dee3b92a2864",
       "files": {
         "ETHOS.md": "ce8efe133fa6a73ad33e79bea96188805a9c8ae64fb948476d7bb5f5f8a167e7",
-        "profile/README.md": "a7b39fd11109b67d3c422eaa4106fb986b7f6c51b3952bca7e87fde10d853cb8"
+        "profile/README.md": "b189943a326c95598b21bc75a9ddf9d39c53f9ec16d670419954093ad8ec9140"
       }
     },
     "aska-physical/cfrp-masts": {
@@ -46,13 +46,13 @@
       }
     },
     "aska-physical/funi-frame": {
-      "commit": "97b326d237de5e03a2a227a02f32121005109fb8",
+      "commit": "17d05bb376d0763db22d591431c7394af7a80097",
       "files": {
-        "HANDOFF.md": "07beab173fbe1b0863dc368115ec004f12719cf8e8ef2ee5a077e6e9f1c914cf",
-        "README.md": "2e759144d262be6e0be47b18709a05ca4ec1ff84bbd06244f155f7eb65d825ff",
-        "docs/ENGINEERING_STUDIES.md": "b7205b630444b1f5cf453a0deee4ebe470d5d855e52d678bd8e67a246276bbf7",
-        "results/certificate.json": "92e7bbcea389274d2967e463ec3881ec9311db7786c5e74559defcd936dfb9fa",
-        "verify.py": "cef9e47da460add38618b46fe4478855f80551f2c722dc73c64808375625a57e"
+        "HANDOFF.md": "86a40992560e7422698a68795829d04d5b5c8bec79af7900ea3751aa6f730a36",
+        "README.md": "dd90a682caf945df66c208b8e4d726f870c7cdd2d1f76dbfdb6107ee1ba51af6",
+        "docs/ENGINEERING_STUDIES.md": "6164ddc868cbc4a0baf0a029f00c76e3b2033483d20d2f0f9420397c009a9bbe",
+        "results/certificate.json": "1c57555060c742c6e1eeb6ac8df38b7bf6ad7e3a7770bb851b345cb6ce3f4ede",
+        "verify.py": "429bdc6cbc7c02f1e85d71368dd01de7e6318743190076de0bdccae94488f676"
       }
     },
     "aska-physical/graph-fab": {

@@ -1,11 +1,13 @@
 {
   "repository": "aska-physical/funi-frame",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "symbolic_theorems": {
     "hysteretic_vs_viscous_rolloff": "lim_{r->oo} r*T_hyst = 0 (O(r^-2)) vs. lim_{r->oo} r*T_visc = 2*zeta (O(r^-1))",
     "thermal_bridge_amplification": "U_eff / U_core = 1 + rho_pin * (k_pin / k_ins - 1)",
     "pcm_volumetric_gain_identity": "E_tank / E_water = (1 - phi) + phi * rho_p * (cp_p*dT + L_f) / (rho_w*cp_w*dT)",
-    "self_cooling_liquid_capture_threshold": "alpha_liq* = 1 / (1 + COP_ads)"
+    "self_cooling_liquid_capture_threshold": "alpha_liq* = 1 / (1 + COP_ads)",
+    "sorption_recooling_limit": "COP_ads <= (T_c/(T_a - T_c))*((T_h - T_a)/T_h)  <=>  T_a <= T_c*T_h*(1 + COP_ads)/(COP_ads*T_h + T_c)",
+    "it_power_from_freed_utility_power": "dP_IT = P_freed/PUE if all overhead scales with load; P_freed/(1 + 1/COP_loop) if only the cooling loop does"
   },
   "domain_1_funicular_radiative_roof": {
     "span_m": 24.0,
@@ -63,6 +65,15 @@
     "Q_liquid_w45_MW": 8.5,
     "Q_air_rdhx_MW": 1.5,
     "alpha_liq_critical_for_self_cooling": 0.6173,
+    "cop_ads_design": 0.62,
+    "T_drive_supply_C": 58.0,
+    "T_chilled_water_C": 18.0,
+    "T_recooling_design_C": 30.0,
+    "T_recooling_design_basis": "proposed in v0.1.1; no source cited; awaiting the owner's confirmation",
+    "cop_loop_design": 28.0,
+    "cop_ads_reversible_limit_at_design_recooling": 2.051,
+    "cop_ads_reversible_limit_at_45C_dry_recooling": 0.423,
+    "T_recooling_max_for_design_cop_C": 41.46,
     "Q_drive_for_adsorption_MW": 2.419,
     "adsorption_self_cools_air_load": true,
     "cop_ads_at_32C_air_exhaust": 0.0,
@@ -82,7 +93,19 @@
     "WUE_funi_frame_L_per_kWh": 0.0,
     "potable_water_saved_million_L_yr": 157.68,
     "freed_substation_power_MW": 3.06,
-    "unlocked_annual_revenue_low_M_usd": 76.62
+    "extra_it_power_at_fixed_supply_low_MW": 2.85,
+    "extra_it_power_at_fixed_supply_high_MW": 2.96,
+    "unlocked_annual_revenue_low_M_usd": 71.35,
+    "unlocked_annual_revenue_high_M_usd": 147.95,
+    "unlocked_annual_revenue_pairing": "low = low IT load at 25 M usd per MW-yr; high = high IT load at 50 M usd per MW-yr",
+    "unlocked_annual_revenue_at_25M_usd_per_MW_yr_M_usd": [
+      71.35,
+      73.98
+    ],
+    "unlocked_annual_revenue_at_50M_usd_per_MW_yr_M_usd": [
+      142.69,
+      147.95
+    ]
   },
   "must_fail_controls": {
     "must_fail_01_rolled_steel_24m_rafter_fails_deflection": true,
@@ -96,7 +119,56 @@
     "must_fail_09_plain_water_fails_compact_15min_ridethrough": true,
     "must_fail_10_liion_exceeds_thermal_arbitrage_capex_ceiling": true,
     "must_fail_11_low_grade_air_exhaust_cannot_drive_adsorption": true,
-    "must_fail_12_evaporative_plant_fails_zero_water_and_pue_gate": true
+    "must_fail_12_evaporative_plant_fails_zero_water_and_pue_gate": true,
+    "must_fail_13_dry_recooling_at_45C_cannot_reach_design_adsorption_cop": true,
+    "must_fail_14_freed_utility_power_counted_as_it_power": true
   },
-  "controls_passed": "12/12"
+  "controls_passed": "14/14",
+  "declared_inputs": {
+    "domain_1_funicular_radiative_roof": [
+      "span_m",
+      "vault_depth_mm",
+      "tornado_tiedown_capacity_kN",
+      "noon_radiative_sky_cooling_W_m2"
+    ],
+    "domain_2_vibro_thermal_sandwich_wall": [
+      "nrc_poraver_helmholtz"
+    ],
+    "domain_3_broadband_vibration_cascade": [
+      "oem_switch_limit_g_rms"
+    ],
+    "domain_4_top_down_seismic_cellular_frame": [
+      "risk_cat_iv_drift_limit_pct"
+    ],
+    "domain_5_6_three_tier_tes_and_closed_loop_cooling": [
+      "P_it_MW",
+      "Q_liquid_w45_MW",
+      "Q_air_rdhx_MW",
+      "cop_ads_design",
+      "cop_ads_at_32C_air_exhaust",
+      "T_drive_supply_C",
+      "T_chilled_water_C",
+      "T_recooling_design_C",
+      "cop_loop_design",
+      "basalt_battery_volume_m3",
+      "basalt_media_mass_tonnes",
+      "basalt_media_cost_usd",
+      "annualized_capex_basalt_usd_kWh",
+      "annualized_capex_liion_usd_kWh",
+      "WUE_funi_frame_L_per_kWh"
+    ]
+  },
+  "controls_on_declared_inputs_only": [
+    "must_fail_10_liion_exceeds_thermal_arbitrage_capex_ceiling"
+  ],
+  "controls_resting_partly_on_declared_inputs": {
+    "must_fail_03_tornado_uplift_resisted_without_ballast": "the tie-down capacity it compares the computed uplift against, tornado_tiedown_capacity_kN, is a declared design value",
+    "must_fail_05_bare_concrete_fails_hall_acoustic_absorption": "nrc_poraver_helmholtz is declared as 0.72, and 0.72 is written again as a literal in the reverberation calculation",
+    "must_fail_07_undamped_steel_exceeds_0p0005g_switch_limit": "the limit it compares against, oem_switch_limit_g_rms, is declared from a manufacturer's figure",
+    "must_fail_08_top_heavy_unbraced_frame_fails_risk_cat_iv_drift": "the limit it compares against, risk_cat_iv_drift_limit_pct, is declared from the code",
+    "must_fail_11_low_grade_air_exhaust_cannot_drive_adsorption": "cop_ads_at_32C_air_exhaust is declared as 0.0",
+    "must_fail_12_evaporative_plant_fails_zero_water_and_pue_gate": "WUE_funi_frame_L_per_kWh is declared as 0.0",
+    "must_fail_13_dry_recooling_at_45C_cannot_reach_design_adsorption_cop": "cop_ads_design and T_recooling_design_C are declared, and so are the two temperatures the limits are computed from",
+    "must_fail_14_freed_utility_power_counted_as_it_power": "cop_loop_design is declared"
+  }
 }

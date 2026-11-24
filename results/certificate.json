@@ -1,20 +1,20 @@
 {
   "repository": "aska-physical/optifab",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "inputs": {
     "vendored": {
-      "aska-physical/funi-frame/certificate.json": "92e7bbcea389274d2967e463ec3881ec9311db7786c5e74559defcd936dfb9fa",
+      "aska-physical/funi-frame/certificate.json": "1c57555060c742c6e1eeb6ac8df38b7bf6ad7e3a7770bb851b345cb6ce3f4ede",
       "aska-physical/funi-floors/certificate.json": "85878c416fed3c290c1321ec0dc27af5a152d8ca4d264b8f802add2e5995d186",
       "aska-physical/venturi-collars/certificate.json": "c93eb98b2431b2b733cb1702594c5dc1e00a77fc811d663cea561f20cb0c0170",
       "Moissanite-Labs/weft/vectors.json": "bdc25776f32b0ed0cdaab4e413bed4a906f20193536724e60a7fba09c9965bcf",
       "Moissanite-Labs/weft/invariants.py": "1064b0f8170c7b4dd2099a9412df2b50f301da003d61a5b07f842f26646612e4"
     },
     "data": {
-      "pins.json": "acb6db126f4fdf3901c6f9f64a9b2d03ee4edc48ec863ccfb170d14604e96d54",
-      "graph.json": "3c0a2dd368a0f223c6aea43b621e131461037425001eb6bceaa7742b25034966",
-      "sources.json": "0ec0cfd7d8aa05ab7a51fb77ac8e91fb06dc44ce66ee6333ed965f7368ecc2d6",
-      "unit.json": "03784c1cb82610ce65998c4805b9c2a8364582aea70637cf8c91b0bac33cb861",
-      "upstream/MANIFEST.json": "9dd0e7efbb39fb37bc542f86751becb3a6dc46fd348737e2b040a24598238541"
+      "pins.json": "4f03bcfe6f63b72be420287266594794246f26180135c228eaa816dcb04ebce1",
+      "graph.json": "cc482559f05b2744286fe12d9e3ef7d6175650d36bab105e93fd7da2b6fa7d95",
+      "sources.json": "0cee12805e06c163ed71b1aa4c6d3873cecadb39956b348f4b7b5a0a0c5a3373",
+      "unit.json": "701e3455a2c61208521549f509fc44b3ec76d778ddc42f9c3f25ebafaff397ad",
+      "upstream/MANIFEST.json": "f460dbc7e4be9e7a69fe6da14265d5f82dec62bebeb7a9e634f8fdb85c2ebd2c"
     },
     "pinned_repositories": 36,
     "pinned_lines": 46
@@ -43,15 +43,20 @@
       "extra_it_if_auxiliaries_are_fixed_MW": 2.959,
       "one_over_PUE_funi": 0.9312,
       "marginal_PUE_with_fixed_auxiliaries": 1.0357,
-      "certificate_revenue_low_M_usd": 76.62,
+      "certificate_revenue_low_M_usd": 71.35,
       "revenue_low_on_extra_it_M_usd": [
         71.35,
         73.97
       ],
-      "revenue_overstatement_pct": [
+      "revenue_overstatement_in_funi_frame_v0_1_0_pct": [
         3.6,
         7.4
-      ]
+      ],
+      "certificate_extra_it_power_MW": [
+        2.85,
+        2.96
+      ],
+      "agrees_with_certificate": true
     },
     "second_law": {
       "T_drive_C": 58.0,
@@ -82,7 +87,12 @@
         0.302,
         0.382
       ],
-      "certificate_has_a_recooling_field": false
+      "certificate_has_a_recooling_field": true,
+      "certificate_recooling_design_C": 30.0,
+      "certificate_recooling_design_basis": "proposed in v0.1.1; no source cited; awaiting the owner's confirmation",
+      "certificate_max_recooling_C": 41.46,
+      "certificate_chilled_water_C": 18.0,
+      "agrees_with_certificate": true
     },
     "minimum_load": {
       "liquid_capture_fraction": 0.85,
@@ -930,8 +940,8 @@
     "round_trip_max_error": 2.7e-08,
     "design_frame_sha256": "f55b63b5f5ff447e6e99e2e0e14033fab0dbeeb1da6024d9763418a22b617b17",
     "contract_check": {
-      "design point, recooling at 30 C": [],
-      "design point as certified, no recooling temperature": [
+      "design point as certified, recooling at its design value": [],
+      "frame with no recooling temperature": [
         "recooling_not_measured"
       ],
       "idle campus at 0.3 MW": [
@@ -1128,7 +1138,7 @@
     "scanner_finds_a_planted_assert": true
   },
   "must_fail_controls": {
-    "must_fail_01_upstream_revenue_is_computed_on_it_power": true,
+    "must_fail_01_freed_utility_power_counted_as_it_power_upstream": true,
     "must_fail_02_recooling_at_45C_keeps_the_claimed_cop_within_the_second_law": true,
     "must_fail_03_capture_below_the_threshold_self_cools_at_some_load": true,
     "must_fail_04_capture_one_point_above_the_threshold_self_cools_at_nameplate": true,
@@ -1143,7 +1153,7 @@
     "must_fail_13_corrupted_weft_vector_goes_unnoticed": true,
     "must_fail_14_drift_in_a_hand_copied_constant_goes_unnoticed": true,
     "must_fail_15_slow_loop_counters_a_plant_tone_within_its_cycle": true,
-    "must_fail_16_certified_design_point_fills_a_frame_without_a_recooling_temperature": true,
+    "must_fail_16_frame_without_a_recooling_temperature_passes_the_contract": true,
     "must_fail_17_frame_past_a_limit_or_below_the_floor_passes_the_contract": true,
     "must_fail_18_repository_left_out_of_the_unit_goes_unnoticed": true,
     "must_fail_19_gate_with_a_different_rounding_passes_the_differential_test": true,

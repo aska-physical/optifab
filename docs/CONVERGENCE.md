@@ -29,7 +29,7 @@ Each status below is the repository's own, in its own words or a close paraphras
 | [aska-physical/cfrp-masts](https://github.com/aska-physical/cfrp-masts) | Deployable CFRP booms and masts. | Certificate version 1.0.0 with 5 must-fail controls. The organisation profile lists it as v0.1.0. ([cfrp-masts/results/certificate.json:2](https://github.com/aska-physical/cfrp-masts/blob/a12b665f2baf32a8d6499ef39c296ef9fe78f630/results/certificate.json#L2)) | `a12b665` |
 | [aska-physical/cfrp-strengthening](https://github.com/aska-physical/cfrp-strengthening) | Re-runnable ACI 440.2R beam strengthening example, the baseline cfrp-truss improves on. It was Foundation-0/cfrp-strengthening, and that address now leads here. | v1.0.0. Agent review recorded. No outside human engineering review. ([cfrp-strengthening/docs/review-ledger.md:12](https://github.com/aska-physical/cfrp-strengthening/blob/3f68cccf19556574b7652311be1b0dc0daa93144/docs/review-ledger.md#L12)) | `3f68ccc` |
 | [aska-physical/cfrp-truss](https://github.com/aska-physical/cfrp-truss) | Truss-anchored CFRP strengthening of concrete beams. | v0.3.0. Certificate with 12 must-fail controls. ([cfrp-truss/README.md:37](https://github.com/aska-physical/cfrp-truss/blob/3c11631e223b71227531d10286abd71bc04d67b7/README.md#L37)) | `3c11631` |
-| [aska-physical/fibral-rigidity](https://github.com/aska-physical/fibral-rigidity) | Stiffness limits of carbon-fibre truss lattices built on the incentre framework. | Claims labelled PROVEN and VERIFIED in the repository. Pull request 1 is merged; the org profile still lists it as awaiting sign-off. ([.github/profile/README.md:17](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L17)) | `0652052` |
+| [aska-physical/fibral-rigidity](https://github.com/aska-physical/fibral-rigidity) | Stiffness limits of carbon-fibre truss lattices built on the incentre framework. | Claims labelled PROVEN and VERIFIED in the repository. Pull request 1 is merged; the org profile still lists it as awaiting sign-off. ([.github/profile/README.md:18](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L18)) | `0652052` |
 | [aska-physical/funi-floors](https://github.com/aska-physical/funi-floors) | Funicular floor cassette for 313 psf rack loads, with an impedance leak sensor in the ribs. | v0.1.0. Certificate with 10 must-fail controls. No review is recorded. ([funi-floors/README.md:34](https://github.com/aska-physical/funi-floors/blob/00eba18ceea0adf69f7dc12ca47d151622faa32a/README.md#L34)) | `00eba18` |
 | [aska-physical/graph-fab](https://github.com/aska-physical/graph-fab) | Research into graphene materials. | README only. ([graph-fab/README.md:2](https://github.com/aska-physical/graph-fab/blob/d669f233212ee0f2a7d59e60b0f3bdc9781f8a99/README.md#L2)) | `d669f23` |
 
@@ -37,15 +37,15 @@ Each status below is the repository's own, in its own words or a close paraphras
 
 | Repository | What it is | Status | Pinned |
 |---|---|---|---|
-| [aska-physical/funi-frame](https://github.com/aska-physical/funi-frame) | Data-centre shell and thermal plant for a 10 MW reference campus: roof, walls, vibration isolation, seismic frame, heat storage, sorption cooling. | v0.1.0. verify.py reproduces the certificate, 12/12 must-fail controls. No review or built plant is recorded. ([funi-frame/README.md:33](https://github.com/aska-physical/funi-frame/blob/97b326d237de5e03a2a227a02f32121005109fb8/README.md#L33)) | `97b326d` |
+| [aska-physical/funi-frame](https://github.com/aska-physical/funi-frame) | Data-centre shell and thermal plant for a 10 MW reference campus: roof, walls, vibration isolation, seismic frame, heat storage, sorption cooling. | v0.1.1. verify.py reproduces the certificate, 14/14 must-fail controls. Its changes were reviewed by the organisation's review agents. No person's sign-off or built plant is recorded. ([funi-frame/README.md:34](https://github.com/aska-physical/funi-frame/blob/17d05bb376d0763db22d591431c7394af7a80097/README.md#L34)) | `17d05bb` |
 | [aska-physical/optifab](https://github.com/aska-physical/optifab) | This repository. One reference campus as a checked stack, with a contract between the plant and the workload. | v0.1.0, claimed. Written by an AI agent. No person has reviewed it. | this repository |
 
 ### L3. Sensing
 
 | Repository | What it is | Status | Pinned |
 |---|---|---|---|
-| [aska-physical/impedence-analyzers](https://github.com/aska-physical/impedence-analyzers) | Seven-frequency impedance analyser for structural and leak sensing. | v0.1.0. Certificate with 5 must-fail controls. ([.github/profile/README.md:16](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L16)) | `ed0a5e1` |
-| [aska-physical/venturi-collars](https://github.com/aska-physical/venturi-collars) | Battery-free airflow harvester that powers a duct sensor node. | v0.1.0. Certificate with 5 must-fail controls. No device built. ([.github/profile/README.md:15](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L15)) | `d53f85a` |
+| [aska-physical/impedence-analyzers](https://github.com/aska-physical/impedence-analyzers) | Seven-frequency impedance analyser for structural and leak sensing. | v0.1.0. Certificate with 5 must-fail controls. ([.github/profile/README.md:17](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L17)) | `ed0a5e1` |
+| [aska-physical/venturi-collars](https://github.com/aska-physical/venturi-collars) | Battery-free airflow harvester that powers a duct sensor node. | v0.1.0. Certificate with 5 must-fail controls. No device built. ([.github/profile/README.md:16](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L16)) | `d53f85a` |
 
 ### L4. Compute and adaptive models
 
@@ -73,7 +73,7 @@ Each status below is the repository's own, in its own words or a close paraphras
 
 | Repository | What it is | Status | Pinned |
 |---|---|---|---|
-| [aska-physical/.github](https://github.com/aska-physical/.github) | The group ethos and the organisation profile that indexes every repository. | Standing directive, recorded 2026-11-10. ([.github/ETHOS.md:3](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/ETHOS.md#L3)) | `0289ce8` |
+| [aska-physical/.github](https://github.com/aska-physical/.github) | The group ethos and the organisation profile that indexes every repository. | Standing directive, recorded 2026-11-10. ([.github/ETHOS.md:3](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/ETHOS.md#L3)) | `4111102` |
 | [aska-physical/dock](https://github.com/aska-physical/dock) | The organisation's public hub page. It lists the org's repositories live from the GitHub API. | Published site. ([dock/index.html:789](https://github.com/aska-physical/dock/blob/ce4135b88139fb63372279015cecc77c6b89f364/index.html#L789)) | `ce4135b` |
 | [Foundation-0/.github](https://github.com/Foundation-0/.github) | Repository standard and label standard: PROVEN, VERIFIED, KNOWN, CONJECTURE. | Standard in force for Foundation-0 repositories. ([.github/REPO-STANDARD.md:64](https://github.com/Foundation-0/.github/blob/81f83c38918382b4ca142b81debd3cc5ccf61d3a/REPO-STANDARD.md#L64)) | `81f83c3` |
 | [Foundation-0/f0](https://github.com/Foundation-0/f0) | The Ledger of AI-assisted advances, the charter, and the rules for agents. Source of the evidence scale used here. | Active. 343 Ledger entries. ([f0/README.md:27](https://github.com/Foundation-0/f0/blob/9a37134750174339c53121939838ce62ab8af630/README.md#L27)) | `9a37134` |
@@ -103,7 +103,7 @@ Before this version the graph holds 0 links between aska-physical and Moissanite
 
 | From | To | Type | Stated at | Note |
 |---|---|---|---|---|
-| aska-physical/funi-frame | aska-physical/optifab | `consumes` | [funi-frame/verify.py:144](https://github.com/aska-physical/funi-frame/blob/97b326d237de5e03a2a227a02f32121005109fb8/verify.py#L144) | Certificate vendored; verifier literals pinned. |
+| aska-physical/funi-frame | aska-physical/optifab | `consumes` | [funi-frame/verify.py:198](https://github.com/aska-physical/funi-frame/blob/17d05bb376d0763db22d591431c7394af7a80097/verify.py#L198) | Certificate vendored; verifier literals pinned. |
 | aska-physical/funi-floors | aska-physical/optifab | `consumes` | [funi-floors/results/certificate.json:61](https://github.com/aska-physical/funi-floors/blob/00eba18ceea0adf69f7dc12ca47d151622faa32a/results/certificate.json#L61) | Certificate vendored for the margin vector and the interface checks. |
 | aska-physical/venturi-collars | aska-physical/optifab | `consumes` | [venturi-collars/README.md:21](https://github.com/aska-physical/venturi-collars/blob/d53f85a35d17a7bd46d0b5320c8879fc9f381978/README.md#L21) | Certificate vendored for the sensing-power margin. |
 | Moissanite-Labs/weft | aska-physical/optifab | `consumes` | [weft/weft/runtime/invariants/invariants.py:95](https://github.com/Moissanite-Labs/weft/blob/df4f9fa45640d7ee840f4529025a9a556d98684c/weft/runtime/invariants/invariants.py#L95) | The gate predicate is re-implemented here, tested on Weft's vectors and checked against Weft's own function on generated inputs. |
@@ -115,15 +115,15 @@ Before this version the graph holds 0 links between aska-physical and Moissanite
 | From | To | Type | Stated at | Note |
 |---|---|---|---|---|
 | Foundation-0/incentre-lattices | aska-physical/fibral-rigidity | `builds_on` | [fibral-rigidity/README.md:5](https://github.com/aska-physical/fibral-rigidity/blob/06520520dff2e956715f18cfa3ba10e7ee83487b/README.md#L5) |  |
-| Foundation-0/nhanes-bioimpedance | aska-physical/cfrp-truss | `stated` | [.github/profile/README.md:13](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L13) |  |
-| Foundation-0/incentre-lattices | aska-physical/cfrp-masts | `stated` | [.github/profile/README.md:14](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L14) |  |
-| Foundation-0/rigid-realizations | aska-physical/cfrp-masts | `stated` | [.github/profile/README.md:14](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L14) |  |
-| Foundation-0/ductricity | aska-physical/venturi-collars | `direction` | [.github/profile/README.md:15](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L15) | The upstream is a project definition with no results, so nothing is inherited but the question. |
-| Foundation-0/thermal-capture | aska-physical/venturi-collars | `direction` | [.github/profile/README.md:15](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L15) | The upstream is a research direction with no results. |
-| Foundation-0/nhanes-bioimpedance | aska-physical/impedence-analyzers | `stated` | [.github/profile/README.md:16](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L16) |  |
-| Foundation-0/point-charges | aska-physical/impedence-analyzers | `stated` | [.github/profile/README.md:16](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L16) |  |
+| Foundation-0/nhanes-bioimpedance | aska-physical/cfrp-truss | `stated` | [.github/profile/README.md:14](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L14) |  |
+| Foundation-0/incentre-lattices | aska-physical/cfrp-masts | `stated` | [.github/profile/README.md:15](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L15) |  |
+| Foundation-0/rigid-realizations | aska-physical/cfrp-masts | `stated` | [.github/profile/README.md:15](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L15) |  |
+| Foundation-0/ductricity | aska-physical/venturi-collars | `direction` | [.github/profile/README.md:16](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L16) | The upstream is a project definition with no results, so nothing is inherited but the question. |
+| Foundation-0/thermal-capture | aska-physical/venturi-collars | `direction` | [.github/profile/README.md:16](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L16) | The upstream is a research direction with no results. |
+| Foundation-0/nhanes-bioimpedance | aska-physical/impedence-analyzers | `stated` | [.github/profile/README.md:17](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L17) |  |
+| Foundation-0/point-charges | aska-physical/impedence-analyzers | `stated` | [.github/profile/README.md:17](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L17) |  |
 | Foundation-0/incentre-lattices | aska-physical/impedence-analyzers | `builds_on` | [impedence-analyzers/README.md:23](https://github.com/aska-physical/impedence-analyzers/blob/ed0a5e10e87e231262af697cb183aa8aa570ca83/README.md#L23) |  |
-| Foundation-0/f0 | aska-physical/.github | `mentions` | [.github/profile/README.md:5](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L5) | The aska-physical profile says the organisation turns Foundation-0 results into products. |
+| Foundation-0/f0 | aska-physical/.github | `mentions` | [.github/profile/README.md:5](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L5) | The aska-physical profile says the organisation turns Foundation-0 results into products. |
 | Foundation-0/.github | aska-physical/fibral-rigidity | `governs` | [fibral-rigidity/README.md:17](https://github.com/aska-physical/fibral-rigidity/blob/06520520dff2e956715f18cfa3ba10e7ee83487b/README.md#L17) | fibral-rigidity labels its claims by the Foundation-0 repository standard. |
 | Foundation-0/f0 | Proven-Commons/mission | `governs` | [mission/README.md:5](https://github.com/Proven-Commons/mission/blob/7b22e542f0db0f3013ab1439cf5d1947676a5083/README.md#L5) |  |
 | Foundation-0/project-asma | Moissanite-Labs/weft | `builds_on` | [weft/weft/runtime/plasm/identifiability_gate.py:7](https://github.com/Moissanite-Labs/weft/blob/df4f9fa45640d7ee840f4529025a9a556d98684c/weft/runtime/plasm/identifiability_gate.py#L7) | Weft adapted two theorems into its identifiability gate. That module is separate from the gate optifab uses. |
@@ -138,19 +138,19 @@ Before this version the graph holds 0 links between aska-physical and Moissanite
 
 | From | To | Type | Stated at | Note |
 |---|---|---|---|---|
-| aska-physical/cfrp-strengthening | aska-physical/cfrp-truss | `stated` | [.github/profile/README.md:13](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L13) |  |
-| aska-physical/fibral-rigidity | aska-physical/cfrp-truss | `stated` | [.github/profile/README.md:13](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L13) |  |
-| aska-physical/fibral-rigidity | aska-physical/cfrp-masts | `stated` | [.github/profile/README.md:14](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L14) |  |
-| aska-physical/fibral-rigidity | aska-physical/funi-floors | `stated` | [.github/profile/README.md:12](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L12) |  |
-| aska-physical/cfrp-truss | aska-physical/funi-floors | `stated` | [.github/profile/README.md:12](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L12) |  |
-| aska-physical/venturi-collars | aska-physical/funi-floors | `stated` | [.github/profile/README.md:12](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L12) |  |
-| aska-physical/impedence-analyzers | aska-physical/funi-floors | `stated` | [.github/profile/README.md:12](https://github.com/aska-physical/.github/blob/0289ce8afa209f7ee8679622e2129fe8ace3746f/profile/README.md#L12) |  |
-| aska-physical/funi-floors | aska-physical/funi-frame | `builds_on` | [funi-frame/README.md:5](https://github.com/aska-physical/funi-frame/blob/97b326d237de5e03a2a227a02f32121005109fb8/README.md#L5) |  |
-| aska-physical/cfrp-truss | aska-physical/funi-frame | `stated` | [funi-frame/README.md:5](https://github.com/aska-physical/funi-frame/blob/97b326d237de5e03a2a227a02f32121005109fb8/README.md#L5) |  |
-| aska-physical/fibral-rigidity | aska-physical/funi-frame | `stated` | [funi-frame/README.md:5](https://github.com/aska-physical/funi-frame/blob/97b326d237de5e03a2a227a02f32121005109fb8/README.md#L5) |  |
-| aska-physical/venturi-collars | aska-physical/funi-frame | `stated` | [funi-frame/README.md:5](https://github.com/aska-physical/funi-frame/blob/97b326d237de5e03a2a227a02f32121005109fb8/README.md#L5) |  |
-| aska-physical/impedence-analyzers | aska-physical/funi-frame | `stated` | [funi-frame/README.md:5](https://github.com/aska-physical/funi-frame/blob/97b326d237de5e03a2a227a02f32121005109fb8/README.md#L5) |  |
-| aska-physical/funi-floors | aska-physical/funi-frame | `consumes` | [funi-frame/verify.py:125](https://github.com/aska-physical/funi-frame/blob/97b326d237de5e03a2a227a02f32121005109fb8/verify.py#L125) | A value copied by hand into the downstream verifier. optifab now checks it against the upstream certificate. |
+| aska-physical/cfrp-strengthening | aska-physical/cfrp-truss | `stated` | [.github/profile/README.md:14](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L14) |  |
+| aska-physical/fibral-rigidity | aska-physical/cfrp-truss | `stated` | [.github/profile/README.md:14](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L14) |  |
+| aska-physical/fibral-rigidity | aska-physical/cfrp-masts | `stated` | [.github/profile/README.md:15](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L15) |  |
+| aska-physical/fibral-rigidity | aska-physical/funi-floors | `stated` | [.github/profile/README.md:13](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L13) |  |
+| aska-physical/cfrp-truss | aska-physical/funi-floors | `stated` | [.github/profile/README.md:13](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L13) |  |
+| aska-physical/venturi-collars | aska-physical/funi-floors | `stated` | [.github/profile/README.md:13](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L13) |  |
+| aska-physical/impedence-analyzers | aska-physical/funi-floors | `stated` | [.github/profile/README.md:13](https://github.com/aska-physical/.github/blob/411110265539e803d8453b70de05dee3b92a2864/profile/README.md#L13) |  |
+| aska-physical/funi-floors | aska-physical/funi-frame | `builds_on` | [funi-frame/README.md:5](https://github.com/aska-physical/funi-frame/blob/17d05bb376d0763db22d591431c7394af7a80097/README.md#L5) |  |
+| aska-physical/cfrp-truss | aska-physical/funi-frame | `stated` | [funi-frame/README.md:5](https://github.com/aska-physical/funi-frame/blob/17d05bb376d0763db22d591431c7394af7a80097/README.md#L5) |  |
+| aska-physical/fibral-rigidity | aska-physical/funi-frame | `stated` | [funi-frame/README.md:5](https://github.com/aska-physical/funi-frame/blob/17d05bb376d0763db22d591431c7394af7a80097/README.md#L5) |  |
+| aska-physical/venturi-collars | aska-physical/funi-frame | `stated` | [funi-frame/README.md:5](https://github.com/aska-physical/funi-frame/blob/17d05bb376d0763db22d591431c7394af7a80097/README.md#L5) |  |
+| aska-physical/impedence-analyzers | aska-physical/funi-frame | `stated` | [funi-frame/README.md:5](https://github.com/aska-physical/funi-frame/blob/17d05bb376d0763db22d591431c7394af7a80097/README.md#L5) |  |
+| aska-physical/funi-floors | aska-physical/funi-frame | `consumes` | [funi-frame/verify.py:175](https://github.com/aska-physical/funi-frame/blob/17d05bb376d0763db22d591431c7394af7a80097/verify.py#L175) | A value copied by hand into the downstream verifier. optifab now checks it against the upstream certificate. |
 | Moissanite-Labs/weft-corpus | Moissanite-Labs/weft | `builds_on` | [weft/weft/runtime/invariants/invariants.py:11](https://github.com/Moissanite-Labs/weft/blob/df4f9fa45640d7ee840f4529025a9a556d98684c/weft/runtime/invariants/invariants.py#L11) | Weft's gate was repaired from a header first written, in the Terrafab documents, as a fence for physical machines. |
 | Moissanite-Labs/weft | Moissanite-Labs/weft-loom | `builds_on` | [weft/README.md:35](https://github.com/Moissanite-Labs/weft/blob/df4f9fa45640d7ee840f4529025a9a556d98684c/README.md#L35) |  |
 | Moissanite-Labs/weft | Moissanite-Labs/siliquant | `mentions` | [siliquant/README.md:3](https://github.com/Moissanite-Labs/siliquant/blob/ba3a7333e9ccb99e35a74655b8d08699600adecd/README.md#L3) |  |
@@ -202,14 +202,14 @@ These were read in the same pass. They are listed so the next reader does not re
 
 | Repository | Commit |
 |---|---|
-| aska-physical/.github | `0289ce8afa209f7ee8679622e2129fe8ace3746f` |
+| aska-physical/.github | `411110265539e803d8453b70de05dee3b92a2864` |
 | aska-physical/cfrp-masts | `a12b665f2baf32a8d6499ef39c296ef9fe78f630` |
 | aska-physical/cfrp-strengthening | `3f68cccf19556574b7652311be1b0dc0daa93144` |
 | aska-physical/cfrp-truss | `3c11631e223b71227531d10286abd71bc04d67b7` |
 | aska-physical/dock | `ce4135b88139fb63372279015cecc77c6b89f364` |
 | aska-physical/fibral-rigidity | `06520520dff2e956715f18cfa3ba10e7ee83487b` |
 | aska-physical/funi-floors | `00eba18ceea0adf69f7dc12ca47d151622faa32a` |
-| aska-physical/funi-frame | `97b326d237de5e03a2a227a02f32121005109fb8` |
+| aska-physical/funi-frame | `17d05bb376d0763db22d591431c7394af7a80097` |
 | aska-physical/graph-fab | `d669f233212ee0f2a7d59e60b0f3bdc9781f8a99` |
 | aska-physical/impedence-analyzers | `ed0a5e10e87e231262af697cb183aa8aa570ca83` |
 | aska-physical/venturi-collars | `d53f85a35d17a7bd46d0b5320c8879fc9f381978` |
