@@ -47,6 +47,16 @@
     "pcm_kwh": 5000
    },
    "why": "At full capture the sorption margin would be 121003 and the load floor margin 668868, with the objective unchanged, so capture frees room without paying anything itself. This is another probe that I expect to be refused for distance because of the large store. I want to see what the wall value does to the margins and the objective at the far end of its range."
+  },
+  {
+   "set": {
+    "pcm_kwh": 5000,
+    "capture_ppm": 950000,
+    "wall_u_mw": 100,
+    "floor_kw": 392,
+    "shed_ppm": 0
+   },
+   "why": "A leaky wall raised all three margins and did nothing for the objective, so I want the tightest wall. This is the design I am aiming for, and I expect it to be refused for distance from here. I want to check my fitted margin formulas at that point and see what objective it would give before I plan the steps."
   }
  ]
 }
