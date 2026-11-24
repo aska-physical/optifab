@@ -1,8 +1,10 @@
 # Notes left by the first recorded proposer
 
-These are the words of the language model that made the run in `results/model_run.json`, copied from its
+Recorded against the model of v0.3.0, which v0.3.1 corrects. Kept as it was.
+
+These are the words of the language model that made the run in `results/v0.3.0/model_run.json`, copied from its
 closing report without change. It wrote them after its last proposal, having seen only the output of
-`tools/propose.py`. The second recorded run (`results/model_run_2.json`) was given this file and nothing else
+`tools/propose.py`. The second recorded run (`results/v0.3.0/model_run_2.json`) was given this file and nothing else
 beyond that same output. Nothing here is checked: it is what one proposer inferred from 11 decisions.
 
 ## What I worked out

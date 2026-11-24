@@ -48,6 +48,7 @@ def show(run: dict, pl: dict) -> str:
     out = ["THE LOOP", "",
            "You hold one design of a data-centre campus and may propose another. Gene values are whole numbers.",
            "A proposal is taken up, with the verdict `ok`, when:",
+           "  0. it differs from the design held (if not, the verdict is `same`);",
            "  1. every gene is within its bounds (if not, the verdict is `bounds`);",
            "  2. the margin vector moves no farther than the radius, as a straight-line distance over all",
            "     margins (if not, `distance`). The radius is the headroom of the design held: the smallest gap",

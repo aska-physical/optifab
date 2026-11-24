@@ -167,10 +167,10 @@ def coolGain (p : Plant) (g : Genome) : Int :=
 /-- The fixed heat load, in the unit of `coolGain p g * g.floor`. -/
 def floorNum (p : Plant) (g : Genome) : Int := qFix p g * 1000
 
-/-- IT heat the store must take in one outage, after shedding. The fixed
-    heat load is not counted here. -/
+/-- Heat the store must take in one outage: the IT load that is not shed,
+    plus the fixed heat load, for the length of the outage. -/
 def outageNum (p : Plant) (sc : Scenario) (g : Genome) : Int :=
-  p.pIt * (1000000 - g.shed) * sc.outMin
+  (p.pIt * (1000000 - g.shed) + qFix p g) * sc.outMin
 
 /-- What the store holds, in the unit of `outageNum`. -/
 def outageDen (g : Genome) : Int := 60000000000 * g.pcm
@@ -198,7 +198,9 @@ def utility (p : Plant) (x : Int) : Int :=
 
 /-- The objective: useful IT energy over utility energy for the scenario
     year, in parts per million and rounded down. Load the scheduler adds
-    to reach its floor is not useful. Load shed in an outage is lost. -/
+    to reach its floor is not useful. Load shed in an outage is lost, and
+    only the utility power that the shed load would have drawn is saved:
+    the part of utility power that does not depend on load runs on. -/
 def objective (p : Plant) (sc : Scenario) (g : Genome) : Int :=
   let full := p.pIt * 1000000
   let low := sc.lowPpm * p.pIt
@@ -208,7 +210,8 @@ def objective (p : Plant) (sc : Scenario) (g : Genome) : Int :=
   let tLow := sc.lowH * 60
   let tOut := sc.outMin * sc.nOut
   let useful := full * tFull + low * tLow - shedP * tOut
-  let used := utility p full * tFull + utility p itLow * tLow - utility p shedP * tOut
+  let used := utility p full * tFull + utility p itLow * tLow
+    - (utility p full - utility p (full - shedP)) * tOut
   if used ≤ 0 then 0 else (1000000 * useful * p.loopCop) / used
 
 /-- Whether `x` lies from `lo` to `hi`. -/
@@ -227,10 +230,12 @@ def inBounds (lo hi g : Genome) : Bool :=
 def judge (p : Plant) (sc : Scenario) (limit : Int) (s : Genome × Int) (cand : Genome) : Outcome :=
   gate (margins p sc s.1) (margins p sc cand) (headroom limit (margins p sc s.1)) s.2 1
 
-/-- Whether a proposed design is taken up. It must lie within the bounds,
-    pass the gate, and not lower the objective. -/
+/-- Whether a proposed design is taken up. It must differ from the design
+    held, lie within the bounds, pass the gate, and not lower the
+    objective. -/
 def accepts (p : Plant) (sc : Scenario) (limit : Int) (s : Genome × Int) (cand : Genome) : Bool :=
-  inBounds p.lo p.hi cand && decide ((judge p sc limit s cand).verdict = Verdict.ok)
+  decide (cand ≠ s.1) && inBounds p.lo p.hi cand
+    && decide ((judge p sc limit s cand).verdict = Verdict.ok)
     && decide (objective p sc s.1 ≤ objective p sc cand)
 
 /-- One generation over designs. A design that is taken up becomes the
@@ -263,7 +268,8 @@ def DriveHeatSuffices (p : Plant) (g : Genome) : Prop :=
 def SelfCoolsAtFloor (p : Plant) (g : Genome) : Prop :=
   0 < coolGain p g ∧ 0 < g.floor ∧ floorNum p g ≤ coolGain p g * g.floor
 
-/-- The store holds the IT heat of one outage, after shedding. -/
+/-- The store holds the heat of one outage: the IT load not shed and the
+    fixed heat load. -/
 def RidesThrough (p : Plant) (sc : Scenario) (g : Genome) : Prop :=
   0 < outageDen g ∧ outageNum p sc g ≤ outageDen g
 

@@ -297,7 +297,7 @@ theorem step_cases (p : Plant) (sc : Scenario) (limit : Int) (s : Genome × Int)
     have h' := h
     simp only [accepts, Bool.and_eq_true, decide_eq_true_eq] at h'
     have j := judge_ok p sc limit s cand h'.1.2
-    refine ⟨h, ?_, h'.1.1, j.1, j.2.2, h'.2⟩
+    refine ⟨h, ?_, h'.1.1.2, j.1, j.2.2, h'.2⟩
     simp [step, h, j.2.1]
   · right
     have h2 : accepts p sc limit s cand = false := by simpa using h
@@ -307,6 +307,7 @@ end PlantGate.Proofs
 
 theorem PlantGate.Spec.step_complete (p : Plant) (sc : Scenario) (limit : Int)
     (s : Genome × Int) (cand : Genome)
+    (hne : cand ≠ s.1)
     (hb : 0 < s.2) (hin : inBounds p.lo p.hi cand = true)
     (hw : ∀ x ∈ margins p sc s.1, x ≤ limit)
     (hd : distSq (margins p sc s.1) (margins p sc cand)
@@ -318,11 +319,16 @@ theorem PlantGate.Spec.step_complete (p : Plant) (sc : Scenario) (limit : Int)
     exact PlantGate.Spec.gate_complete _ _ _ _ _ (by omega) (by omega) (margins_ne_nil p sc s.1)
       (margins_length p sc s.1 cand) (headroom_nonneg limit _ hw) hd
   have ha : accepts p sc limit s cand = true := by
-    simp [accepts, hin, hv, ho]
+    simp [accepts, hin, hv, ho, hne]
   rcases step_cases p sc limit s cand with ⟨_, e, _⟩ | ⟨hf, _⟩
   · exact e
   · rw [ha] at hf
     exact absurd hf (by simp)
+
+theorem PlantGate.Spec.same_design_not_taken_up (p : Plant) (sc : Scenario) (limit : Int)
+    (s : Genome × Int) :
+    accepts p sc limit s s.1 = false := by
+  simp [accepts]
 
 theorem PlantGate.Spec.step_refusal_changes_nothing (p : Plant) (sc : Scenario) (limit : Int)
     (s : Genome × Int) (cand : Genome)

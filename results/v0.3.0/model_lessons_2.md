@@ -1,8 +1,10 @@
 # Notes left by the second recorded proposer
 
-These are the words of the language model that made the run in `results/model_run_2.json`, copied from its
+Recorded against the model of v0.3.0, which v0.3.1 corrects. Kept as it was.
+
+These are the words of the language model that made the run in `results/v0.3.0/model_run_2.json`, copied from its
 closing report without change. It had no memory of the first run. It was given the output of
-`tools/propose.py` and the first proposer's notes in `results/model_lessons.md`. No third run has been made.
+`tools/propose.py` and the first proposer's notes in `results/v0.3.0/model_lessons.md`. No third run has been made.
 Nothing here is checked: it is what one proposer inferred from 4 decisions and the earlier notes.
 
 ## Earlier notes: what I relied on and how it held up
