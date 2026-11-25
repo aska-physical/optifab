@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import ast
 import copy
+import decimal
 from fractions import Fraction
 import json
 from pathlib import Path
@@ -23,6 +24,7 @@ from optifab.q import (  # noqa: E402
     Inertia,
     MAX_DEPTH,
     MAX_INPUT_BITS,
+    MAX_INT_DIGITS,
     MAX_NODES,
     MAX_PREC_BITS,
     MAX_TERMS,
@@ -314,6 +316,72 @@ class TestIntervalEnclosures(unittest.TestCase):
         with self.assertRaises(QError):
             qi_pow(QI.point(Fraction(-2)), QI.point(Fraction(2)))
 
+        # L3 domain-asymmetry contract: ln_q accepts 10^300 (ln ~ 690.77 > 500), while qi_exp refuses |y| > 500.
+        ln_1e300 = ln_q(q_from_str("1" + "0" * 300))
+        self.assertGreater(ln_1e300.lo, Fraction(500))
+        with self.assertRaises(QError) as ctx_asym:
+            qi_exp(ln_1e300)
+        self.assertEqual(ctx_asym.exception.code, "RANGE_ERROR")
+
+    def test_small_terms_remainder_enclosure_and_decimal_oracle(self) -> None:
+        """Kills M01 (dropped Taylor/atanh remainder tail at small terms=4..8) and ships L2 independent Decimal oracle."""
+        with decimal.localcontext() as ctx:
+            ctx.prec = 130
+
+            def _q_to_dec(q: Fraction) -> decimal.Decimal:
+                return decimal.Decimal(q.numerator) / decimal.Decimal(q.denominator)
+
+            # Small-terms containment (terms=4, 6, 8 at prec_bits=128) MUST enclose both the 130-digit
+            # Decimal transcendental value AND the high-order (terms=40, prec_bits=256) rational enclosure.
+            # At terms=4 on x=1/2, the bare Taylor partial sum is 211/128 = 1.6484375 < exp(1/2) = 1.64872127...,
+            # so dropping `tail` in `_exp_small_nonneg` immediately violates `iv.hi >= dec_val` and `(iv.hi)^2 >= 1957/720`.
+            iv_half_t4 = exp_q(Fraction(1, 2), terms=4, prec_bits=128)
+            self.assertGreaterEqual(iv_half_t4.hi * iv_half_t4.hi, Fraction(1957, 720))
+
+            for terms in (4, 6, 8, 24):
+                for x_exp in (
+                    Fraction(-50),
+                    Fraction(-3, 2),
+                    Fraction(-1, 2),
+                    Fraction(1, 7),
+                    Fraction(1, 2),
+                    Fraction(1),
+                    Fraction(5, 2),
+                    Fraction(50),
+                ):
+                    iv_e = exp_q(x_exp, terms=terms, prec_bits=128)
+                    ref_e = exp_q(x_exp, terms=40, prec_bits=256)
+                    dec_e = _q_to_dec(x_exp).exp()
+                    self.assertLessEqual(iv_e.lo, ref_e.lo, f"exp_q({x_exp}, terms={terms}) lo > ref.lo")
+                    self.assertGreaterEqual(iv_e.hi, ref_e.hi, f"exp_q({x_exp}, terms={terms}) hi < ref.hi")
+                    self.assertLessEqual(_q_to_dec(iv_e.lo), dec_e, f"exp_q({x_exp}, terms={terms}) lo > Decimal.exp")
+                    self.assertGreaterEqual(_q_to_dec(iv_e.hi), dec_e, f"exp_q({x_exp}, terms={terms}) hi < Decimal.exp")
+
+                # Cover both u > 0 (r in (1, 2]) and u < 0 (r in [1/2, 1)) in `_ln_reduced` plus multi-octave shifts.
+                for x_ln in (
+                    Fraction(1, 100),
+                    Fraction(1, 2),
+                    Fraction(2, 3),
+                    Fraction(4, 5),
+                    Fraction(5, 4),
+                    Fraction(3, 2),
+                    Fraction(2),
+                    Fraction(100),
+                ):
+                    iv_l = ln_q(x_ln, terms=terms, prec_bits=128)
+                    ref_l = ln_q(x_ln, terms=40, prec_bits=256)
+                    dec_l = _q_to_dec(x_ln).ln()
+                    self.assertLessEqual(iv_l.lo, ref_l.lo, f"ln_q({x_ln}, terms={terms}) lo > ref.lo")
+                    self.assertGreaterEqual(iv_l.hi, ref_l.hi, f"ln_q({x_ln}, terms={terms}) hi < ref.hi")
+                    self.assertLessEqual(_q_to_dec(iv_l.lo), dec_l, f"ln_q({x_ln}, terms={terms}) lo > Decimal.ln")
+                    self.assertGreaterEqual(_q_to_dec(iv_l.hi), dec_l, f"ln_q({x_ln}, terms={terms}) hi < Decimal.ln")
+
+            for base_q, exp_q_arg in ((Fraction(3, 2), Fraction(5, 3)), (Fraction(7, 4), Fraction(-2, 3))):
+                iv_p = qi_pow(QI.point(base_q), QI.point(exp_q_arg), terms=6, prec_bits=128)
+                dec_p = (_q_to_dec(exp_q_arg) * _q_to_dec(base_q).ln()).exp()
+                self.assertLessEqual(_q_to_dec(iv_p.lo), dec_p)
+                self.assertGreaterEqual(_q_to_dec(iv_p.hi), dec_p)
+
 
 class TestInertiaAdapters(unittest.TestCase):
     """Named Inertia record and Lean-matching `legacy_tuple_agree` property."""
@@ -494,6 +562,8 @@ class TestPhaseP0Goldens(unittest.TestCase):
             sha256_hex(bytearray(b"abc"))  # type: ignore[arg-type]
 
         # Reject NUL, lone surrogate, float, Fraction, out-of-range int256, non-str key, depth>64, nodes>4096.
+        self.assertEqual(MAX_INT_DIGITS, 78)
+        self.assertEqual(len(encode_zone_canon_v1_ascii(-(1 << 255))), MAX_INT_DIGITS)
         for bad_obj, expected_code in (
             ({"a": "x\x00y"}, "NUL_FORBIDDEN"),
             ({"a": "\ud800"}, "SURROGATE_FORBIDDEN"),
@@ -587,6 +657,49 @@ class TestWitnessMutationKills(unittest.TestCase):
         # Reconstruction exactness check.
         self.assertEqual(ldlt_reconstruct(L1, d1), M1)
 
+        # F2 code-mutant kills on `ldlt_exact`, `verify_ldlt_admit`, and `solve_ldlt`:
+        # - M08: zero leading or Schur pivot in `ldlt_exact` MUST raise structured QError("ZERO_PIVOT"), never ZeroDivisionError.
+        for singular_m in (
+            ((Fraction(0), Fraction(1)), (Fraction(1), Fraction(2))),
+            ((Fraction(1), Fraction(1)), (Fraction(1), Fraction(1))),
+        ):
+            with self.assertRaises(QError) as ctx_zp:
+                ldlt_exact(singular_m)
+            self.assertEqual(ctx_zp.exception.code, "ZERO_PIVOT")
+
+        # - M09: singular PSD matrix with d_i == 0 and exact M == L diag(d) L^T MUST be rejected by `verify_ldlt_admit`.
+        L_unit2 = ((Fraction(1), Fraction(0)), (Fraction(1), Fraction(1)))
+        for d_zero_case in ((Fraction(2), Fraction(0)), (Fraction(0), Fraction(2))):
+            M_psd = ldlt_reconstruct(L_unit2, d_zero_case)
+            self.assertFalse(verify_ldlt_admit(M_psd, L_unit2, d_zero_case))
+
+        # - Non-unit diagonal in L with exact M == L diag(d) L^T and d > 0 MUST be rejected.
+        L_nonunit = ((Fraction(2), Fraction(0)), (Fraction(0), Fraction(1)))
+        d_pos2 = (Fraction(2), Fraction(5))
+        self.assertFalse(verify_ldlt_admit(ldlt_reconstruct(L_nonunit, d_pos2), L_nonunit, d_pos2))
+
+        # - M10: non-zero upper-triangular entry in L with exact M == L diag(d) L^T, unit diagonal, and d > 0 MUST be rejected.
+        L_upper = ((Fraction(1), Fraction(3)), (Fraction(0), Fraction(1)))
+        M_upper = ldlt_reconstruct(L_upper, d_pos2)
+        self.assertFalse(verify_ldlt_admit(M_upper, L_upper, d_pos2))
+
+        # - `solve_ldlt` rejects non-unit diagonal, non-zero upper entry, and zero pivot with structured QError.
+        with self.assertRaises(QError) as ctx_s1:
+            solve_ldlt(L_nonunit, d_pos2, (Fraction(1), Fraction(1)))
+        self.assertEqual(ctx_s1.exception.code, "UNIT_LOWER_ERROR")
+        with self.assertRaises(QError) as ctx_s2:
+            solve_ldlt(L_upper, d_pos2, (Fraction(1), Fraction(1)))
+        self.assertEqual(ctx_s2.exception.code, "UNIT_LOWER_ERROR")
+        with self.assertRaises(QError) as ctx_s3:
+            solve_ldlt(L_unit2, (Fraction(2), Fraction(0)), (Fraction(1), Fraction(1)))
+        self.assertEqual(ctx_s3.exception.code, "ZERO_PIVOT")
+
+        # - Semidefinite boundary `v != 0` with `v^T M v == 0` proves `M` is NOT strictly positive definite (`verify_refuse_witness` True).
+        M_semi = ldlt_reconstruct(L_unit2, (Fraction(2), Fraction(0)))
+        ok_semi, qv_semi = verify_refuse_witness(M_semi, (Fraction(1), Fraction(-1)))
+        self.assertTrue(ok_semi)
+        self.assertEqual(qv_semi, Fraction(0))
+
     def test_farkas_eq_and_ineq_reject_hollow_and_perturbed_witnesses(self) -> None:
         doc = _load_json("cx6_farkas_golden.json")
         L_cx = signed_laplacian(doc["system"]["cx6_dale_signed_synapses"])
@@ -616,9 +729,15 @@ class TestWitnessMutationKills(unittest.TestCase):
         # Negative p entry rejected even if p^T A = 0 and p^T b < 0.
         ok_neg, _ = verify_farkas_ineq(A_in, (Fraction(1), Fraction(0)), (Fraction(-1), Fraction(-1)))
         self.assertFalse(ok_neg)
-        # Non-negative p^T b >= 0 rejected.
+        # Non-negative p^T b > 0 rejected.
         ok_posb, _ = verify_farkas_ineq(A_in, (Fraction(1), Fraction(0)), (Fraction(1), Fraction(1)))
         self.assertFalse(ok_posb)
+        # M14: Exact boundary `p^T b == 0` (feasible x = 1 for x <= 1, -x <= -1) MUST be rejected by BOTH ineq and eq verifiers.
+        b_eq_zero = (Fraction(1), Fraction(-1))
+        ok_zero_ineq, _ = verify_farkas_ineq(A_in, b_eq_zero, (Fraction(1), Fraction(1)))
+        self.assertFalse(ok_zero_ineq)
+        ok_zero_eq, _ = verify_farkas_eq(A_in, b_eq_zero, (Fraction(1), Fraction(1)))
+        self.assertFalse(ok_zero_eq)
         # p^T A != 0 rejected.
         ok_bad_a, _ = verify_farkas_ineq(A_in, b_in, (Fraction(2), Fraction(1)))
         self.assertFalse(ok_bad_a)

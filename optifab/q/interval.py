@@ -335,6 +335,8 @@ def _exp_small_nonneg(y: Fraction, terms: int) -> QI:
 def exp_q(x: Fraction, *, terms: int = 24, prec_bits: int = _DEFAULT_PREC_BITS) -> QI:
     """Certified rational enclosure for `exp(x)` via halving, Taylor remainder, and relative-bit outward squaring.
 
+    Domain: `|x| <= 500` (intentionally narrower than `ln_q`'s `MAX_INPUT_BITS` domain so squaring stays bounded;
+    `qi_exp(ln_q(z))` therefore requires `|ln(z)| <= 500` and raises `QError('RANGE_ERROR')` outside `[e^-500, e^500]`).
     Always returns strictly positive `[lo, hi]` (`lo > 0`) for every `|x| <= 500`.
     """
     _require_fraction(x, "x")
@@ -391,7 +393,10 @@ def _ln_reduced(r: Fraction, terms: int) -> QI:
 
 
 def ln_q(x: Fraction, *, terms: int = 24, prec_bits: int = _DEFAULT_PREC_BITS) -> QI:
-    """Certified rational enclosure for `ln(x)` (`x > 0`) via binary reduction and `atanh` remainder."""
+    """Certified rational enclosure for `ln(x)` (`x > 0`) via binary reduction and `atanh` remainder.
+
+    Accepts `x > 0` up to `MAX_INPUT_BITS` numerator/denominator bit-length (wider than `exp_q`'s `|y| <= 500` cap).
+    """
     _require_fraction(x, "x")
     _check_input_bits(x, "x")
     if type(terms) is not int or terms < 4 or terms > MAX_TERMS:

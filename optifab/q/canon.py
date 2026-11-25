@@ -26,9 +26,9 @@ OPTIFAB_CERT_PROFILE_ID = b"zone-canon-v1:ascii:optifab-cert-v1"
 MAX_INPUT_BYTES = 1_048_576
 MAX_DEPTH = 64
 MAX_NODES = 4_096
-MAX_INT_DIGITS = 78
 _INT256_MIN = -(1 << 255)
 _INT256_MAX = (1 << 255) - 1
+MAX_INT_DIGITS = len(str(_INT256_MIN))  # 78 ASCII chars max (leading '-' + 77 digits for -2^255)
 
 _STD_ESCAPES = {
     '"': '\\"',
