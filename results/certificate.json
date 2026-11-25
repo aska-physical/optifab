@@ -1,6 +1,6 @@
 {
   "repository": "aska-physical/optifab",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "inputs": {
     "vendored": {
       "aska-physical/funi-frame/certificate.json": "1c57555060c742c6e1eeb6ac8df38b7bf6ad7e3a7770bb851b345cb6ce3f4ede",
@@ -1132,7 +1132,6 @@
     "checked_and_closed_links": 1
   },
   "checks_that_survive_python_O": {
-    "python_files_scanned": 12,
     "assert_statements": 0,
     "files_with_assert_statements": [],
     "scanner_finds_a_planted_assert": true

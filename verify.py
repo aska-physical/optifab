@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic verifier for aska-physical/optifab v0.3.2.
+"""Deterministic verifier for aska-physical/optifab v0.3.3.
 
 optifab models one reference data-centre campus as a checked stack and states the contract between
 the physical plant and the digital workload. It adds no new measurement. Every number is derived
@@ -51,7 +51,7 @@ FORMAL_SOURCES = ["PlantGate.lean", "PlantGate/Spec.lean", "PlantGate/Proofs.lea
                   "lakefile.toml", "lean-toolchain", "tests/oracle.py", "tests/run_tests.py"]
 KELVIN = 273.15
 PSF_TO_KPA = 0.04788026
-VERSION = "0.3.2"
+VERSION = "0.3.3"
 
 
 # --------------------------------------------------------------------------- inputs
@@ -66,11 +66,15 @@ def count_asserts(source: str) -> int:
 
 
 def bare_asserts() -> dict:
-    """Count `assert` statements in this repository's own Python files. There should be none."""
+    """Count `assert` statements in this repository's own Python files. There should be none.
+
+    The number of files scanned is deliberately left out of the certificate. It was in it until v0.3.2, and
+    then any pull request that added a Python file anywhere made the certificate on main stale."""
     files = sorted(p for p in ROOT.rglob("*.py")
                    if not {".lake", ".git", "data", "__pycache__"} & set(p.relative_to(ROOT).parts))
     found = {str(p.relative_to(ROOT)): count_asserts(p.read_text(encoding="utf-8")) for p in files}
-    return {"python_files_scanned": len(files), "assert_statements": sum(found.values()),
+    require(files, "the scan for assert statements found no Python file to read")
+    return {"assert_statements": sum(found.values()),
             "files_with_assert_statements": sorted(f for f, k in found.items() if k),
             "scanner_finds_a_planted_assert": count_asserts("def f(x):\n    assert x\n") == 1}
 

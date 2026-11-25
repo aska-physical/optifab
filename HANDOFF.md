@@ -1,4 +1,4 @@
-# Handoff: aska-physical/optifab v0.3.2
+# Handoff: aska-physical/optifab v0.3.3
 
 Written under the group ethos: leave everything the next agent needs so nothing has to be derived twice.
 
@@ -152,7 +152,9 @@ differed. The notes are kept below as they were written, for the record.
   `require()`, never `assert`: `python3 -O` strips assert statements, and until v0.3.0 that let a failing
   control write a certificate and exit 0. Control 29 fails if an assert statement comes back. Do not use the
   builtin `sum()` on floats either: its rounding changed in Python 3.12 and made the certificate depend on the
-  interpreter. Use `_sum_sq` or an explicit loop. CI runs five Python versions to catch a relapse.
+  interpreter. Use `_sum_sq` or an explicit loop. CI runs five Python versions to catch a relapse. And keep
+  out of the certificate anything that changes when someone else adds a file: a count of scanned files was in
+  it until v0.3.2, and two unrelated pull requests then left `main` failing.
 - [loop.py](loop.py): the improvement loop. [formal/](formal/README.md): the Lean project, which now holds
   the plant model. [formal/tests/oracle.py](formal/tests/oracle.py) is its Python copy, and `loop.py` calls it.
 - [tools/propose.py](tools/propose.py): the proposer's command line. [results/model_run.json](results/model_run.json)
