@@ -32,6 +32,7 @@ from pathlib import Path
 import sympy as sp
 
 import loop
+import verify_guards
 
 ROOT = Path(__file__).resolve().parent
 DATA = ROOT / "data"
@@ -86,7 +87,7 @@ def _sum_sq(values) -> float:
 
 
 def read_json(path: Path):
-    return json.loads(path.read_text(encoding="utf-8"))
+    return verify_guards.strict_read_json(path)
 
 
 def sha256_bytes(data: bytes) -> str:
@@ -97,7 +98,7 @@ def parse_vendored(item: dict, raw: bytes):
     """Refuse a vendored input whose bytes no longer match the hash in the manifest."""
     if sha256_bytes(raw) != item["sha256"]:
         raise SystemExit(f"ERROR: vendored input changed: {item['file']}")
-    return json.loads(raw.decode("utf-8")) if item["file"].endswith(".json") else raw
+    return verify_guards.strict_parse_json_bytes(raw) if item["file"].endswith(".json") else raw
 
 
 def load_inputs() -> dict:
@@ -318,7 +319,7 @@ def plant_envelope(inp: dict, design_dt_k: float = 20.0) -> dict:
         "ride_through_min_by_shed_fraction": {
             str(s): round(budget / (p_kw * (1.0 - s)) * 60.0, 2) for s in (0.0, 0.25, 0.5, 0.75)},
         "shed_fraction_to_bridge_outage_min": {
-            str(t): round(max(0.0, 1.0 - budget / (p_kw * t / 60.0)), 4) for t in (10, 15, 30, 60)},
+            str(t): round(verify_guards.strict_finite_max(0.0, 1.0 - budget / (p_kw * t / 60.0)), 4) for t in (10, 15, 30, 60)},
         "burst_hours_at_10pct_over_cooling_capacity": round(budget / (0.10 * p_kw), 2),
     }
     return {"pue_reproduction": reproduction, "substation": substation, "second_law": second_law,
@@ -368,6 +369,10 @@ def sensor_alternative(inp: dict) -> dict:
 
 
 def plant_radius(margins: list[dict]) -> dict:
+    if len(margins) < 2:
+        raise ValueError("plant_radius requires at least two margins")
+    for m in margins:
+        verify_guards.require_finite(m["utilisation"], m.get("limit_state", "utilisation"))
     worst = max(margins, key=lambda m: m["utilisation"])
     ordered = sorted(margins, key=lambda m: -m["utilisation"])
     return {"plant_radius": math.floor((1.0 - worst["utilisation"]) * 1e4) / 1e4,  # rounded down, never optimistic
@@ -382,18 +387,25 @@ def ball_in_box_check(u0: list[float], radius: float, samples: int = 20000) -> d
     A coordinate is largest at the axis point u0 + radius*e_i, so those n points decide the matter. Random
     points on the sphere are sampled as well, and the check is shown to fail for a slightly larger radius.
     """
-    n, state, worst = len(u0), 20261117, 0.0
+    u0_clean = [verify_guards.require_finite(u, "u0") for u in u0]
+    if not u0_clean:
+        raise ValueError("u0 must be non-empty")
+    radius = verify_guards.require_finite(radius, "radius")
+    n, state, worst = len(u0_clean), 20261117, 0.0
     for _ in range(samples):
         direction = []
         for _ in range(n):
             state = (state * 6364136223846793005 + 1442695040888963407) % (1 << 64)
             direction.append((state >> 11) / float(1 << 53) * 2.0 - 1.0)
         norm = math.sqrt(_sum_sq(direction)) or 1.0
-        worst = max(worst, max(u + radius * d / norm for u, d in zip(u0, direction)))
-    axis = max(u + radius for u in u0)
+        worst = verify_guards.strict_finite_max(
+            worst,
+            verify_guards.strict_finite_max_iter(u + radius * d / norm for u, d in zip(u0_clean, direction)),
+        )
+    axis = verify_guards.strict_finite_max_iter(u + radius for u in u0_clean)
     return {"samples": samples, "max_coordinate_at_axis_points": round(axis, 6), "max_coordinate_sampled": round(worst, 6),
-            "all_within_limits": max(axis, worst) <= 1.0,
-            "fails_if_radius_grows_by_0.001": max(u + radius + 1e-3 for u in u0) > 1.0}
+            "all_within_limits": verify_guards.strict_finite_max(axis, worst) <= 1.0,
+            "fails_if_radius_grows_by_0.001": verify_guards.strict_finite_max_iter(u + radius + 1e-3 for u in u0_clean) > 1.0}
 
 
 # --------------------------------------------------------------------------- the gate
@@ -734,7 +746,7 @@ def plant_frame_checks(inp: dict, margins: list[dict], radius: float, env: dict)
         "layout": spec["struct"], "bytes": len(design_raw), "floats": 16,
         "matches_weft_frame_layout": PLANT_FRAME.format == spec["struct"] and len(design_raw) == spec["bytes"] and spec["floats"] == 16,
         "slots": [m["limit_state"] for m in margins] + FRAME_TAIL,
-        "round_trip_max_error": float(f"{max(abs(a - b) for a, b in zip(u0, design['utilisations'])):.1e}"),
+        "round_trip_max_error": float(f"{verify_guards.strict_finite_max_iter(abs(a - b) for a, b in zip(u0, design['utilisations'])):.1e}"),
         "design_frame_sha256": sha256_bytes(design_raw),
         "contract_check": cases,
         "gate_from_frame": {"design point": gate_ok[3], "floor punching demand up 26 percent": gate_heavy[3]},
@@ -1021,7 +1033,7 @@ def archived_runs(plant: dict) -> dict:
     out = {}
     for key, (run_file, ledger_file) in ARCHIVED_RUNS.items():
         raw_run, raw_ledger = (ROOT / "results" / run_file).read_bytes(), (ROOT / "results" / ledger_file).read_bytes()
-        run, old = json.loads(raw_run), json.loads(raw_ledger)
+        run, old = verify_guards.strict_parse_json_bytes(raw_run), verify_guards.strict_parse_json_bytes(raw_ledger)
         new = loop.run_proposals(plant, run["start"], run["budget"], run["proposals"])
         out[key] = {
             "run_file": f"results/{run_file}", "run_file_sha256": sha256_bytes(raw_run),
@@ -1548,7 +1560,7 @@ def upstream_check(root: Path, repin: bool) -> int:
             "files": {}})
         entry["files"][c["path"]] = digest
         if c.get("kind") == "json":
-            if resolve_pointer(json.loads(raw.decode("utf-8")), c["pointer"]) != c["equals"]:
+            if resolve_pointer(verify_guards.strict_parse_json_bytes(raw), c["pointer"]) != c["equals"]:
                 problems.append(f"{c['repo']}:{c['path']} value at pointer changed ({c['id']})")
             continue
         lines = raw.decode("utf-8").splitlines()
@@ -1604,6 +1616,7 @@ def upstream_check(root: Path, repin: bool) -> int:
     return 0
 
 
+@verify_guards.fail_closed_cli
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--write", action="store_true", help="rewrite results/certificate.json")
@@ -1632,14 +1645,18 @@ def main() -> int:
     if not CERT_PATH.exists() or read_json(CERT_PATH) != cert:
         print("ERROR: results/certificate.json does not match verify.py. Run with --write after a deliberate change.", file=sys.stderr)
         return 1
+    verify_guards.verify_canonical_json_file(CERT_PATH, cert, indent=2, ensure_ascii=False)
+    verify_guards.verify_canonical_json_file(LEDGER_PATH, ledger, indent=1, ensure_ascii=False)
     if not LEDGER_PATH.exists() or read_json(LEDGER_PATH) != ledger:
         print("ERROR: results/ledger.json does not match the loop. Run with --write after a deliberate change.", file=sys.stderr)
         return 1
     for key, (run_file, ledger_file) in RECORDED_RUNS.items():
         path = ROOT / "results" / ledger_file
-        if key in ledgers and (not path.exists() or read_json(path) != ledgers[key]):
-            print(f"ERROR: results/{ledger_file} does not match results/{run_file}. Run with --write.", file=sys.stderr)
-            return 1
+        if key in ledgers:
+            if not path.exists() or read_json(path) != ledgers[key]:
+                print(f"ERROR: results/{ledger_file} does not match results/{run_file}. Run with --write.", file=sys.stderr)
+                return 1
+            verify_guards.verify_canonical_json_file(path, ledgers[key], indent=1, ensure_ascii=False)
     g, m, p = cert["graph"], cert["margins"], cert["plant"]
     print(f"[PASS] optifab v{VERSION}: {cert['controls_passed']} controls, "
           f"Weft vectors {cert['gate']['weft_conformance']['passed']}/{cert['gate']['weft_conformance']['weight_update_vectors']}, "
