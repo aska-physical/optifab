@@ -1,0 +1,61 @@
+{
+  "five_org_ownership": {
+    "Foundation-0": "Canonicalization profiles (zone-canon-v1)",
+    "Moissanite-Labs": "S102 connectome operators migrated onto named Inertia record",
+    "Proven-Commons": "Pure-Init Lean 4.36.0 gate algebra library (Q, Inertia, LDLT, Farkas, Gate)",
+    "aska-physical": "Physics repos and optifab v0.4 core",
+    "siliconcordat": "Digital block, GGUF digest, VRAM bpw gate, certificate replay"
+  },
+  "five_org_repo_heads": {
+    "Foundation-0/aletheia": "d0b1f1eaeeeaa58062cfa1a28f45914c851e39a1",
+    "Moissanite-Labs/spliceware": "063683208b7f0aa248a354a422c1963b2b41d222",
+    "Proven-Commons/mcproof": "575286f07bb85c1920df344d04dbb199961477dc",
+    "Proven-Commons/mission": "3d521d8c605220ca76bb1d6d87625613786aa5c6",
+    "aska-physical/cfrp-masts": "9f54e981502fdbc9f027a5799d0d42767593667c",
+    "aska-physical/cfrp-truss": "0b9ae3b8e2892f5156535bdb5f6dc226ecd6b86e",
+    "aska-physical/fibral-rigidity": "d66ea4f32eb088ebda6c485dba35debd3cd583a3",
+    "aska-physical/funi-floors": "f67a03708be6c5fafc5601125d4a1d39eb81d558",
+    "aska-physical/funi-frame": "17d05bb376d0763db22d591431c7394af7a80097",
+    "aska-physical/impedence-analyzers": "b93a99232cd22ed00de6ab7670705db55e8cd245",
+    "aska-physical/optifab": "012f8bbf757849d0fffa2057ef2bb7bbb755760d",
+    "aska-physical/venturi-collars": "73e1c7de24618896c465d29f6530a52eb0f21bfd",
+    "siliconcordat/loom": "4957b15777a2e3e84516926000e67aaa27d636d9",
+    "siliconcordat/warp": "97c4e26eb77857c7d5c13232a496453688639370"
+  },
+  "golden_files": {
+    "cx6_farkas_golden.json": "a4c9741f2dd46097cf7c3b785b5ad2fa5b218525ec8d018571e66fcb198ed551",
+    "s99_schur_golden.json": "63dd5c98f7241fc8284eb2b49ec37e06ad4fe11d306d2f16ef64cf4097e11397"
+  },
+  "lean_toolchains": {
+    "existing_formal_dir": "leanprover/lean4:v4.35.0",
+    "note": "formal/ stays pinned to v4.35.0 until Phase P3; new v0.4 L3 targets pure-Init v4.36.0.",
+    "target_v04_l3": "leanprover/lean4:v4.36.0"
+  },
+  "optifab_anchors": {
+    "historical_pre_p2_baseline": {
+      "commit": "401e081f72476b13fdbf3d8fe7a1686c3a4be851",
+      "role": "Pre-PR#21 S99 golden baseline (floor_punching_collar 110401/137820)",
+      "version": "0.3.3"
+    },
+    "post_pr21_main_base": {
+      "commit": "012f8bbf757849d0fffa2057ef2bb7bbb755760d",
+      "pr_merged": 21,
+      "role": "Live main base for v0.4 additive Phase P0 + L0 staging"
+    }
+  },
+  "profile_id": "zone-canon-v1:ascii:optifab-cert-v1",
+  "receipt_sha256": "90219f89fbb37ba6b0c9fc0e88f560999d13e0f71fef77e4143707c9d1c4bf72",
+  "schema": "optifab.v04.p0.pins.v1",
+  "zone_canon_v1_del_vector": {
+    "canonical_ascii": "{\"del\":\"\\u007f\",\"e\":\"\\u00e9\",\"pair\":{\"den\":100000,\"num\":1}}",
+    "input": {
+      "del": "\u007f",
+      "e": "\u00e9",
+      "pair": {
+        "den": 100000,
+        "num": 1
+      }
+    },
+    "profile_digest_sha256": "2200e3773bfdf87868d0ff79762ee41662083ab74cf6c736d3552c87eaf92a6c"
+  }
+}
