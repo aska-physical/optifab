@@ -2,7 +2,7 @@
 
 Modelling the ideal datacenter.
 
-**Status: v0.3.2, claimed.** An AI agent wrote this version and no person has reviewed it. Nothing in it is
+**Status: v0.3.3, claimed.** An AI agent wrote this version and no person has reviewed it. Nothing in it is
 measured. Every number is derived from the certificates of other repositories, which are themselves models.
 
 optifab is the design of one physical structure that holds the work of four organisations, so that the digital

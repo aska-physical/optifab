@@ -2,6 +2,16 @@
 
 Machine-checked milestones for `aska-physical/optifab`.
 
+## [0.3.3] - 2026-11-25
+
+### Fixed
+
+- **`python3 verify.py` failed on `main`.** The certificate recorded how many Python files control 29 had
+  scanned for `assert` statements. Two pull requests that added Python files merged after v0.3.2, the count went
+  from 12 to 14, and the committed certificate no longer matched. The count is no longer in the certificate.
+  Control 29 is unchanged: it still scans every Python file outside `data/` and fails if one has an `assert`
+  statement. Nothing else in the certificate changes.
+
 ## [0.3.2] - 2026-11-24
 
 Follows funi-frame v0.1.1, which adopted findings 1 and 2.
