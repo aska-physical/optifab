@@ -230,13 +230,22 @@ def inBounds (lo hi g : Genome) : Bool :=
 def judge (p : Plant) (sc : Scenario) (limit : Int) (s : Genome × Int) (cand : Genome) : Outcome :=
   gate (margins p sc s.1) (margins p sc cand) (headroom limit (margins p sc s.1)) s.2 1
 
+/-- Whether `cand` strictly improves the objective, or holds it equal while
+    strictly widening headroom. This stops a proposer from spending budget to
+    erode headroom at an equal objective while still allowing hardware changes
+    that open headroom for later software gains. -/
+def lexImproves (p : Plant) (sc : Scenario) (limit : Int) (held cand : Genome) : Bool :=
+  decide (objective p sc held < objective p sc cand)
+    || (decide (objective p sc held = objective p sc cand)
+        && decide (headroom limit (margins p sc held) < headroom limit (margins p sc cand)))
+
 /-- Whether a proposed design is taken up. It must differ from the design
-    held, lie within the bounds, pass the gate, and not lower the
-    objective. -/
+    held, lie within the bounds, pass the gate, and either raise the
+    objective or keep it equal while strictly widening headroom. -/
 def accepts (p : Plant) (sc : Scenario) (limit : Int) (s : Genome × Int) (cand : Genome) : Bool :=
   decide (cand ≠ s.1) && inBounds p.lo p.hi cand
     && decide ((judge p sc limit s cand).verdict = Verdict.ok)
-    && decide (objective p sc s.1 ≤ objective p sc cand)
+    && lexImproves p sc limit s.1 cand
 
 /-- One generation over designs. A design that is taken up becomes the
     one held, and the budget falls to what the gate left. Otherwise
@@ -272,5 +281,138 @@ def SelfCoolsAtFloor (p : Plant) (g : Genome) : Prop :=
     fixed heat load. -/
 def RidesThrough (p : Plant) (sc : Scenario) (g : Genome) : Prop :=
   0 < outageDen g ∧ outageNum p sc g ≤ outageDen g
+
+/-! ## Well-formed inputs -/
+
+/-- Physical and domain validity of the fixed plant, its bounds, and the
+    scenario year. Rules out negative loads, zero-length outages, capture or
+    shed bounds above 1,000,000 ppm, and inverted bounds. -/
+def WellFormedPlant (p : Plant) (sc : Scenario) : Prop :=
+  0 < p.pIt ∧ 0 < p.cop ∧ 0 ≤ p.uaRoof ∧ 0 ≤ p.wallArea ∧ 0 ≤ p.dT
+    ∧ 0 ≤ p.other ∧ 0 ≤ p.passive ∧ 0 ≤ p.aux ∧ 0 < p.loopCop
+    ∧ 0 < p.lo.pcm ∧ p.lo.pcm ≤ p.hi.pcm
+    ∧ 0 ≤ p.lo.capture ∧ p.lo.capture ≤ p.hi.capture ∧ p.hi.capture ≤ 1000000
+    ∧ 0 ≤ p.lo.wallU ∧ p.lo.wallU ≤ p.hi.wallU
+    ∧ 0 ≤ p.lo.floor ∧ p.lo.floor ≤ p.hi.floor
+    ∧ 0 ≤ p.lo.shed ∧ p.lo.shed ≤ p.hi.shed ∧ p.hi.shed ≤ 1000000
+    ∧ 0 < sc.outMin ∧ 0 ≤ sc.nOut
+    ∧ 0 ≤ sc.lowPpm ∧ sc.lowPpm ≤ 1000000
+    ∧ 0 ≤ sc.lowH ∧ sc.lowH ≤ sc.hours ∧ 0 < sc.hours
+
+/-- Physical validity of a design: positive store and load floor, non-negative
+    wall U-value, and capture and shed shares in `[0, 1,000,000]` ppm. -/
+def WellFormedGenome (g : Genome) : Prop :=
+  0 < g.pcm ∧ 0 ≤ g.capture ∧ g.capture ≤ 1000000 ∧ 0 ≤ g.wallU
+    ∧ 0 < g.floor ∧ 0 ≤ g.shed ∧ g.shed ≤ 1000000
+
+/-- A plant, scenario, and design that all make physical sense. -/
+def WellFormed (p : Plant) (sc : Scenario) (g : Genome) : Prop :=
+  WellFormedPlant p sc ∧ WellFormedGenome g
+
+/-- Executable check for `WellFormedPlant`. -/
+def wellFormedPlantBool (p : Plant) (sc : Scenario) : Bool :=
+  decide (0 < p.pIt) && decide (0 < p.cop) && decide (0 ≤ p.uaRoof)
+    && decide (0 ≤ p.wallArea) && decide (0 ≤ p.dT) && decide (0 ≤ p.other)
+    && decide (0 ≤ p.passive) && decide (0 ≤ p.aux) && decide (0 < p.loopCop)
+    && decide (0 < p.lo.pcm) && decide (p.lo.pcm ≤ p.hi.pcm)
+    && decide (0 ≤ p.lo.capture) && decide (p.lo.capture ≤ p.hi.capture)
+    && decide (p.hi.capture ≤ 1000000)
+    && decide (0 ≤ p.lo.wallU) && decide (p.lo.wallU ≤ p.hi.wallU)
+    && decide (0 ≤ p.lo.floor) && decide (p.lo.floor ≤ p.hi.floor)
+    && decide (0 ≤ p.lo.shed) && decide (p.lo.shed ≤ p.hi.shed)
+    && decide (p.hi.shed ≤ 1000000)
+    && decide (0 < sc.outMin) && decide (0 ≤ sc.nOut)
+    && decide (0 ≤ sc.lowPpm) && decide (sc.lowPpm ≤ 1000000)
+    && decide (0 ≤ sc.lowH) && decide (sc.lowH ≤ sc.hours) && decide (0 < sc.hours)
+
+/-- Executable check for `WellFormedGenome`. -/
+def wellFormedGenomeBool (g : Genome) : Bool :=
+  decide (0 < g.pcm) && decide (0 ≤ g.capture) && decide (g.capture ≤ 1000000)
+    && decide (0 ≤ g.wallU) && decide (0 < g.floor)
+    && decide (0 ≤ g.shed) && decide (g.shed ≤ 1000000)
+
+/-- Executable check for `WellFormed`. -/
+def wellFormedBool (p : Plant) (sc : Scenario) (g : Genome) : Bool :=
+  wellFormedPlantBool p sc && wellFormedGenomeBool g
+
+/-! ## Asymmetric upward gate and out-of-limit recovery -/
+
+/-- Upward move in one coordinate: `max 0 (c - b)`. A move that lowers a margin
+    (toward safety) contributes zero. -/
+def posDiff (b c : Int) : Int :=
+  if b < c then c - b else 0
+
+/-- Sum of squared upward moves, coordinate by coordinate. -/
+def posDistSq : List Int → List Int → Int
+  | b :: bs, c :: cs => posDiff b c * posDiff b c + posDistSq bs cs
+  | _, _ => 0
+
+/-- Recovery monotonicity: no safe coordinate may cross above `limit`, and no
+    already-violating coordinate may rise further. -/
+def noNewExcess (limit : Int) : List Int → List Int → Bool
+  | b :: bs, c :: cs => decide (c ≤ max b limit) && noNewExcess limit bs cs
+  | _, _ => true
+
+/-- Why an asymmetric gate step was refused, or how it was admitted. -/
+inductive AsymVerdict where
+  | ok
+  | okRecovery
+  | cost
+  | budget
+  | shape
+  | distance
+  | noImprovement
+  deriving DecidableEq, Repr
+
+/-- Whether an asymmetric verdict admits the candidate. -/
+def AsymVerdict.admitted : AsymVerdict → Bool
+  | .ok => true
+  | .okRecovery => true
+  | _ => false
+
+/-- An asymmetric gate verdict and the budget left after it. -/
+structure AsymOutcome where
+  verdict : AsymVerdict
+  remaining : Int
+
+/-- Asymmetric gate with out-of-limit recovery.
+    Within the limit (`0 ≤ headroom limit base`), only upward margin moves
+    count against the headroom radius (`posDistSq base cand ≤ r²`), so pure
+    safety moves of any size are admitted. Past the limit (`headroom < 0`),
+    recovery mode admits a candidate iff it strictly widens headroom (strictly
+    lowers the worst excess above `limit`) without creating any new violation
+    or worsening any existing one. -/
+def gateAsymmetric (limit : Int) (base cand : List Int) (budget cost : Int) : AsymOutcome :=
+  if cost ≤ 0 then ⟨.cost, budget⟩
+  else if budget < cost then ⟨.budget, budget⟩
+  else if base.length ≠ cand.length ∨ base = [] then ⟨.shape, budget⟩
+  else
+    let r := headroom limit base
+    if r < 0 then
+      if r < headroom limit cand ∧ noNewExcess limit base cand = true then
+        ⟨.okRecovery, budget - cost⟩
+      else
+        ⟨.noImprovement, budget⟩
+    else if r * r < posDistSq base cand then
+      ⟨.distance, budget⟩
+    else
+      ⟨.ok, budget - cost⟩
+
+/-- One generation under the asymmetric gate. -/
+def evolveAsymmetric (limit : Int) (s : List Int × Int) (cand : List Int) (cost : Int) : List Int × Int :=
+  let o := gateAsymmetric limit s.1 cand s.2 cost
+  if o.verdict.admitted = true then (cand, o.remaining) else s
+
+/-- Any number of generations under the asymmetric gate. -/
+def runAsymmetric (limit : Int) : List Int × Int → List (List Int × Int) → List Int × Int
+  | s, [] => s
+  | s, (cand, cost) :: rest => runAsymmetric limit (evolveAsymmetric limit s cand cost) rest
+
+/-- How many proposals were admitted under the asymmetric gate. -/
+def asymAcceptedCount (limit : Int) : List Int × Int → List (List Int × Int) → Nat
+  | _, [] => 0
+  | s, (cand, cost) :: rest =>
+    (if (gateAsymmetric limit s.1 cand s.2 cost).verdict.admitted = true then 1 else 0)
+      + asymAcceptedCount limit (evolveAsymmetric limit s cand cost) rest
 
 end PlantGate

@@ -12,12 +12,20 @@
     "PlantGate.Spec.run_bounded",
     "PlantGate.Spec.step_complete",
     "PlantGate.Spec.same_design_not_taken_up",
+    "PlantGate.Spec.tie_headroom_decay_refused",
     "PlantGate.Spec.step_refusal_changes_nothing",
     "PlantGate.Spec.loop_safe",
     "PlantGate.Spec.loop_in_bounds",
     "PlantGate.Spec.loop_never_worse",
+    "PlantGate.Spec.loop_lex_monotone",
     "PlantGate.Spec.loop_bounded",
-    "PlantGate.Spec.loop_keeps_physics"
+    "PlantGate.Spec.loop_keeps_physics",
+    "PlantGate.Spec.wellformed_nonneg_demands",
+    "PlantGate.Spec.loop_keeps_wellformed_physics",
+    "PlantGate.Spec.asym_gate_ok_stays_within",
+    "PlantGate.Spec.asym_gate_pure_safety_admitted",
+    "PlantGate.Spec.asym_gate_recovery_lyapunov_descent",
+    "PlantGate.Spec.asym_run_safe_and_bounded"
   ],
   "comparator": {
     "command": "lake comparator --paranoid",
@@ -32,7 +40,7 @@
     ]
   },
   "differential_tests": {
-    "inputs": 405000,
+    "inputs": 430000,
     "seed": 20261117,
     "failures": 0,
     "passed": true
@@ -64,10 +72,10 @@
     }
   },
   "bar": "Proven Commons bar check: items 2 to 6 pass; item 1 is open (no reviewer has approved the specification). See formal/BAR-REPORT.md.",
-  "sources_sha256": "10559f50464e796190f33b61eca3e5aecd172fa4e896740906508bc0df74a36c",
+  "sources_sha256": "6b0881702a27c527124db22aeb4a326f9cfd95d2ce28341a8cadfae11bab37f4",
   "ledger_hashes": {
     "seeded_search": "a6faa3020cfb86bdfd695830da932b4c0e04b719b5c87d9009c1d728da17ca1e",
-    "adversary": "963a04d4dc9f5d8ea62e30b73360b65de162620147e199b850da5a6c3054fc69",
+    "adversary": "ea9de45544d93e3dbde1490673020b7f1b8843eaf207cf42a0f7be91baa40f35",
     "recorded_proposer": "6cb930d4f3335fe8bace314d917f8205f3f9546f3f0bb3a61007a4a2cae76831",
     "recorded_proposer_given_lessons": "202752f3bf6be527afbc009fd116701c870706f2fb26124d73be5d25dfe55810"
   }

@@ -290,18 +290,104 @@ theorem step_cases (p : Plant) (sc : Scenario) (limit : Int) (s : Genome × Int)
         ∧ inBounds p.lo p.hi cand = true
         ∧ (∀ x ∈ margins p sc cand, x ≤ limit)
         ∧ 1 ≤ s.2
-        ∧ objective p sc s.1 ≤ objective p sc cand)
+        ∧ (objective p sc s.1 < objective p sc cand
+            ∨ (objective p sc s.1 = objective p sc cand
+                ∧ headroom limit (margins p sc s.1) < headroom limit (margins p sc cand))))
       ∨ (accepts p sc limit s cand = false ∧ step p sc limit s cand = s) := by
   by_cases h : accepts p sc limit s cand = true
   · left
     have h' := h
-    simp only [accepts, Bool.and_eq_true, decide_eq_true_eq] at h'
+    simp only [accepts, lexImproves, Bool.and_eq_true, Bool.or_eq_true, decide_eq_true_eq] at h'
     have j := judge_ok p sc limit s cand h'.1.2
     refine ⟨h, ?_, h'.1.1.2, j.1, j.2.2, h'.2⟩
     simp [step, h, j.2.1]
   · right
     have h2 : accepts p sc limit s cand = false := by simpa using h
     exact ⟨h2, by simp [step, h2]⟩
+
+theorem posDiff_nonneg (b c : Int) : 0 ≤ posDiff b c := by
+  unfold posDiff
+  split <;> omega
+
+theorem posDistSq_nonneg : ∀ (base cand : List Int), 0 ≤ posDistSq base cand
+  | [], _ => by simp [posDistSq]
+  | _ :: _, [] => by simp [posDistSq]
+  | b :: bs, c :: cs => by
+    have h1 : 0 ≤ posDiff b c * posDiff b c := sq_nonneg (posDiff b c)
+    have h2 := posDistSq_nonneg bs cs
+    simp only [posDistSq]
+    omega
+
+theorem posDistSq_zero_of_le :
+    ∀ (base cand : List Int), (∀ p ∈ List.zip base cand, p.2 ≤ p.1) → posDistSq base cand = 0
+  | [], _, _ => by simp [posDistSq]
+  | _ :: _, [], _ => by simp [posDistSq]
+  | b :: bs, c :: cs, h => by
+    have h0 : c ≤ b := h (b, c) (by simp)
+    have hp : posDiff b c = 0 := by
+      unfold posDiff
+      split <;> omega
+    have ih := posDistSq_zero_of_le bs cs (fun p hp' => h p (by simp [hp']))
+    simp [posDistSq, hp, ih]
+
+theorem within_of_pos (limit r : Int) (hr : 0 ≤ r) :
+    ∀ (base cand : List Int), base.length = cand.length → posDistSq base cand ≤ r * r →
+      (∀ b ∈ base, r ≤ limit - b) → ∀ x ∈ cand, x ≤ limit
+  | [], [], _, _, _ => by simp
+  | [], _ :: _, hl, _, _ => by simp at hl
+  | _ :: _, [], hl, _, _ => by simp at hl
+  | b :: bs, c :: cs, hl, hd, hh => by
+    intro x hx
+    simp only [posDistSq] at hd
+    have h1 : 0 ≤ posDiff b c * posDiff b c := sq_nonneg (posDiff b c)
+    have h2 := posDistSq_nonneg bs cs
+    rcases List.mem_cons.mp hx with rfl | hx'
+    · have h3 := le_of_sq_le (posDiff b x) r hr (by omega)
+      have h4 := hh b (by simp)
+      unfold posDiff at h3
+      split at h3 <;> omega
+    · exact within_of_pos limit r hr bs cs (by simpa using hl) (by omega)
+        (fun b' hb' => hh b' (by simp [hb'])) x hx'
+
+theorem noNewExcess_sound (limit : Int) :
+    ∀ (base cand : List Int), noNewExcess limit base cand = true →
+      ∀ p ∈ List.zip base cand, p.2 ≤ max p.1 limit
+  | [], _, _ => by simp
+  | _ :: _, [], _ => by simp
+  | b :: bs, c :: cs, h => by
+    intro p hp
+    simp only [noNewExcess, Bool.and_eq_true, decide_eq_true_eq] at h
+    rw [List.zip_cons_cons] at hp
+    rcases List.mem_cons.mp hp with rfl | hp'
+    · exact h.1
+    · exact noNewExcess_sound limit bs cs h.2 p hp'
+
+theorem asym_evolve_safe_step (limit : Int) (s : List Int × Int) (cand : List Int) (cost : Int)
+    (hw : ∀ x ∈ s.1, x ≤ limit) (hb : 0 ≤ s.2) :
+    (∀ x ∈ (evolveAsymmetric limit s cand cost).1, x ≤ limit)
+      ∧ 0 ≤ (evolveAsymmetric limit s cand cost).2
+      ∧ (evolveAsymmetric limit s cand cost).2 ≤ s.2
+      ∧ ((if (gateAsymmetric limit s.1 cand s.2 cost).verdict.admitted = true then 1 else 0) : Int)
+          + (evolveAsymmetric limit s cand cost).2 ≤ s.2 := by
+  have hr : 0 ≤ headroom limit s.1 := headroom_nonneg limit s.1 hw
+  by_cases h1 : cost ≤ 0
+  · simp [evolveAsymmetric, gateAsymmetric, AsymVerdict.admitted, h1, hb]; exact hw
+  by_cases h2 : s.2 < cost
+  · simp [evolveAsymmetric, gateAsymmetric, AsymVerdict.admitted, h1, h2, hb]; exact hw
+  by_cases h3 : s.1.length ≠ cand.length ∨ s.1 = []
+  · simp [evolveAsymmetric, gateAsymmetric, AsymVerdict.admitted, h1, h2, h3, hb]; exact hw
+  have h4 : ¬ headroom limit s.1 < 0 := by omega
+  by_cases h5 : headroom limit s.1 * headroom limit s.1 < posDistSq s.1 cand
+  · simp [evolveAsymmetric, gateAsymmetric, AsymVerdict.admitted, h1, h2, h3, h4, h5, hb]; exact hw
+  · have hl : s.1.length = cand.length := by
+      by_cases e : s.1.length = cand.length
+      · exact e
+      · exact absurd (Or.inl e) h3
+    have hc : ∀ x ∈ cand, x ≤ limit :=
+      within_of_pos limit (headroom limit s.1) hr s.1 cand hl (by omega)
+        (fun b hb' => headroom_le limit s.1 b hb')
+    simp only [evolveAsymmetric, gateAsymmetric, AsymVerdict.admitted, h1, h2, h3, h4, h5, ↓reduceIte]
+    exact ⟨hc, by omega, by omega, by omega⟩
 
 end PlantGate.Proofs
 
@@ -312,14 +398,19 @@ theorem PlantGate.Spec.step_complete (p : Plant) (sc : Scenario) (limit : Int)
     (hw : ∀ x ∈ margins p sc s.1, x ≤ limit)
     (hd : distSq (margins p sc s.1) (margins p sc cand)
       ≤ headroom limit (margins p sc s.1) * headroom limit (margins p sc s.1))
-    (ho : objective p sc s.1 ≤ objective p sc cand) :
+    (ho : objective p sc s.1 < objective p sc cand
+      ∨ (objective p sc s.1 = objective p sc cand
+          ∧ headroom limit (margins p sc s.1) < headroom limit (margins p sc cand))) :
     step p sc limit s cand = (cand, s.2 - 1) := by
   have hv : (judge p sc limit s cand).verdict = Verdict.ok := by
     unfold judge
     exact PlantGate.Spec.gate_complete _ _ _ _ _ (by omega) (by omega) (margins_ne_nil p sc s.1)
       (margins_length p sc s.1 cand) (headroom_nonneg limit _ hw) hd
+  have hlex : lexImproves p sc limit s.1 cand = true := by
+    simp only [lexImproves, Bool.or_eq_true, Bool.and_eq_true, decide_eq_true_eq]
+    exact ho
   have ha : accepts p sc limit s cand = true := by
-    simp [accepts, hin, hv, ho, hne]
+    simp [accepts, hin, hv, hlex, hne]
   rcases step_cases p sc limit s cand with ⟨_, e, _⟩ | ⟨hf, _⟩
   · exact e
   · rw [ha] at hf
@@ -329,6 +420,15 @@ theorem PlantGate.Spec.same_design_not_taken_up (p : Plant) (sc : Scenario) (lim
     (s : Genome × Int) :
     accepts p sc limit s s.1 = false := by
   simp [accepts]
+
+theorem PlantGate.Spec.tie_headroom_decay_refused (p : Plant) (sc : Scenario) (limit : Int)
+    (s : Genome × Int) (cand : Genome)
+    (heq : objective p sc cand = objective p sc s.1)
+    (hdec : headroom limit (margins p sc cand) ≤ headroom limit (margins p sc s.1)) :
+    accepts p sc limit s cand = false := by
+  have h1 : ¬ objective p sc s.1 < objective p sc cand := by omega
+  have h2 : ¬ headroom limit (margins p sc s.1) < headroom limit (margins p sc cand) := by omega
+  simp [accepts, lexImproves, h1, h2]
 
 theorem PlantGate.Spec.step_refusal_changes_nothing (p : Plant) (sc : Scenario) (limit : Int)
     (s : Genome × Int) (cand : Genome)
@@ -392,11 +492,37 @@ theorem PlantGate.Spec.loop_never_worse (p : Plant) (sc : Scenario) (limit : Int
   | cons cand rest ih =>
     simp only [loop]
     have r := ih (step p sc limit s cand)
-    rcases step_cases p sc limit s cand with ⟨_, e, _, _, _, ho⟩ | ⟨_, e⟩
+    rcases step_cases p sc limit s cand with ⟨_, e, _, _, _, hlex⟩ | ⟨_, e⟩
     · rw [e] at r ⊢
+      have ho : objective p sc s.1 ≤ objective p sc cand := by
+        rcases hlex with hlt | ⟨heq, _⟩ <;> omega
       exact Int.le_trans ho r
     · rw [e] at r ⊢
       exact r
+
+theorem PlantGate.Spec.loop_lex_monotone (p : Plant) (sc : Scenario) (limit : Int)
+    (cands : List Genome) (s : Genome × Int) :
+    objective p sc s.1 < objective p sc (loop p sc limit s cands).1
+      ∨ (objective p sc s.1 = objective p sc (loop p sc limit s cands).1
+          ∧ headroom limit (margins p sc s.1)
+              ≤ headroom limit (margins p sc (loop p sc limit s cands).1)) := by
+  induction cands generalizing s with
+  | nil => exact Or.inr ⟨rfl, Int.le_refl _⟩
+  | cons cand rest ih =>
+    simp only [loop]
+    rcases step_cases p sc limit s cand with ⟨_, e, _, _, _, hlex⟩ | ⟨_, e⟩
+    · have r := ih (cand, s.2 - 1)
+      dsimp only at r
+      rw [e]
+      rcases hlex with hlt | ⟨heq, hht⟩
+      · rcases r with rlt | ⟨req, _⟩
+        · exact Or.inl (by omega)
+        · exact Or.inl (by omega)
+      · rcases r with rlt | ⟨req, rh⟩
+        · exact Or.inl (by omega)
+        · exact Or.inr ⟨by omega, by omega⟩
+    · rw [e]
+      exact ih s
 
 theorem PlantGate.Spec.loop_bounded (p : Plant) (sc : Scenario) (limit : Int)
     (cands : List Genome) (s : Genome × Int) :
@@ -423,3 +549,157 @@ theorem PlantGate.Spec.loop_keeps_physics (p : Plant) (sc : Scenario)
       ∧ SelfCoolsAtFloor p (loop p sc 1000000 s cands).1
       ∧ RidesThrough p sc (loop p sc 1000000 s cands).1 :=
   physics_of p sc _ (PlantGate.Proofs.loop_margins p sc 1000000 cands s hw)
+
+theorem PlantGate.Spec.wellformed_nonneg_demands (p : Plant) (sc : Scenario) (g : Genome)
+    (hwf : WellFormed p sc g) :
+    0 ≤ qFix p g ∧ 0 ≤ driveNum p g ∧ 0 ≤ outageNum p sc g
+      ∧ 0 < outageDen g ∧ 0 < g.floor := by
+  rcases hwf with ⟨hp, hg⟩
+  rcases hp with ⟨hpIt, hcop, hua, hwa, hdT, hother, hpas, haux, hlcop,
+    hlopcm, hhipcm, hlocap, hhicap, hcapmax, hlowall, hhiwall, hlofl, hhifl,
+    hloshed, hhished, hshedmax, houtMin, _⟩
+  rcases hg with ⟨gpcm, gcap0, gcap1, gwall, gfloor, gshed0, gshed1⟩
+  have hwa_nonneg : 0 ≤ g.wallU * p.wallArea := Int.mul_nonneg gwall hwa
+  have hqf : 0 ≤ qFix p g := by
+    unfold qFix
+    have hmul : 0 ≤ (p.uaRoof + g.wallU * p.wallArea) * p.dT := Int.mul_nonneg (by omega) hdT
+    omega
+  have hdn : 0 ≤ driveNum p g := by
+    unfold driveNum
+    have hmul : 0 ≤ (1000000 - g.capture) * (p.pIt * 1000000) := Int.mul_nonneg (by omega) (by omega)
+    omega
+  have hon : 0 ≤ outageNum p sc g := by
+    unfold outageNum
+    have hmul : 0 ≤ p.pIt * (1000000 - g.shed) := Int.mul_nonneg (by omega) (by omega)
+    exact Int.mul_nonneg (by omega) (by omega)
+  have hod : 0 < outageDen g := by
+    unfold outageDen
+    omega
+  exact ⟨hqf, hdn, hon, hod, gfloor⟩
+
+theorem PlantGate.Spec.loop_keeps_wellformed_physics (p : Plant) (sc : Scenario)
+    (cands : List Genome) (s : Genome × Int)
+    (hwp : WellFormedPlant p sc)
+    (hin : inBounds p.lo p.hi s.1 = true)
+    (hw : ∀ x ∈ margins p sc s.1, x ≤ 1000000) :
+    WellFormed p sc (loop p sc 1000000 s cands).1
+      ∧ DriveHeatSuffices p (loop p sc 1000000 s cands).1
+      ∧ SelfCoolsAtFloor p (loop p sc 1000000 s cands).1
+      ∧ RidesThrough p sc (loop p sc 1000000 s cands).1
+      ∧ 0 ≤ driveNum p (loop p sc 1000000 s cands).1
+      ∧ 0 ≤ outageNum p sc (loop p sc 1000000 s cands).1 := by
+  have hphys := PlantGate.Spec.loop_keeps_physics p sc cands s hw
+  have hbnd := PlantGate.Spec.loop_in_bounds p sc 1000000 cands s hin
+  simp only [inBounds, between, Bool.and_eq_true, decide_eq_true_eq] at hbnd
+  rcases hwp with ⟨hpIt, hcop, hua, hwa, hdT, hother, hpas, haux, hlcop,
+    hlopcm, hhipcm, hlocap, hhicap, hcapmax, hlowall, hhiwall, hlofl, hhifl,
+    hloshed, hhished, hshedmax, houtMin, hrest⟩
+  have hwp' : WellFormedPlant p sc :=
+    ⟨hpIt, hcop, hua, hwa, hdT, hother, hpas, haux, hlcop,
+      hlopcm, hhipcm, hlocap, hhicap, hcapmax, hlowall, hhiwall, hlofl, hhifl,
+      hloshed, hhished, hshedmax, houtMin, hrest⟩
+  have hwg : WellFormedGenome (loop p sc 1000000 s cands).1 :=
+    ⟨by omega, by omega, by omega, by omega, hphys.2.1.2.1, by omega, by omega⟩
+  have hwf : WellFormed p sc (loop p sc 1000000 s cands).1 := ⟨hwp', hwg⟩
+  have hdem := PlantGate.Spec.wellformed_nonneg_demands p sc _ hwf
+  exact ⟨hwf, hphys.1, hphys.2.1, hphys.2.2, hdem.2.1, hdem.2.2.1⟩
+
+theorem PlantGate.Spec.asym_gate_ok_stays_within (limit : Int) (base cand : List Int)
+    (budget cost : Int)
+    (h : (gateAsymmetric limit base cand budget cost).verdict = AsymVerdict.ok) :
+    (∀ x ∈ cand, x ≤ limit) ∧ 0 < cost ∧ cost ≤ budget
+      ∧ (gateAsymmetric limit base cand budget cost).remaining = budget - cost := by
+  by_cases h1 : cost ≤ 0
+  · simp [gateAsymmetric, h1] at h
+  by_cases h2 : budget < cost
+  · simp [gateAsymmetric, h1, h2] at h
+  by_cases h3 : base.length ≠ cand.length ∨ base = []
+  · simp [gateAsymmetric, h1, h2, h3] at h
+  by_cases h4 : headroom limit base < 0
+  · by_cases hr : headroom limit base < headroom limit cand ∧ noNewExcess limit base cand = true
+    · simp [gateAsymmetric, h1, h2, h3, h4, hr] at h
+    · simp [gateAsymmetric, h1, h2, h3, h4, hr] at h
+  by_cases h5 : headroom limit base * headroom limit base < posDistSq base cand
+  · simp [gateAsymmetric, h1, h2, h3, h4, h5] at h
+  · have hl : base.length = cand.length := by
+      by_cases e : base.length = cand.length
+      · exact e
+      · exact absurd (Or.inl e) h3
+    have hc : ∀ x ∈ cand, x ≤ limit :=
+      within_of_pos limit (headroom limit base) (by omega) base cand hl (by omega)
+        (fun b hb => headroom_le limit base b hb)
+    refine ⟨hc, by omega, by omega, ?_⟩
+    simp [gateAsymmetric, h1, h2, h3, h4, h5]
+
+theorem PlantGate.Spec.asym_gate_pure_safety_admitted (limit : Int) (base cand : List Int)
+    (budget cost : Int)
+    (hc : 0 < cost) (hb : cost ≤ budget) (hn : base ≠ []) (hl : base.length = cand.length)
+    (hw : ∀ x ∈ base, x ≤ limit)
+    (hdown : ∀ p ∈ List.zip base cand, p.2 ≤ p.1) :
+    (gateAsymmetric limit base cand budget cost).verdict = AsymVerdict.ok := by
+  have h1 : ¬ cost ≤ 0 := by omega
+  have h2 : ¬ budget < cost := by omega
+  have h3 : ¬ (base.length ≠ cand.length ∨ base = []) := by
+    intro h
+    rcases h with h | h
+    · exact h hl
+    · exact hn h
+  have hr : 0 ≤ headroom limit base := headroom_nonneg limit base hw
+  have h4 : ¬ headroom limit base < 0 := by omega
+  have hz : posDistSq base cand = 0 := posDistSq_zero_of_le base cand hdown
+  have hsq : 0 ≤ headroom limit base * headroom limit base := sq_nonneg (headroom limit base)
+  have h5 : ¬ headroom limit base * headroom limit base < posDistSq base cand := by omega
+  simp [gateAsymmetric, h1, h2, h3, h4, h5]
+
+theorem PlantGate.Spec.asym_gate_recovery_lyapunov_descent (limit : Int) (base cand : List Int)
+    (budget cost : Int)
+    (h : (gateAsymmetric limit base cand budget cost).verdict = AsymVerdict.okRecovery) :
+    headroom limit base < 0
+      ∧ headroom limit base < headroom limit cand
+      ∧ max 0 (-headroom limit cand) < max 0 (-headroom limit base)
+      ∧ (∀ p ∈ List.zip base cand, p.2 ≤ max p.1 limit)
+      ∧ 0 < cost ∧ cost ≤ budget
+      ∧ (gateAsymmetric limit base cand budget cost).remaining = budget - cost := by
+  by_cases h1 : cost ≤ 0
+  · simp [gateAsymmetric, h1] at h
+  by_cases h2 : budget < cost
+  · simp [gateAsymmetric, h1, h2] at h
+  by_cases h3 : base.length ≠ cand.length ∨ base = []
+  · simp [gateAsymmetric, h1, h2, h3] at h
+  by_cases h4 : headroom limit base < 0
+  · by_cases hr : headroom limit base < headroom limit cand ∧ noNewExcess limit base cand = true
+    · have hlyap : max 0 (-headroom limit cand) < max 0 (-headroom limit base) := by
+        simp only [Int.max_def]
+        split <;> split <;> omega
+      refine ⟨h4, hr.1, hlyap, noNewExcess_sound limit base cand hr.2, by omega, by omega, ?_⟩
+      simp [gateAsymmetric, h1, h2, h3, h4, hr]
+    · simp [gateAsymmetric, h1, h2, h3, h4, hr] at h
+  · by_cases h5 : headroom limit base * headroom limit base < posDistSq base cand
+    · simp [gateAsymmetric, h1, h2, h3, h4, h5] at h
+    · simp [gateAsymmetric, h1, h2, h3, h4, h5] at h
+
+theorem PlantGate.Spec.asym_run_safe_and_bounded (limit : Int) (steps : List (List Int × Int))
+    (s : List Int × Int)
+    (hw : ∀ x ∈ s.1, x ≤ limit) (hb : 0 ≤ s.2) :
+    (∀ x ∈ (runAsymmetric limit s steps).1, x ≤ limit)
+      ∧ 0 ≤ (runAsymmetric limit s steps).2
+      ∧ (runAsymmetric limit s steps).2 ≤ s.2
+      ∧ (asymAcceptedCount limit s steps : Int) + (runAsymmetric limit s steps).2 ≤ s.2 := by
+  induction steps generalizing s with
+  | nil => exact ⟨hw, hb, by simp [runAsymmetric], by simp [asymAcceptedCount, runAsymmetric]⟩
+  | cons st rest ih =>
+    obtain ⟨cand, cost⟩ := st
+    have e := asym_evolve_safe_step limit s cand cost hw hb
+    have r := ih (evolveAsymmetric limit s cand cost) e.1 e.2.1
+    simp only [runAsymmetric, asymAcceptedCount]
+    have h4 : ((if (gateAsymmetric limit s.1 cand s.2 cost).verdict.admitted = true then 1 else 0) : Int)
+        + (evolveAsymmetric limit s cand cost).2 ≤ s.2 := e.2.2.2
+    have r4 : (asymAcceptedCount limit (evolveAsymmetric limit s cand cost) rest : Int)
+        + (runAsymmetric limit (evolveAsymmetric limit s cand cost) rest).2
+        ≤ (evolveAsymmetric limit s cand cost).2 := r.2.2.2
+    refine ⟨r.1, r.2.1, by omega, ?_⟩
+    by_cases hadm : (gateAsymmetric limit s.1 cand s.2 cost).verdict.admitted = true
+    · simp only [hadm, ↓reduceIte] at h4 ⊢
+      omega
+    · simp only [hadm, Bool.false_eq_true, ↓reduceIte] at h4 ⊢
+      omega
