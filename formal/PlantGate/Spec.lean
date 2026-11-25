@@ -69,9 +69,10 @@ theorem PlantGate.Spec.run_bounded (limit : Int) (steps : List (List Int × Int)
     (acceptedCount limit s steps : Int) + (run limit s steps).2 ≤ s.2 := sorry
 
 /-- Usefulness of the loop over designs: a different design within the
-    bounds that stays within the headroom and does not lower the objective
-    is taken up, for one unit of budget. A loop that takes nothing up passes the
-    safety statements below and fails this one. -/
+    bounds that stays within the headroom and either strictly raises the
+    objective or keeps it equal while strictly widening headroom is taken up,
+    for one unit of budget. A loop that takes nothing up passes the safety
+    statements below and fails this one. -/
 theorem PlantGate.Spec.step_complete (p : Plant) (sc : Scenario) (limit : Int)
     (s : Genome × Int) (cand : Genome)
     (hne : cand ≠ s.1)
@@ -79,7 +80,9 @@ theorem PlantGate.Spec.step_complete (p : Plant) (sc : Scenario) (limit : Int)
     (hw : ∀ x ∈ margins p sc s.1, x ≤ limit)
     (hd : distSq (margins p sc s.1) (margins p sc cand)
       ≤ headroom limit (margins p sc s.1) * headroom limit (margins p sc s.1))
-    (ho : objective p sc s.1 ≤ objective p sc cand) :
+    (ho : objective p sc s.1 < objective p sc cand
+      ∨ (objective p sc s.1 = objective p sc cand
+          ∧ headroom limit (margins p sc s.1) < headroom limit (margins p sc cand))) :
     step p sc limit s cand = (cand, s.2 - 1) := sorry
 
 /-- A proposal identical to the design held is never taken up, so it
@@ -87,6 +90,15 @@ theorem PlantGate.Spec.step_complete (p : Plant) (sc : Scenario) (limit : Int)
 theorem PlantGate.Spec.same_design_not_taken_up (p : Plant) (sc : Scenario) (limit : Int)
     (s : Genome × Int) :
     accepts p sc limit s s.1 = false := sorry
+
+/-- An equal-objective proposal that does not strictly widen headroom is
+    refused, so no proposer can erode headroom or burn budget on neutral
+    sideways moves at a tied objective. -/
+theorem PlantGate.Spec.tie_headroom_decay_refused (p : Plant) (sc : Scenario) (limit : Int)
+    (s : Genome × Int) (cand : Genome)
+    (heq : objective p sc cand = objective p sc s.1)
+    (hdec : headroom limit (margins p sc cand) ≤ headroom limit (margins p sc s.1)) :
+    accepts p sc limit s cand = false := sorry
 
 /-- A proposed design that is not taken up changes nothing: the design
     held and the budget are as they were. -/
@@ -113,12 +125,20 @@ theorem PlantGate.Spec.loop_in_bounds (p : Plant) (sc : Scenario) (limit : Int)
     inBounds p.lo p.hi (loop p sc limit s cands).1 = true := sorry
 
 /-- The loop never gets worse. Whatever is proposed, the objective of the
-    design held at the end is at least the objective at the start. A design
-    that scores the same is taken up, so this does not say that every
-    change is an improvement. -/
+    design held at the end is at least the objective at the start. -/
 theorem PlantGate.Spec.loop_never_worse (p : Plant) (sc : Scenario) (limit : Int)
     (cands : List Genome) (s : Genome × Int) :
     objective p sc s.1 ≤ objective p sc (loop p sc limit s cands).1 := sorry
+
+/-- Lexicographic Pareto monotonicity: after any list of proposed designs,
+    either the objective strictly rose, or it stayed equal and the headroom
+    did not fall. -/
+theorem PlantGate.Spec.loop_lex_monotone (p : Plant) (sc : Scenario) (limit : Int)
+    (cands : List Genome) (s : Genome × Int) :
+    objective p sc s.1 < objective p sc (loop p sc limit s cands).1
+      ∨ (objective p sc s.1 = objective p sc (loop p sc limit s cands).1
+          ∧ headroom limit (margins p sc s.1)
+              ≤ headroom limit (margins p sc (loop p sc limit s cands).1)) := sorry
 
 /-- The number of designs taken up plus the budget left never exceeds the
     budget at the start. -/
@@ -138,3 +158,77 @@ theorem PlantGate.Spec.loop_keeps_physics (p : Plant) (sc : Scenario)
     DriveHeatSuffices p (loop p sc 1000000 s cands).1
       ∧ SelfCoolsAtFloor p (loop p sc 1000000 s cands).1
       ∧ RidesThrough p sc (loop p sc 1000000 s cands).1 := sorry
+
+/-- Well-formedness rules out vacuous negative demands and zero capacities:
+    fixed heat load, drive demand, and outage heat are all non-negative, the
+    thermal store capacity is strictly positive, and the scheduler floor is
+    strictly positive. -/
+theorem PlantGate.Spec.wellformed_nonneg_demands (p : Plant) (sc : Scenario) (g : Genome)
+    (hwf : WellFormed p sc g) :
+    0 ≤ qFix p g ∧ 0 ≤ driveNum p g ∧ 0 ≤ outageNum p sc g
+      ∧ 0 < outageDen g ∧ 0 < g.floor := sorry
+
+/-- Non-vacuous physics invariant: on a well-formed plant and scenario, start
+    within bounds and within the 1,000,000 ppm limit. After any list of
+    proposals, the held design remains well-formed (strictly positive store
+    and floor, capture and shed within `[0, 1,000,000]`), satisfies all three
+    exact physical inequalities, and has non-negative drive and outage
+    demands. -/
+theorem PlantGate.Spec.loop_keeps_wellformed_physics (p : Plant) (sc : Scenario)
+    (cands : List Genome) (s : Genome × Int)
+    (hwp : WellFormedPlant p sc)
+    (hin : inBounds p.lo p.hi s.1 = true)
+    (hw : ∀ x ∈ margins p sc s.1, x ≤ 1000000) :
+    WellFormed p sc (loop p sc 1000000 s cands).1
+      ∧ DriveHeatSuffices p (loop p sc 1000000 s cands).1
+      ∧ SelfCoolsAtFloor p (loop p sc 1000000 s cands).1
+      ∧ RidesThrough p sc (loop p sc 1000000 s cands).1
+      ∧ 0 ≤ driveNum p (loop p sc 1000000 s cands).1
+      ∧ 0 ≤ outageNum p sc (loop p sc 1000000 s cands).1 := sorry
+
+/-- Safety of the asymmetric gate in normal mode: an admitted `.ok` candidate
+    has every margin at or below the limit, positive cost within budget, and
+    spends exactly its cost. -/
+theorem PlantGate.Spec.asym_gate_ok_stays_within (limit : Int) (base cand : List Int)
+    (budget cost : Int)
+    (h : (gateAsymmetric limit base cand budget cost).verdict = AsymVerdict.ok) :
+    (∀ x ∈ cand, x ≤ limit) ∧ 0 < cost ∧ cost ≤ budget
+      ∧ (gateAsymmetric limit base cand budget cost).remaining = budget - cost := sorry
+
+/-- Completeness of the asymmetric gate for pure safety moves: starting
+    within the limit with positive cost within budget, any non-empty
+    same-length move that raises no margin is admitted as `.ok`, regardless
+    of how far margins drop toward safety. -/
+theorem PlantGate.Spec.asym_gate_pure_safety_admitted (limit : Int) (base cand : List Int)
+    (budget cost : Int)
+    (hc : 0 < cost) (hb : cost ≤ budget) (hn : base ≠ []) (hl : base.length = cand.length)
+    (hw : ∀ x ∈ base, x ≤ limit)
+    (hdown : ∀ p ∈ List.zip base cand, p.2 ≤ p.1) :
+    (gateAsymmetric limit base cand budget cost).verdict = AsymVerdict.ok := sorry
+
+/-- Strict Lyapunov recovery for out-of-limit baselines: an `.okRecovery` step
+    starts from negative headroom, strictly increases headroom (strictly
+    lowers the worst excess above `limit`), never pushes a safe coordinate
+    above `limit` or worsens an already-violating coordinate, and spends
+    exactly its positive cost. -/
+theorem PlantGate.Spec.asym_gate_recovery_lyapunov_descent (limit : Int) (base cand : List Int)
+    (budget cost : Int)
+    (h : (gateAsymmetric limit base cand budget cost).verdict = AsymVerdict.okRecovery) :
+    headroom limit base < 0
+      ∧ headroom limit base < headroom limit cand
+      ∧ max 0 (-headroom limit cand) < max 0 (-headroom limit base)
+      ∧ (∀ p ∈ List.zip base cand, p.2 ≤ max p.1 limit)
+      ∧ 0 < cost ∧ cost ≤ budget
+      ∧ (gateAsymmetric limit base cand budget cost).remaining = budget - cost := sorry
+
+/-- Safety and budget bound of the asymmetric loop: starting within the
+    limit with non-negative budget, any sequence of proposals stays within
+    the limit, keeps the budget non-negative and non-increasing, and admits
+    at most the starting budget of changes. -/
+theorem PlantGate.Spec.asym_run_safe_and_bounded (limit : Int) (steps : List (List Int × Int))
+    (s : List Int × Int)
+    (hw : ∀ x ∈ s.1, x ≤ limit) (hb : 0 ≤ s.2) :
+    (∀ x ∈ (runAsymmetric limit s steps).1, x ≤ limit)
+      ∧ 0 ≤ (runAsymmetric limit s steps).2
+      ∧ (runAsymmetric limit s steps).2 ≤ s.2
+      ∧ (asymAcceptedCount limit s steps : Int) + (runAsymmetric limit s steps).2 ≤ s.2 := sorry

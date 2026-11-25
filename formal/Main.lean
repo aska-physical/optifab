@@ -35,6 +35,15 @@ def verdictName : Verdict → String
   | .radius => "radius"
   | .distance => "distance"
 
+def asymVerdictName : AsymVerdict → String
+  | .ok => "ok"
+  | .okRecovery => "okRecovery"
+  | .cost => "cost"
+  | .budget => "budget"
+  | .shape => "shape"
+  | .distance => "distance"
+  | .noImprovement => "noImprovement"
+
 def ints (s : String) : Option (List Int) :=
   (words s).mapM String.toInt?
 
@@ -60,7 +69,8 @@ def design (limit budget : Int) (p : Plant) (y : Scenario) (b c : Genome) : Stri
     else if c = b then "same"
     else if inBounds p.lo p.hi c = false then "bounds"
     else if j.verdict ≠ Verdict.ok then verdictName j.verdict
-    else "worse"
+    else if objective p y c < objective p y b then "worse"
+    else "headroom"
   let after := step p y limit (b, budget) c
   let ms := " ".intercalate ((margins p y c).map toString)
   s!"{name} {after.2} {objective p y b} {objective p y c} ; {ms}"
@@ -86,6 +96,13 @@ def answer (line : String) : String :=
         else "error"
       | _, _, _, _ => "error"
     | _, _, _, _, _, _, _, _ => "error"
+  | [head, pl, sc, lo, hi, g] =>
+    match words head, ints pl, ints sc, (ints lo).bind genomeOf, (ints hi).bind genomeOf, (ints g).bind genomeOf with
+    | ["w"], some pl, some sc, some lo, some hi, some g =>
+      match plantOf pl [] lo hi, scenarioOf sc with
+      | some p, some y => if wellFormedBool p y g = true then "ok" else "malformed"
+      | _, _ => "error"
+    | _, _, _, _, _, _ => "error"
   | [head, base, cand] =>
     match words head, (words base).mapM String.toInt?, (words cand).mapM String.toInt? with
     | [mode, x, budget, cost], some b, some c =>
@@ -95,6 +112,9 @@ def answer (line : String) : String :=
           let radius := if mode = "h" then headroom x b else x
           let o := gate b c radius budget cost
           s!"{verdictName o.verdict} {o.remaining}"
+        else if mode = "a" then
+          let o := gateAsymmetric x b c budget cost
+          s!"{asymVerdictName o.verdict} {o.remaining}"
         else "error"
       | _, _, _ => "error"
     | _, _, _ => "error"

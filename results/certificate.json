@@ -570,11 +570,11 @@
     "seed": 20261117,
     "verdicts": {
       "bounds": 55,
-      "budget": 456,
-      "distance": 2389,
-      "ok": 64,
-      "same": 38,
-      "worse": 5
+      "distance": 2796,
+      "headroom": 82,
+      "ok": 9,
+      "same": 48,
+      "worse": 17
     },
     "opening_verdicts": [
       "bounds",
@@ -585,18 +585,18 @@
       "distance",
       "same"
     ],
-    "taken_up": 64,
+    "taken_up": 9,
     "budget": 64,
-    "budget_left": 0,
+    "budget_left": 55,
     "eta_start_ppm": 914210,
-    "eta_final_ppm": 914718,
+    "eta_final_ppm": 915736,
     "every_design_held_within_limit": true,
     "every_design_held_within_bounds": true,
     "objective_never_fell": true,
     "changes_within_budget": true,
     "chain_intact": true,
     "entries_follow_from_one_another": true,
-    "final_hash": "963a04d4dc9f5d8ea62e30b73360b65de162620147e199b850da5a6c3054fc69"
+    "final_hash": "ea9de45544d93e3dbde1490673020b7f1b8843eaf207cf42a0f7be91baa40f35"
   },
   "recorded_proposer": {
     "present": true,
@@ -766,7 +766,7 @@
       "run_file_sha256": "0c5cf9323b4ec7bba0bf63842dbdaee9a7d061336606a8a26d4b7ae8a22a248d",
       "ledger_file_sha256": "73f934cedad7e00cd7b6d3e2d17c318955b30e2eac6f4e7d6930179169dde343",
       "proposals": 11,
-      "verdicts_unchanged_under_the_corrected_model": 2,
+      "verdicts_unchanged_under_the_corrected_model": 1,
       "final_design_unchanged": false,
       "objective_as_recorded_ppm": 919548,
       "objective_under_the_corrected_model_ppm": 914718
@@ -796,12 +796,20 @@
       "PlantGate.Spec.run_bounded",
       "PlantGate.Spec.step_complete",
       "PlantGate.Spec.same_design_not_taken_up",
+      "PlantGate.Spec.tie_headroom_decay_refused",
       "PlantGate.Spec.step_refusal_changes_nothing",
       "PlantGate.Spec.loop_safe",
       "PlantGate.Spec.loop_in_bounds",
       "PlantGate.Spec.loop_never_worse",
+      "PlantGate.Spec.loop_lex_monotone",
       "PlantGate.Spec.loop_bounded",
-      "PlantGate.Spec.loop_keeps_physics"
+      "PlantGate.Spec.loop_keeps_physics",
+      "PlantGate.Spec.wellformed_nonneg_demands",
+      "PlantGate.Spec.loop_keeps_wellformed_physics",
+      "PlantGate.Spec.asym_gate_ok_stays_within",
+      "PlantGate.Spec.asym_gate_pure_safety_admitted",
+      "PlantGate.Spec.asym_gate_recovery_lyapunov_descent",
+      "PlantGate.Spec.asym_run_safe_and_bounded"
     ],
     "comparator": {
       "command": "lake comparator --paranoid",
@@ -842,7 +850,7 @@
       }
     },
     "differential_tests": {
-      "inputs": 405000,
+      "inputs": 430000,
       "seed": 20261117,
       "failures": 0,
       "passed": true
@@ -1165,7 +1173,8 @@
     "must_fail_26_recorded_run_of_an_outside_proposer_breaks_a_rule_or_can_be_edited_unseen": true,
     "must_fail_28_ledger_whose_entries_do_not_follow_from_one_another_passes": true,
     "must_fail_29_check_that_python_O_would_strip": true,
+    "must_fail_30_issue14_lex_wellformed_and_asymmetric_gate": true,
     "must_fail_27_warm_site_campus_counted_with_the_design_load_floor": true
   },
-  "controls_passed": "29/29"
+  "controls_passed": "30/30"
 }

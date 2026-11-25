@@ -199,12 +199,100 @@ def inputs(seed, count):
     return cases[:count], mutated
 
 
+def split_output_lines(stdout: str) -> list[str]:
+    """Split process stdout into exact lines, stripping at most one trailing newline."""
+    if stdout == "":
+        return []
+    if stdout.endswith("\n"):
+        return stdout[:-1].split("\n")
+    return stdout.split("\n")
+
+
+def compare_outputs(inputs_all, want, stdout):
+    """Compare Lean stdout lines against expected outputs, failing on any length mismatch."""
+    out = split_output_lines(stdout)
+    failures = [(c, got) for c, w, got in zip(inputs_all, want, out) if got != w]
+    if len(out) != len(want):
+        failures.append(("output line count mismatch", f"got {len(out)} lines, expected {len(want)}"))
+    return failures
+
+
+def asym_inputs(seed, count):
+    """Asymmetric-gate inputs: pure safety moves, OOB recovery, boundary mutations, and random cases."""
+    cases = [
+        (1_000_000, 10, 1, [], []),
+        (1_000_000, 10, 1, [900_000], []),
+        (1_000_000, 10, 0, [900_000], [800_000]),
+        (1_000_000, 0, 1, [900_000], [800_000]),
+        # Pure safety move larger than symmetric headroom (pcm 2500 -> 5000 kWh outage margin)
+        (1_000_000, 64, 1, [801_052, 961_695], [801_052, 480_848]),
+        # At exact limit (headroom = 0): pure safety move admitted, upward move refused
+        (1_000_000, 64, 1, [1_000_000, 800_000], [950_000, 800_000]),
+        (1_000_000, 64, 1, [1_000_000, 800_000], [1_000_001, 800_000]),
+        # OOB baseline recovery (pcm = 2350 -> 2500 kWh): strict Lyapunov descent, no new excess
+        (1_000_000, 64, 1, [801_052, 1_023_079], [801_052, 961_695]),
+        (1_000_000, 64, 1, [801_052, 1_023_079], [801_052, 1_001_765]),
+        # OOB non-improving or creating a new violation -> refused
+        (1_000_000, 64, 1, [801_052, 1_023_079], [801_052, 1_023_079]),
+        (1_000_000, 64, 1, [801_052, 1_023_079], [1_005_000, 961_695]),
+    ]
+    rng = random.Random(seed + 3)
+
+    def push(case):
+        if len(cases) < count:
+            cases.append(case)
+
+    while len(cases) < count:
+        n = rng.randint(1, 6)
+        bits = rng.choice([4, 12, 22, 40])
+        base = [rng.getrandbits(bits) - (1 << (bits - 1)) for _ in range(n)]
+        budget = rng.choice([0, 1, 2, 64, rng.getrandbits(bits)])
+        cost = rng.choice([1, 1, budget, budget + 1, 0, -1])
+        if rng.random() < 0.65:
+            # Safe baseline
+            limit = max(base) + rng.choice([0, 1, rng.getrandbits(bits // 2 + 1)])
+            room = oracle.headroom(limit, base)
+            cand = [b + rng.randint(-(1 << (bits // 2)), 1 << (bits // 2)) for b in base]
+            push((limit, budget, cost, base, cand))
+            # Large pure safety drop (way beyond room)
+            safe_cand = [b - rng.randint(0, max(1, 10 * room + 100)) for b in base]
+            push((limit, budget, cost, base, safe_cand))
+            # One coordinate moved upward to, onto, and past room while another drops far
+            for move in (room - 1, room, room + 1):
+                c = list(base)
+                idx = rng.randrange(n)
+                c[idx] += move
+                if n >= 2:
+                    c[(idx + 1) % n] -= abs(move) + room + 5
+                push((limit, budget, cost, base, c))
+        else:
+            # Out-of-limit baseline (headroom < 0)
+            limit = max(base) - rng.randint(1, max(2, 1 << (bits // 2)))
+            idx = base.index(max(base))
+            # Valid recovery step
+            c_rec = [min(b, limit) for b in base]
+            c_rec[idx] = base[idx] - rng.randint(1, max(1, base[idx] - limit + 5))
+            push((limit, budget, cost, base, c_rec))
+            # Non-improving step
+            c_same = list(base)
+            push((limit, budget, cost, base, c_same))
+            # Step that reduces worst excess but pushes a safe coordinate past limit
+            if n >= 2:
+                c_bad = list(c_rec)
+                other = (idx + 1) % n
+                if base[other] <= limit:
+                    c_bad[other] = limit + 1
+                    push((limit, budget, cost, base, c_bad))
+    return cases[:count]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=20261117)
     ap.add_argument("--count", type=int, default=300_000)
     ap.add_argument("--designs", type=int, default=100_000)
     ap.add_argument("--loops", type=int, default=5_000)
+    ap.add_argument("--asym", type=int, default=25_000)
     args = ap.parse_args()
 
     if not EXE.exists():
@@ -213,22 +301,31 @@ def main():
     cases, mutated = inputs(args.seed, args.count)
     designs, edges = design_inputs(args.seed, args.designs)
     loops = loop_inputs(args.seed, args.loops)
-    stdin = "".join(oracle.line(*c) + "\n" for c in cases) + "".join(oracle.design_line(*d) + "\n" for d in designs) \
+    asyms = asym_inputs(args.seed, args.asym)
+    stdin = (
+        "".join(oracle.line(*c) + "\n" for c in cases)
+        + "".join(oracle.design_line(*d) + "\n" for d in designs)
         + "".join(oracle.loop_line(*r) + "\n" for r in loops)
-    out = subprocess.run([str(EXE)], input=stdin, capture_output=True,
-                         text=True, check=True).stdout.split("\n")
-    want = [expected(c) for c in cases] + [oracle.design_expected(*d) for d in designs] \
+        + "".join(oracle.asym_line(*a) + "\n" for a in asyms)
+    )
+    stdout = subprocess.run([str(EXE)], input=stdin, capture_output=True,
+                            text=True, check=True).stdout
+    want = (
+        [expected(c) for c in cases]
+        + [oracle.design_expected(*d) for d in designs]
         + [oracle.loop_expected(*r) for r in loops]
-    failures = [(c, got) for c, w, got in zip(cases + designs + loops, want, out) if got != w]
-    if len(out) < len(want):
-        failures.append(("missing output", f"{len(out)} lines"))
-    verdicts, design_verdicts = {}, {}
+        + [oracle.asym_expected(*a) for a in asyms]
+    )
+    failures = compare_outputs(cases + designs + loops + asyms, want, stdout)
+    verdicts, design_verdicts, asym_verdicts = {}, {}, {}
     for w in want[:len(cases)]:
         verdicts[w.split()[0]] = verdicts.get(w.split()[0], 0) + 1
     for w in want[len(cases):len(cases) + len(designs)]:
         design_verdicts[w.split()[0]] = design_verdicts.get(w.split()[0], 0) + 1
+    for w in want[len(cases) + len(designs) + len(loops):]:
+        asym_verdicts[w.split()[0]] = asym_verdicts.get(w.split()[0], 0) + 1
     proposals = sum(len(r[5]) for r in loops)
-    taken = sum(int(w.split()[-1]) for w in want[len(cases) + len(designs):])
+    taken = sum(int(w.split()[-1]) for w in want[len(cases) + len(designs):len(cases) + len(designs) + len(loops)])
 
     lean = subprocess.run(["lake", "env", "lean", "--version"], cwd=ROOT,
                           capture_output=True, text=True).stdout.strip()
@@ -248,6 +345,8 @@ def main():
         f"- Design edges: {edges} of the design inputs have a gene on or just past a bound, or a margin on or just past its limit",
         "- Design verdicts: " + ", ".join(f"{k} {v}" for k, v in sorted(design_verdicts.items())),
         f"- Loop inputs: {len(loops)}, each a whole run through `loop` and `changes`: {proposals} proposals in all, {taken} taken up",
+        f"- Asymmetric gate inputs: {len(asyms)}",
+        "- Asymmetric verdicts: " + ", ".join(f"{k} {v}" for k, v in sorted(asym_verdicts.items())),
         f"- Failures: {len(failures)}",
         "",
     ]

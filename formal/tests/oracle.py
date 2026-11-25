@@ -42,6 +42,53 @@ def evolve(limit, state, cand, cost):
     return ((cand, remaining) if verdict == "ok" else state), verdict
 
 
+def pos_diff(b, c):
+    return c - b if b < c else 0
+
+
+def pos_dist_sq(base, cand):
+    return sum(pos_diff(b, c) * pos_diff(b, c) for b, c in zip(base, cand))
+
+
+def no_new_excess(limit, base, cand):
+    return all(c <= max(b, limit) for b, c in zip(base, cand))
+
+
+def gate_asymmetric(limit, base, cand, budget, cost):
+    """Asymmetric upward gate with strict Lyapunov out-of-limit recovery."""
+    if cost <= 0:
+        return "cost", budget
+    if budget < cost:
+        return "budget", budget
+    if len(base) != len(cand) or not base:
+        return "shape", budget
+    r = headroom(limit, base)
+    if r < 0:
+        if r < headroom(limit, cand) and no_new_excess(limit, base, cand):
+            return "okRecovery", budget - cost
+        return "noImprovement", budget
+    if r * r < pos_dist_sq(base, cand):
+        return "distance", budget
+    return "ok", budget - cost
+
+
+def evolve_asymmetric(limit, state, cand, cost):
+    """One generation under the asymmetric gate."""
+    base, budget = state
+    verdict, remaining = gate_asymmetric(limit, base, cand, budget, cost)
+    return ((cand, remaining) if verdict in ("ok", "okRecovery") else state), verdict
+
+
+def asym_line(limit, budget, cost, base, cand):
+    """One asymmetric-gate input line for the Lean executable."""
+    return f"a {limit} {budget} {cost} ; {' '.join(map(str, base))} ; {' '.join(map(str, cand))}"
+
+
+def asym_expected(limit, budget, cost, base, cand):
+    verdict, remaining = gate_asymmetric(limit, base, cand, budget, cost)
+    return f"{verdict} {remaining}"
+
+
 def line(mode, x, budget, cost, base, cand):
     """One input line for the Lean executable."""
     return f"{mode} {x} {budget} {cost} ; {' '.join(map(str, base))} ; {' '.join(map(str, cand))}"
@@ -118,21 +165,83 @@ def in_bounds(lo, hi, g):
     return all(lo[k] <= g[k] <= hi[k] for k in GENES)
 
 
+def well_formed_plant(p, sc):
+    lo, hi = p["lo"], p["hi"]
+    return (
+        p["p_it_w"] > 0 and p["cop_ppm"] > 0 and p["ua_roof_mw_k"] >= 0
+        and p["wall_area_m2"] >= 0 and p["dt_mk"] >= 0 and p["other_w"] >= 0
+        and p["passive_w"] >= 0 and p["aux_w"] >= 0 and p["loop_cop_milli"] > 0
+        and lo["pcm_kwh"] > 0 and lo["pcm_kwh"] <= hi["pcm_kwh"]
+        and 0 <= lo["capture_ppm"] <= hi["capture_ppm"] <= 1_000_000
+        and 0 <= lo["wall_u_mw"] <= hi["wall_u_mw"]
+        and 0 <= lo["floor_kw"] <= hi["floor_kw"]
+        and 0 <= lo["shed_ppm"] <= hi["shed_ppm"] <= 1_000_000
+        and sc["outage_min"] > 0 and sc["outages_per_year"] >= 0
+        and 0 <= sc["low_demand_fraction_ppm"] <= 1_000_000
+        and 0 <= sc["low_demand_hours"] <= sc["hours_per_year"]
+        and sc["hours_per_year"] > 0
+    )
+
+
+def well_formed_genome(g):
+    return (
+        g["pcm_kwh"] > 0
+        and 0 <= g["capture_ppm"] <= 1_000_000
+        and g["wall_u_mw"] >= 0
+        and g["floor_kw"] > 0
+        and 0 <= g["shed_ppm"] <= 1_000_000
+    )
+
+
+def well_formed(p, sc, g):
+    return well_formed_plant(p, sc) and well_formed_genome(g)
+
+
+def well_formed_line(p, sc, g):
+    """One well-formedness check line for the Lean executable."""
+    return " ; ".join([
+        "w",
+        " ".join(str(p[k]) for k in PLANT),
+        " ".join(str(sc[k]) for k in SCENARIO),
+        _genes(p["lo"]),
+        _genes(p["hi"]),
+        _genes(g),
+    ])
+
+
+def well_formed_expected(p, sc, g):
+    return "ok" if well_formed(p, sc, g) else "malformed"
+
+
+def lex_improves(p, sc, limit, held, cand):
+    o_held, o_cand = objective(p, sc, held), objective(p, sc, cand)
+    if o_cand > o_held:
+        return True
+    if o_cand == o_held:
+        return headroom(limit, margins(p, sc, cand)) > headroom(limit, margins(p, sc, held))
+    return False
+
+
 def design_step(p, sc, limit, state, cand):
     """One generation over designs. Returns the new state and the verdict."""
     held, budget = state
     base = margins(p, sc, held)
-    verdict, remaining = gate(base, margins(p, sc, cand), headroom(limit, base), budget, 1)
+    cand_m = margins(p, sc, cand)
+    verdict, remaining = gate(base, cand_m, headroom(limit, base), budget, 1)
     if all(cand[k] == held[k] for k in GENES):
         name = "same"
     elif not in_bounds(p["lo"], p["hi"], cand):
         name = "bounds"
     elif verdict != "ok":
         name = verdict
-    elif objective(p, sc, cand) < objective(p, sc, held):
-        name = "worse"
     else:
-        name = "ok"
+        o_held, o_cand = objective(p, sc, held), objective(p, sc, cand)
+        if o_cand < o_held:
+            name = "worse"
+        elif o_cand == o_held and headroom(limit, cand_m) <= headroom(limit, base):
+            name = "headroom"
+        else:
+            name = "ok"
     return ((cand, remaining) if name == "ok" else state), name
 
 

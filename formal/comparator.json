@@ -12,12 +12,20 @@
     "PlantGate.Spec.run_bounded",
     "PlantGate.Spec.step_complete",
     "PlantGate.Spec.same_design_not_taken_up",
+    "PlantGate.Spec.tie_headroom_decay_refused",
     "PlantGate.Spec.step_refusal_changes_nothing",
     "PlantGate.Spec.loop_safe",
     "PlantGate.Spec.loop_in_bounds",
     "PlantGate.Spec.loop_never_worse",
+    "PlantGate.Spec.loop_lex_monotone",
     "PlantGate.Spec.loop_bounded",
-    "PlantGate.Spec.loop_keeps_physics"
+    "PlantGate.Spec.loop_keeps_physics",
+    "PlantGate.Spec.wellformed_nonneg_demands",
+    "PlantGate.Spec.loop_keeps_wellformed_physics",
+    "PlantGate.Spec.asym_gate_ok_stays_within",
+    "PlantGate.Spec.asym_gate_pure_safety_admitted",
+    "PlantGate.Spec.asym_gate_recovery_lyapunov_descent",
+    "PlantGate.Spec.asym_run_safe_and_bounded"
   ],
   "permitted_axioms": [
     "propext",

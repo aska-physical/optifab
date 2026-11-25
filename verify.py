@@ -1081,10 +1081,13 @@ def run_formal(ledgers: dict) -> int:
     replay, mismatches = {}, 0
     for name, ledger in ledgers.items():
         lines = loop.replay_lines(ledger)
-        out = sh([str(FORMAL_DIR / ".lake" / "build" / "bin" / "plantgate")], input="\n".join(lines) + "\n").stdout.split("\n")
-        bad = sum(1 for want, got in zip(loop.replay_expected(ledger), out) if got != want) + max(0, len(lines) - len(out))
+        raw_out = sh([str(FORMAL_DIR / ".lake" / "build" / "bin" / "plantgate")], input="\n".join(lines) + "\n").stdout
+        out = raw_out[:-1].split("\n") if raw_out.endswith("\n") else (raw_out.split("\n") if raw_out else [])
+        expected_lines = loop.replay_expected(ledger)
+        bad = sum(1 for want, got in zip(expected_lines, out) if got != want) + abs(len(expected_lines) - len(out))
         whole, want_whole = loop.replay_whole(ledger)  # the same run in one piece, through the proved `loop` and `changes`
-        got_whole = sh([str(FORMAL_DIR / ".lake" / "build" / "bin" / "plantgate")], input=whole + "\n").stdout.strip()
+        raw_whole = sh([str(FORMAL_DIR / ".lake" / "build" / "bin" / "plantgate")], input=whole + "\n").stdout
+        got_whole = raw_whole[:-1] if raw_whole.endswith("\n") else raw_whole
         bad += got_whole != want_whole
         replay[name] = {"decisions": len(lines), "mismatches": bad, "whole_run_through_lean_loop_agrees": got_whole == want_whole}
         mismatches += bad
@@ -1329,6 +1332,16 @@ def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, 
     flipped = copy.deepcopy(inp["weft_vectors"])
     flipped["weight_update_vectors"][1]["expected_accepted"] = False
     drift = interface_checks(inp, floor_mass_override=200.0)
+    plant_pinned = loop_plant(inp, env, margins)
+    start_genes = loop.genes(LOOP_START)
+    decay_cand = dict(start_genes, pcm_kwh=2450)
+    wider_cand = dict(start_genes, pcm_kwh=2580)
+    safe_big = dict(start_genes, pcm_kwh=5000)
+    oob_start = dict(start_genes, pcm_kwh=2350)
+    base_vec = loop.oracle.margins(plant_pinned, loop.SCENARIO, start_genes)
+    safe_vec = loop.oracle.margins(plant_pinned, loop.SCENARIO, safe_big)
+    oob_vec = loop.oracle.margins(plant_pinned, loop.SCENARIO, oob_start)
+    bad_rec_vec = [loop.LIMIT + 1] + base_vec[1:]
     controls = {
         # funi-frame v0.1.1 adopted finding 1. The control now guards the agreement: it fails if upstream goes back
         # to counting freed utility power as IT power, or if the two derivations drift apart.
@@ -1413,6 +1426,16 @@ def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, 
         "must_fail_29_check_that_python_O_would_strip":
             asserts["assert_statements"] == 0 and asserts["scanner_finds_a_planted_assert"]
             and _raises(lambda: require(False, "probe")),
+        "must_fail_30_issue14_lex_wellformed_and_asymmetric_gate":
+            loop.oracle.design_step(plant_pinned, loop.SCENARIO, loop.LIMIT, (start_genes, LOOP_BUDGET), decay_cand)[1] == "headroom"
+            and loop.oracle.design_step(plant_pinned, loop.SCENARIO, loop.LIMIT, (start_genes, LOOP_BUDGET), wider_cand)[1] == "ok"
+            and loop.oracle.well_formed(plant_pinned, loop.SCENARIO, start_genes)
+            and not loop.oracle.well_formed(plant_pinned, loop.SCENARIO, dict(start_genes, shed_ppm=2_000_000))
+            and not loop.oracle.well_formed(plant_pinned, loop.SCENARIO, dict(start_genes, floor_kw=0))
+            and loop.oracle.pos_dist_sq(base_vec, safe_vec) == 0
+            and loop.oracle.gate_asymmetric(loop.LIMIT, base_vec, safe_vec, LOOP_BUDGET, 1) == ("ok", LOOP_BUDGET - 1)
+            and loop.oracle.gate_asymmetric(loop.LIMIT, oob_vec, base_vec, LOOP_BUDGET, 1) == ("okRecovery", LOOP_BUDGET - 1)
+            and loop.oracle.gate_asymmetric(loop.LIMIT, oob_vec, bad_rec_vec, LOOP_BUDGET, 1) == ("noImprovement", LOOP_BUDGET),
         "must_fail_27_warm_site_campus_counted_with_the_design_load_floor":
             abs(network["sites"][0]["load_floor_MW"] - ml["P_min_envelope_plus_overhead_MW"]) < 0.001
             and network["two_campuses"]["warm_floor_over_cool_floor"] > 2.0
@@ -1483,6 +1506,8 @@ def build_certificate(with_ledger: bool = False, check: bool = True):
     require(graph["aska_physical_to_moissanite_links_before"] == 0 and graph["aska_physical_to_moissanite_links_added"] >= 1, 'the cross-organisation link count is not what the map claims')
     require(frames["matches_weft_frame_layout"] and frames["gate_from_frame"]["design point"] == "ok", "the plant frame does not match Weft's layout, or the design point does not pass the gate")
     require(not unit["loop_closed"], "the loop is reported closed; check data/unit.json before believing it")
+    require(loop.oracle.well_formed(plant, loop.SCENARIO, loop.genes(LOOP_START)),
+            "the pinned plant, scenario, or starting design fails WellFormed")
     require(not check or all(controls.values()), [k for k, v in controls.items() if not v])
 
     overhead_cut = (ts["PUE_conventional"] - ts["PUE_funi_frame"]) / (ts["PUE_conventional"] - 1.0) * 100.0
