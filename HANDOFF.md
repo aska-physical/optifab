@@ -1,4 +1,4 @@
-# Handoff: aska-physical/optifab v0.3.1
+# Handoff: aska-physical/optifab v0.3.2
 
 Written under the group ethos: leave everything the next agent needs so nothing has to be derived twice.
 
@@ -14,9 +14,9 @@ single unit. [docs/STRUCTURE.md](docs/STRUCTURE.md) is the design of that unit a
 The findings are in [README.md](README.md) and derived in [docs/MODEL.md](docs/MODEL.md). In one line each:
 
 1. The 3.06 MW of utility power that funi-frame's plant frees carries 2.85 to 2.96 MW of IT load, depending on
-   how much of the overhead grows with load.
-2. The sorption stage needs a heat sink below 41.5 °C at best to reach its claimed COP. The plant model has no
-   recooling temperature.
+   how much of the overhead grows with load. Adopted in funi-frame v0.1.1.
+2. The sorption stage needs a heat sink below 41.5 °C at best to reach its claimed COP. funi-frame v0.1.0 had
+   no recooling temperature. v0.1.1 carries the limit and a proposed design value of 30 °C.
 3. The campus stops cooling itself below about 0.56 MW of IT load. A worse wall raises that floor.
 4. The PCM skid is a budget of 2,500 kWh_th that outages and bursts draw on.
 5. The tightest certified margin in the building is the floor punching collar, at 80.1%.
@@ -109,9 +109,10 @@ The findings are in [README.md](README.md) and derived in [docs/MODEL.md](docs/M
 
 These concern other repositories. Nothing was changed there except the profile fix in item 4.
 
-These three funi-frame notes are implemented in aska-physical/funi-frame#4 (draft). When it merges,
-optifab's verifier fails on purpose (must-fail control 1 and the recooling-field check), because findings 1 and
-2 will then be out of date: refresh the vendored certificate, run `--repin`, and restate them.
+These three funi-frame notes were implemented in aska-physical/funi-frame#4, merged on 2026-11-24 as v0.1.1.
+optifab v0.3.2 follows it: the vendored certificate and the pins are at v0.1.1, findings 1 and 2 are restated
+as adopted, and `verify.py` now checks that the two repositories agree where it used to check that they
+differed. The notes are kept below as they were written, for the record.
 
 1. **funi-frame, compute revenue.** `results/certificate.json` reports `freed_substation_power_MW` of 3.06 and
    `unlocked_annual_revenue_low_M_usd` of 76.62, the product of that power and $25M per MW-year
@@ -204,8 +205,9 @@ could be given `results/model_lessons_2.md`.
 4. **A first fabrication element (interface L8, element F1).** Pick one aska-physical process that already has
    certified limits, state its gate inputs, and run the gate on them. Fe-SMA activation in funi-floors is the
    obvious candidate.
-5. **Apply notes 1 and 2 of section 3 in funi-frame.** Done when its certificate carries the extra IT power
-   and a recooling temperature, and optifab's pins are refreshed.
+5. **Done in v0.3.2.** Notes 1 and 2 of section 3 are in funi-frame v0.1.1 and optifab's pins are refreshed.
+   What is left there is the owner's: confirm or replace the 30 °C design recooling temperature, and say
+   whether the compute value is per MW of IT load.
 6. **A year at part load (optifab, with funi-frame issue 2).** Run an hourly utilisation trace against the load
    floor and the thermal budget. Report hours below the floor and the budget drawn. Share the trace with
    funi-frame's aquifer balance, which injects 84.3 GWh_th a year in one direction.
@@ -252,7 +254,7 @@ could be given `results/model_lessons_2.md`.
   the twelve under "Surveyed and not connected". The three Terrafab documents named in issue 1 were read in
   full, with Weft's digest of them. Two read-only survey agents located data files and status
   lines; every value used here was then re-read directly and is pinned.
-- Ran: funi-frame's `verify.py`, which reproduces its certificate (12/12 controls). optifab's own verifier,
+- Ran: funi-frame's `verify.py`, which reproduces its certificate (12/12 controls at v0.1.0, 14/14 at v0.1.1). optifab's own verifier,
   offline and against the clones.
 - Ran: Weft's `invariants.py`, as the oracle of the differential test. Lean 4.35.0, `lake comparator --paranoid`
   and the Proven Commons bar checker (`bar/check.py` at mission `7b22e54`) on `formal/`.

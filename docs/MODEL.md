@@ -43,7 +43,11 @@ Literals and prose are pinned by repository, commit, file, line and text in `dat
 
 **PROVEN** (two identities). **VERIFIED** (numbers).
 
-funi-frame reports 3.06 MW of "freed substation power" and multiplies it by a value of compute per MW. Freed
+**Adopted upstream.** funi-frame v0.1.1 reports the extra IT power derived below, and `verify.py` now checks
+that its certificate and this derivation agree. What follows is the derivation, and the comparison with
+v0.1.0 that prompted the change.
+
+funi-frame v0.1.0 reported 3.06 MW of "freed substation power" and multiplied it by a value of compute per MW. Freed
 utility power is not IT power, because new racks need cooling and overhead of their own. How much IT load the
 freed power carries depends on how the overhead grows.
 
@@ -66,12 +70,14 @@ round to the certificate's 1.380 and 1.074). Then:
 | Freed utility power | 3.065 MW (certificate: 3.06) |
 | Extra IT load, every overhead growing with load | 2.854 MW |
 | Extra IT load, auxiliaries fixed | 2.959 MW |
-| Low-end revenue on the certificate | $76.62M a year |
+| Low-end revenue on the v0.1.0 certificate | $76.62M a year |
 | Low-end revenue on the extra IT load | $71.35M to $73.97M a year |
+| Extra IT load on the v0.1.1 certificate | 2.85 to 2.96 MW |
+| Low-end revenue on the v0.1.1 certificate | $71.35M a year |
 
-Either way it is less than 3.06 MW. If the dollar value is per MW of IT load, the certificate's revenue figures
-are 3.6% to 7.4% high. funi-frame does not say which kind of MW its value refers to, and the source of that
-value is not pinned here. Both cases assume the freed power is used in the same plant.
+Either way it is less than 3.06 MW. If the dollar value is per MW of IT load, the v0.1.0 revenue figures
+were 3.6% to 7.4% high. v0.1.1 assumes it is per MW of IT load and says the owner has still to confirm that.
+The source of the value is not pinned here. Both cases assume the freed power is used in the same plant.
 
 The rebuild also gives the heat sent to the aquifer store: 9.62 MW, or 84.3 GWh_th a year, all in one direction.
 funi-frame already lists the yearly aquifer balance as open work.
@@ -108,7 +114,11 @@ evaporator is colder than the water it chills, and the condenser is warmer than 
 machine that took up heat along the whole range of a warmer return stream could be bounded less tightly; the
 certificate gives no return temperature.
 
-The funi-frame certificate has no recooling temperature in it, and no stream temperature as a value at all. Its
+**Adopted upstream.** The funi-frame v0.1.0 certificate had no recooling temperature in it, and no stream
+temperature as a value at all. v0.1.1 carries the drive, chilled-water and recooling temperatures, the same
+limit of 41.46 °C, and a must-fail control for dry recooling at 45 °C. `verify.py` checks that its limit and
+its reversible COP agree with the ones derived here. Its design recooling temperature of 30 °C is marked in
+the certificate as a proposal with no source, awaiting the owner's confirmation. Its
 design does provide cool sinks: the aquifer loop, the energy piles and the sky-cooling roof. The point is that
 the zero-water claim and the COP claim both depend on those sinks. Dry coolers alone cannot hold the COP on a
 day hotter than about 41 °C minus their approach.
@@ -297,8 +307,9 @@ largest rounding error on a margin is 3e-8.
 
 The contract check reads one frame and reports which terms fail: a margin past its limit, a spent budget, a load
 below the floor of section 3, a recooling temperature at or above the limit of section 2, or a quantity that
-was not measured. The design point passes with a recooling temperature of 30 °C. With the recooling slot left
-empty, as the funi-frame certificate leaves it, the check reports `recooling_not_measured`.
+was not measured. The design point passes with the certificate's design recooling temperature of 30 °C. With the
+recooling slot left empty the check reports `recooling_not_measured`. Until funi-frame v0.1.1 the certified
+design point could not fill that slot at all.
 
 The byte layout is Weft's and is pinned. What each slot means is new here, and Weft's owners decide whether the
 frame may share their bus. [STRUCTURE.md](STRUCTURE.md) lists the slots.
@@ -457,7 +468,7 @@ Python copy, and `--formal` replays all of it in Lean.
 **VERIFIED** under assumption A-4. A-4, made here: at any recooling temperature the sorption chiller reaches
 the same share of its reversible COP as at the design point. With 58 °C drive, 18 °C chilled water and 30 °C
 recooling the reversible COP is 2.051, so the claimed 0.62 is a share of 0.302. The 30 °C is the design value
-proposed in aska-physical/funi-frame#4. No certificate states one.
+in funi-frame's certificate since v0.1.1, where it is marked as a proposal awaiting the owner's confirmation.
 
 Section 3 gave the load floor as `q_fix / ((1 + COP) α − 1)`. Under A-4 the COP falls as the recooling
 temperature rises, and the floor rises with it:

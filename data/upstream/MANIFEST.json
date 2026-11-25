@@ -5,10 +5,10 @@
     {
       "id": "funi-frame",
       "repo": "aska-physical/funi-frame",
-      "commit": "97b326d237de5e03a2a227a02f32121005109fb8",
+      "commit": "17d05bb376d0763db22d591431c7394af7a80097",
       "path": "results/certificate.json",
       "file": "aska-physical/funi-frame/certificate.json",
-      "sha256": "92e7bbcea389274d2967e463ec3881ec9311db7786c5e74559defcd936dfb9fa",
+      "sha256": "1c57555060c742c6e1eeb6ac8df38b7bf6ad7e3a7770bb851b345cb6ce3f4ede",
       "licence": "No licence file upstream. Same organisation."
     },
     {

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic verifier for aska-physical/optifab v0.3.1.
+"""Deterministic verifier for aska-physical/optifab v0.3.2.
 
 optifab models one reference data-centre campus as a checked stack and states the contract between
 the physical plant and the digital workload. It adds no new measurement. Every number is derived
@@ -50,7 +50,7 @@ FORMAL_SOURCES = ["PlantGate.lean", "PlantGate/Spec.lean", "PlantGate/Proofs.lea
                   "lakefile.toml", "lean-toolchain", "tests/oracle.py", "tests/run_tests.py"]
 KELVIN = 273.15
 PSF_TO_KPA = 0.04788026
-VERSION = "0.3.1"
+VERSION = "0.3.2"
 
 
 # --------------------------------------------------------------------------- inputs
@@ -225,8 +225,16 @@ def plant_envelope(inp: dict, design_dt_k: float = 20.0) -> dict:
         "marginal_PUE_with_fixed_auxiliaries": round(1.0 + 1.0 / cp["ates_cop"], 4),
         "certificate_revenue_low_M_usd": ts["unlocked_annual_revenue_low_M_usd"],
         "revenue_low_on_extra_it_M_usd": [round(extra_scaled * rev, 2), round(extra_fixed * rev, 2)],
-        "revenue_overstatement_pct": [round((freed_utility / extra_fixed - 1.0) * 100.0, 1),
-                                      round((freed_utility / extra_scaled - 1.0) * 100.0, 1)],
+        # funi-frame v0.1.0 multiplied the freed utility power by the value per MW. This is how far that was off.
+        "revenue_overstatement_in_funi_frame_v0_1_0_pct": [round((freed_utility / extra_fixed - 1.0) * 100.0, 1),
+                                                           round((freed_utility / extra_scaled - 1.0) * 100.0, 1)],
+        # Since v0.1.1 the upstream certificate reports the IT power itself. The two derivations must agree.
+        "certificate_extra_it_power_MW": [ts["extra_it_power_at_fixed_supply_low_MW"],
+                                          ts["extra_it_power_at_fixed_supply_high_MW"]],
+        "agrees_with_certificate": (
+            abs(extra_scaled - ts["extra_it_power_at_fixed_supply_low_MW"]) <= 0.005
+            and abs(extra_fixed - ts["extra_it_power_at_fixed_supply_high_MW"]) <= 0.005
+            and abs(extra_scaled * rev - ts["unlocked_annual_revenue_low_M_usd"]) <= 0.005),
     }
 
     # 3. Second-law envelope of the sorption stage.
@@ -251,6 +259,16 @@ def plant_envelope(inp: dict, design_dt_k: float = 20.0) -> dict:
         "second_law_efficiency_at_30C_recooling": [round(cop / cop_tri_thermal(t_drive, 30.0, t_chw_hi), 3),
                                                    round(cop / cop_tri_thermal(t_drive, 30.0, t_chw_lo), 3)],
         "certificate_has_a_recooling_field": any("recool" in k or "reject" in k or "condens" in k for k in keys(ff)),
+        # Since funi-frame v0.1.1 the certificate carries a design recooling temperature and its own limit.
+        "certificate_recooling_design_C": ts["T_recooling_design_C"],
+        "certificate_recooling_design_basis": ts["T_recooling_design_basis"],
+        "certificate_max_recooling_C": ts["T_recooling_max_for_design_cop_C"],
+        "certificate_chilled_water_C": ts["T_chilled_water_C"],
+        "agrees_with_certificate": (
+            ts["T_drive_supply_C"] == t_drive and ts["T_chilled_water_C"] == t_chw_hi and ts["cop_ads_design"] == cop
+            and abs(recooling_limit_c(t_drive, t_chw_hi, cop) - ts["T_recooling_max_for_design_cop_C"]) <= 0.005
+            and abs(cop_tri_thermal(t_drive, ts["T_recooling_design_C"], t_chw_hi)
+                    - ts["cop_ads_reversible_limit_at_design_recooling"]) <= 0.0005),
     }
 
     # 4. Minimum IT load that still drives the sorption stage.
@@ -693,17 +711,18 @@ def plant_frame_checks(inp: dict, margins: list[dict], radius: float, env: dict)
     p_it = inp["ff"]["domain_5_6_three_tier_tes_and_closed_loop_cooling"]["P_it_MW"]
     floor = env["minimum_load"]["P_min_envelope_plus_overhead_MW"]
     limit = env["second_law"]["max_recooling_C_at_chilled_18C"]  # the looser of the two, so never too strict
+    t_design = env["second_law"]["certificate_recooling_design_C"]  # proposed upstream, not yet confirmed by the owner
 
-    def frame(u=u0, load=p_it, recool=30.0, bud=budget):
+    def frame(u=u0, load=p_it, recool=t_design, bud=budget):
         return decode_plant_frame(encode_plant_frame(u, bud, load, recool, 0.0))
 
-    design_raw = encode_plant_frame(u0, budget, p_it, 30.0, 0.0)
+    design_raw = encode_plant_frame(u0, budget, p_it, t_design, 0.0)
     design = decode_plant_frame(design_raw)
     heavy = list(u0)
     heavy[k] = u0[k] * 1.26
     cases = {
-        "design point, recooling at 30 C": contract_check(design, floor, limit),
-        "design point as certified, no recooling temperature": contract_check(frame(recool=math.nan), floor, limit),
+        "design point as certified, recooling at its design value": contract_check(design, floor, limit),
+        "frame with no recooling temperature": contract_check(frame(recool=math.nan), floor, limit),
         "idle campus at 0.3 MW": contract_check(frame(load=0.3), floor, limit),
         "recooling at 42 C": contract_check(frame(recool=42.0), floor, limit),
         "floor punching demand up 26 percent": contract_check(frame(u=heavy), floor, limit),
@@ -798,11 +817,12 @@ def network_first_look(inp: dict, env: dict, plant: dict) -> dict:
 
     Assumption A-4, made here: at any recooling temperature the sorption chiller reaches the same share of
     its reversible COP as at the design point (58 C drive, 18 C chilled water, 30 C recooling). The 30 C
-    is the design value proposed in aska-physical/funi-frame#4, not a certified one."""
+    is in funi-frame's certificate since v0.1.1, marked there as a proposal awaiting the owner's confirmation."""
     pins, ml, sl = inp["pins"], env["minimum_load"], env["second_law"]
     cop = pin_value(pins, "ff.cop_ads", "cop_ads")
     t_drive, t_chw = sl["T_drive_C"], sl["T_chilled_C"][1]
-    share = cop / cop_tri_thermal(t_drive, 30.0, t_chw)
+    t_design = sl["certificate_recooling_design_C"]
+    share = cop / cop_tri_thermal(t_drive, t_design, t_chw)
     alpha, q_fix = ml["liquid_capture_fraction"], ml["envelope_gain_MW"] + ml["other_overhead_MW"]
     nameplate = plant["p_it_w"] / 1e6
 
@@ -1294,10 +1314,13 @@ def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, 
     flipped["weight_update_vectors"][1]["expected_accepted"] = False
     drift = interface_checks(inp, floor_mass_override=200.0)
     controls = {
-        # Fails, by design, the day funi-frame computes its revenue on IT power: finding 1 is then out of date.
-        "must_fail_01_upstream_revenue_is_computed_on_it_power":
-            sub["certificate_revenue_low_M_usd"] > 1.02 * max(sub["revenue_low_on_extra_it_M_usd"])
-            and sub["extra_it_if_auxiliaries_are_fixed_MW"] < sub["certificate_freed_substation_power_MW"],
+        # funi-frame v0.1.1 adopted finding 1. The control now guards the agreement: it fails if upstream goes back
+        # to counting freed utility power as IT power, or if the two derivations drift apart.
+        "must_fail_01_freed_utility_power_counted_as_it_power_upstream":
+            sub["agrees_with_certificate"]
+            and sub["certificate_revenue_low_M_usd"] < 0.98 * sub["certificate_freed_substation_power_MW"]
+            * pin_value(pins, "ff.revenue_low", "revenue_low_M_usd_per_MW_yr")
+            and max(sub["certificate_extra_it_power_MW"]) < sub["certificate_freed_substation_power_MW"],
         "must_fail_02_recooling_at_45C_keeps_the_claimed_cop_within_the_second_law":
             cop_tri_thermal(t_drive, 45.0, sl["T_chilled_C"][1]) < cop < cop_tri_thermal(t_drive, 30.0, sl["T_chilled_C"][1]),
         "must_fail_03_capture_below_the_threshold_self_cools_at_some_load":
@@ -1326,9 +1349,10 @@ def must_fail_controls(inp: dict, env: dict, margins: list[dict], radius: dict, 
         "must_fail_15_slow_loop_counters_a_plant_tone_within_its_cycle":
             timing["tones_countered_within_cycle_slow"] == 0 and timing["tones_countered_within_cycle_fast"] == len(timing["plant_tones"])
             and timing["plant_tones"][0]["residual_slow"] > 1.0 > timing["plant_tones"][0]["residual_fast"],
-        "must_fail_16_certified_design_point_fills_a_frame_without_a_recooling_temperature":
-            cc["design point as certified, no recooling temperature"] == ["recooling_not_measured"]
-            and cc["design point, recooling at 30 C"] == [] and cc["recooling at 42 C"] == ["recooling_above_limit"],
+        "must_fail_16_frame_without_a_recooling_temperature_passes_the_contract":
+            cc["frame with no recooling temperature"] == ["recooling_not_measured"]
+            and cc["design point as certified, recooling at its design value"] == []
+            and cc["recooling at 42 C"] == ["recooling_above_limit"],
         "must_fail_17_frame_past_a_limit_or_below_the_floor_passes_the_contract":
             cc["floor punching demand up 26 percent"] == ["limit_exceeded"] and cc["idle campus at 0.3 MW"] == ["below_load_floor"]
             and cc["thermal budget spent"] == ["thermal_budget_exhausted"]
@@ -1432,7 +1456,9 @@ def build_certificate(with_ledger: bool = False, check: bool = True):
                                   adversary, recorded_runs, network, asserts)
 
     require(env["pue_reproduction"]["liquid_plus_air_equals_it_load"] and env["pue_reproduction"]["matches_certificate"], 'the plant heat balance does not reproduce the upstream certificate')
-    require(not env["second_law"]["certificate_has_a_recooling_field"], "funi-frame now carries a recooling field: revisit finding 2")
+    require(env["substation"]["agrees_with_certificate"], "the extra IT power derived here no longer matches funi-frame's certificate")
+    require(env["second_law"]["certificate_has_a_recooling_field"] and env["second_law"]["agrees_with_certificate"],
+            "the recooling limit derived here no longer matches funi-frame's certificate")
     require(ball["all_within_limits"] and ball["fails_if_radius_grows_by_0.001"], 'the ball of the plant radius does not stay within every limit, or the check cannot fail')
     require(not conformance["failed"], conformance["failed"])
     require(differential["mismatches"] == 0, differential["first_mismatches"])

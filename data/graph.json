@@ -46,14 +46,14 @@
       "layer": "L2",
       "kind": "product",
       "role": "Data-centre shell and thermal plant for a 10 MW reference campus: roof, walls, vibration isolation, seismic frame, heat storage, sorption cooling.",
-      "status": "v0.1.0. verify.py reproduces the certificate, 12/12 must-fail controls. No review or built plant is recorded.",
+      "status": "v0.1.1. verify.py reproduces the certificate, 14/14 must-fail controls. Its changes were reviewed by the organisation's review agents. No person's sign-off or built plant is recorded.",
       "evidence": "claimed",
       "evidence_by": "optifab",
       "status_cite": {
         "repo": "aska-physical/funi-frame",
         "path": "README.md",
-        "find": "Verifies four SymPy symbolic theorems and **12/12 must-fail controls**",
-        "line": 33
+        "find": "Verifies six SymPy symbolic identities and **14/14 must-fail controls**",
+        "line": 34
       }
     },
     {
@@ -113,7 +113,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`fibral-rigidity`](https://github.com/aska-physical/fibral-rigidity)**",
-        "line": 17
+        "line": 18
       }
     },
     {
@@ -143,7 +143,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`venturi-collars`](https://github.com/aska-physical/venturi-collars)**",
-        "line": 15
+        "line": 16
       }
     },
     {
@@ -158,7 +158,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`impedence-analyzers`](https://github.com/aska-physical/impedence-analyzers)**",
-        "line": 16
+        "line": 17
       }
     },
     {
@@ -633,7 +633,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`cfrp-truss`](https://github.com/aska-physical/cfrp-truss)**",
-        "line": 13
+        "line": 14
       }
     },
     {
@@ -644,7 +644,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`cfrp-truss`](https://github.com/aska-physical/cfrp-truss)**",
-        "line": 13
+        "line": 14
       }
     },
     {
@@ -655,7 +655,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`cfrp-truss`](https://github.com/aska-physical/cfrp-truss)**",
-        "line": 13
+        "line": 14
       }
     },
     {
@@ -666,7 +666,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`cfrp-masts`](https://github.com/aska-physical/cfrp-masts)**",
-        "line": 14
+        "line": 15
       }
     },
     {
@@ -677,7 +677,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`cfrp-masts`](https://github.com/aska-physical/cfrp-masts)**",
-        "line": 14
+        "line": 15
       }
     },
     {
@@ -688,7 +688,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`cfrp-masts`](https://github.com/aska-physical/cfrp-masts)**",
-        "line": 14
+        "line": 15
       }
     },
     {
@@ -699,7 +699,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`venturi-collars`](https://github.com/aska-physical/venturi-collars)**",
-        "line": 15
+        "line": 16
       },
       "note": "The upstream is a project definition with no results, so nothing is inherited but the question."
     },
@@ -711,7 +711,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`venturi-collars`](https://github.com/aska-physical/venturi-collars)**",
-        "line": 15
+        "line": 16
       },
       "note": "The upstream is a research direction with no results."
     },
@@ -723,7 +723,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`impedence-analyzers`](https://github.com/aska-physical/impedence-analyzers)**",
-        "line": 16
+        "line": 17
       }
     },
     {
@@ -734,7 +734,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`impedence-analyzers`](https://github.com/aska-physical/impedence-analyzers)**",
-        "line": 16
+        "line": 17
       }
     },
     {
@@ -756,7 +756,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`funi-floors`](/aska-physical/funi-floors)**",
-        "line": 12
+        "line": 13
       }
     },
     {
@@ -767,7 +767,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`funi-floors`](/aska-physical/funi-floors)**",
-        "line": 12
+        "line": 13
       }
     },
     {
@@ -778,7 +778,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`funi-floors`](/aska-physical/funi-floors)**",
-        "line": 12
+        "line": 13
       }
     },
     {
@@ -789,7 +789,7 @@
         "repo": "aska-physical/.github",
         "path": "profile/README.md",
         "find": "| **[`funi-floors`](/aska-physical/funi-floors)**",
-        "line": 12
+        "line": 13
       }
     },
     {
@@ -855,7 +855,7 @@
         "repo": "aska-physical/funi-frame",
         "path": "verify.py",
         "find": "m_a = (2500.0 * (195.12 + roof_m) + p_m * h_a * wall_m) / 1000.0",
-        "line": 125
+        "line": 175
       },
       "note": "A value copied by hand into the downstream verifier. optifab now checks it against the upstream certificate."
     },
@@ -866,8 +866,8 @@
       "cite": {
         "repo": "aska-physical/funi-frame",
         "path": "verify.py",
-        "find": "Q_drv = Q_air / 0.62",
-        "line": 144
+        "find": "cop_ads, cop_loop = 0.62, 28.0",
+        "line": 198
       },
       "note": "Certificate vendored; verifier literals pinned.",
       "new": true
