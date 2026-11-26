@@ -1,0 +1,184 @@
+{
+  "certificate_sha256": "4f80fea31d4ca9a52924378510e12773abb2fcd7597cdf14ddd650425cda2876",
+  "claim_scope": "model_and_checker_only_no_bench_measurement",
+  "energy_power_status": "UNCONTROLLED_LAPTOP_NOT_CLAIMED",
+  "payload": {
+    "all_gates_passed": true,
+    "gates": {
+      "U1": {
+        "beaver_k4_moment_collapse": "64/1",
+        "belanger_k2_delta_e_q": "1/40",
+        "belanger_k4_delta_e_q": "27/80",
+        "belanger_k4_over_k2_nonlinear_ratio_q": "27/2",
+        "belanger_reversed_k_half_forbidden_delta_e_q": "-1/80",
+        "classification": {
+          "beaver_cascade_vs_petra_36_basins": "EXACT_ISOMORPHISM",
+          "beaver_leaky_weir_vs_petra_gier_schur": "EXACT_SCHUR_INERTIA_EQUIVALENCE",
+          "linear_schur_weir_vs_choke_piping_feedback": "PROVABLE_OBSTRUCTION",
+          "linear_schur_weir_vs_machu_picchu_belanger_jump": "PROVABLE_OBSTRUCTION"
+        },
+        "gate": "U1_HYDRAULIC_SCHUR_WEIR_AND_BELANGER_OBSTRUCTION",
+        "gier_9pipe_schur_conductance_q": "9/1",
+        "gier_haynsworth_inertia": {
+          "neg": 0,
+          "pos": 10,
+          "zero": 1
+        },
+        "passed": true,
+        "petra_beaver_unvented_surge_q": "1/3",
+        "petra_beaver_vented_surge_q": "64/1365",
+        "petra_k36_moment_collapse": "46656/1",
+        "piping_over_choke_t5_gt_500": true,
+        "vented_haynsworth_inertia": {
+          "neg": 0,
+          "pos": 7,
+          "zero": 0
+        }
+      },
+      "U2": {
+        "c4_upwind_skew_frob_sq_q": "2/1",
+        "casarabe_s1_s2_s3_q": [
+          "1/1",
+          "1/1",
+          "1009/1012"
+        ],
+        "classification": {
+          "insect_burrow_betti1_vs_amazonian_cut_ventilation": "EXACT_SCHUR_INERTIA_EQUIVALENCE",
+          "orb_web_g6_2_vs_casarabe_c2_6_unweighted": "EXACT_ISOMORPHISM",
+          "symmetric_laplacian_vs_upwind_convective_transport": "PROVABLE_OBSTRUCTION",
+          "unweighted_casarabe_cuts_vs_weighted_kappa100_lodf": "PROVABLE_OBSTRUCTION"
+        },
+        "convective_operator_rejected_by_symmetric_inertia": true,
+        "g_orb_6_2_exact_isomorphic_to_casarabe_c2_6": true,
+        "gate": "U2_ORB_CASARABE_ISOMORPHISM_VENTILATION_AND_CONVECTIVE_OBSTRUCTION",
+        "lodf_k1_over_k100_ratio_q": "70835025156751/3147372856747",
+        "lodf_remote_max_k100_q": "2863851553/151680996053",
+        "lodf_remote_max_k1_q": "467/1099",
+        "passed": true,
+        "upano_s2_q": "68/69",
+        "ventilation_casarabe_power_q": "1656/2755",
+        "ventilation_ring_power_q": "1/13",
+        "ventilation_tree_power_q": "0/1"
+      },
+      "U3": {
+        "classification": {
+          "dougong_monotonic_ductility_vs_tailorbird_postage_stamp_tear": "PROVABLE_OBSTRUCTION",
+          "elastic_volkersen_seam_vs_dougong_hysteresis": "PROVABLE_OBSTRUCTION",
+          "volkersen_tridiagonal_vs_spd_m_matrix_schur": "EXACT_SCHUR_INERTIA_EQUIVALENCE"
+        },
+        "dougong_coulomb_e_diss_q": "96/1",
+        "dougong_coulomb_pi_zeta_q": "2/3",
+        "elastic_closed_cycle_e_diss_q": "0/1",
+        "gate": "U3_TAILORBIRD_VOLKERSEN_DOUGONG_HOUSNER_TAXONOMY",
+        "machu_picchu_stout_loss_q": "120/169",
+        "machu_picchu_stout_over_slender_q": "9248/2197",
+        "passed": true,
+        "tailorbird_graded_cap_m4_q": "20/7",
+        "tailorbird_graded_gain_ratio_q": "55/49",
+        "tailorbird_m_star": 4,
+        "tailorbird_w_cap_star_q": "28/11",
+        "volkersen_m6_inertia": {
+          "neg": 0,
+          "pos": 5,
+          "zero": 0
+        }
+      },
+      "U4": {
+        "casarabe_laplacian_inertia": {
+          "neg": 0,
+          "pos": 12,
+          "zero": 1
+        },
+        "classification": {
+          "passive_biomimetic_historical_vs_h8_auxetic_fold_sheaf": "PROVABLE_OBSTRUCTION",
+          "schur_elimination_method_across_passive_and_auxetic": "EXACT_SCHUR_INERTIA_EQUIVALENCE",
+          "tension_only_web_vs_compressed_cable_buckling": "PROVABLE_OBSTRUCTION"
+        },
+        "equal_order_dim": 8,
+        "gate": "U4_SYLVESTER_INERTIA_NON_CONGRUENCE",
+        "h8_auxetic_fold_sheaf_inertia": {
+          "neg": 4,
+          "pos": 4,
+          "zero": 0
+        },
+        "non_congruence_proven": true,
+        "orb_8d_compression_neg_ctrl_inertia": {
+          "neg": 8,
+          "pos": 0,
+          "zero": 0
+        },
+        "orb_8d_tension_only_inertia": {
+          "neg": 0,
+          "pos": 8,
+          "zero": 0
+        },
+        "passed": true,
+        "zero_diag_hyperbolic_2x2_inertia": {
+          "neg": 1,
+          "pos": 1,
+          "zero": 0
+        }
+      },
+      "U5": {
+        "classification": {
+          "checkerboard_vs_full_torsion_blocking": "EXACT_SCHUR_INERTIA_EQUIVALENCE",
+          "pin_jointed_checkerboard_z2_zigzag_mode": "PROVABLE_OBSTRUCTION"
+        },
+        "continuous_spicule_checker1_floppy": 0,
+        "gate": "U5_EUPLECTELLA_CHECKERBOARD_PARITY_OBSTRUCTION",
+        "passed": true,
+        "pin_checker1_bridge_diags": 9,
+        "pin_checker1_bridge_floppy": 0,
+        "pin_checker1_diags": 8,
+        "pin_checker1_floppy": 1,
+        "pin_checker1_torsion_energy_q": "8/1",
+        "pin_checker1_zigzag_energy_q": "0/1",
+        "pin_full1_diags": 16,
+        "pin_none_floppy": 7
+      },
+      "U6": {
+        "ast_self_audit": {
+          "has_nonempty_ast": true,
+          "zero_ast_div": true,
+          "zero_bare_asserts": true,
+          "zero_dynamic_escapes": true,
+          "zero_float_calls": true,
+          "zero_float_imports": true,
+          "zero_float_literals": true,
+          "zero_unsafe_fraction_calls": true,
+          "zero_unsafe_pow": true
+        },
+        "ecosystem_bridges": [
+          {
+            "gates": "U1, U2, U4",
+            "modules": "optifab/q/{inertia,farkas,linalg,interval}.py; studies/schur-metrology-closure; studies/cycle-thermal-contraction-audit",
+            "scope_note": "Symmetric Schur pushforward & Haynsworth inertia transfer across passive thermal/hydraulic M-matrices; upwind convective advection (U2) and indefinite off-brane regimes (U4) are explicitly obstructed.",
+            "target": "aska-physical/optifab"
+          },
+          {
+            "gates": "U1, U2",
+            "modules": "studies/cascaded-choke-and-cycle-ventilation-audit; verify.py",
+            "scope_note": "Shares K^3 cascade Jensen statics, vented surge Schur attenuation, and beta_1 >= 1 Kirchhoff circulation; Belanger jumps and high-Mach choked flow are obstructed from linear M-matrix scope.",
+            "target": "aska-physical/venturi-collars"
+          },
+          {
+            "gates": "U3, U5",
+            "modules": "studies/volkersen-anchor-audit; verify.py",
+            "scope_note": "Shares SPD tridiagonal Volkersen graded anchor spacing (55/49 zero-extra-hole gain) and Maxwell-Calladine checkerboard bracing; elastic Volkersen has 0/1 cyclic dissipation vs Dougong friction hysteresis.",
+            "target": "aska-physical/cfrp-truss"
+          },
+          {
+            "gates": "U1, U2, U3, U4, U5",
+            "modules": "biomimetic & historical pure-Q exact operator studies",
+            "scope_note": "Unifies Schur elimination & Haynsworth additivity while certifying exact Sylvester non-congruence between equal-order 8x8 passive M-matrices (8,0,0) and 8D H_8 auxetic fold-sheaves (4,4,0).",
+            "target": "Foundation-0/cave-expedition"
+          }
+        ],
+        "gate": "U6_AST_ZERO_FLOAT_SELF_AUDIT_AND_SCOPE_REGISTRY",
+        "passed": true
+      }
+    }
+  },
+  "payload_sha256": "491e47c109048e2415de73638bd0c473492102839e2ec4f37acbbff8b383c61c",
+  "schema": "aska-physical.optifab.biomimetic-historical-exact-mechanics.v1"
+}
