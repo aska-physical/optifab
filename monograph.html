@@ -467,7 +467,7 @@
 
             <!-- Mathematical Invariant / Formal Principle Box -->
             <div class="mt-5 p-4 rounded-2xl bg-obsidian-900 border border-alabaster-100/10">
-              <div class="text-[10px] font-mono uppercase tracking-widest text-alabaster-400 mb-1.5">What Is Proved</div>
+              <div id="insp-invariant-label" class="text-[10px] font-mono uppercase tracking-widest text-alabaster-400 mb-1.5">What Is Proved</div>
               <div id="insp-invariant" class="font-mono text-xs text-travertine-300 leading-relaxed">
                 PlantGate.Spec.gate_ok_sound · loop_safe · loop_bounded (Spec.lean → Proofs.lean): an admitted step is sound; the held design's modelled margins stay ≤ limit; the budget is never overdrawn; designs taken up ≤ budget.
               </div>
@@ -1349,8 +1349,8 @@
           badge: 'Verification Engine',
           size: '111.3 KB engine',
           path: 'verify.py & verify_guards.py (NaN + Zone-B hardening)',
-          desc: 'The 101 KB orchestration engine that binds Lean 4 outputs, exact Q-Core checks, golden Farkas/Schur regression vectors, and Zone-B edge hardening into one deterministic audit.',
-          invariant: 'Exit(0) ⇔ AllGuards(NoNaN, ZoneB, GoldenVectors, PlantGate) = PASS',
+          desc: 'verify.py re-derives the campus certificate from pinned inputs, applies verify_guards, and checks the committed formal record (Lean source hash and recorded ledger replay). Q-core and golden Farkas/Schur suites run as a separate CI step (tests/test_optifab_v04_p0_q_core.py).',
+          invariant: 'verify.py: certificate, guards, formal record; Q-core and goldens run separately in CI',
         },
         {
           id: 'loop',
@@ -1446,6 +1446,8 @@
           document.getElementById('insp-title').textContent = node.label;
           document.getElementById('insp-path').textContent = node.path;
           document.getElementById('insp-desc').textContent = node.desc;
+          const invLabel = document.getElementById('insp-invariant-label');
+          if (invLabel) invLabel.textContent = (id === 'plantgate') ? 'What Is Proved' : 'Design goal';
           document.getElementById('insp-invariant').textContent = node.invariant;
 
           const inputs = GRAPH_EDGES.filter(([, dst]) => dst === id).map(([src]) => nodeMap[src]);
