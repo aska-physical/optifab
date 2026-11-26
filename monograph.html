@@ -1,0 +1,2326 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OPTIFAB — Convergence of Epistemic Capture &amp; Living Matter</title>
+
+  <!-- Typography: Monumental Editorial Serif + Precision Inter + Formal Monospace -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tailwind Design System Tokens for OPTIFAB Monograph -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          },
+          colors: {
+            obsidian: {
+              950: '#050709',
+              900: '#090C10',
+              850: '#0E1319',
+              800: '#141B23',
+              700: '#1E2833',
+            },
+            alabaster: {
+              50: '#FAF8F5',
+              100: '#F1EDE6',
+              200: '#DCD6CB',
+              400: '#9BA09E',
+              500: '#6D7475',
+            },
+            moissanite: {
+              300: '#A5E8DF',
+              400: '#78D4C8',
+              500: '#49B5A8',
+              900: '#112D2B',
+            },
+            travertine: {
+              300: '#E8C996',
+              400: '#D4A86A',
+              500: '#B88946',
+              900: '#2E2212',
+            },
+            symbiosis: {
+              400: '#63C29B',
+              500: '#3FA47B',
+              900: '#112920',
+            },
+            metrology: {
+              400: '#E5945B',
+              500: '#CC743A',
+            },
+          },
+          keyframes: {
+            pulseSlow: {
+              '0%, 100%': { opacity: '0.45' },
+              '50%': { opacity: '1' },
+            },
+            dashFlow: {
+              '0%': { strokeDashoffset: '48' },
+              '100%': { strokeDashoffset: '0' },
+            },
+            floatGentle: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-6px)' },
+            },
+          },
+          animation: {
+            'pulse-slow': 'pulseSlow 4s ease-in-out infinite',
+            'dash-flow': 'dashFlow 2.6s linear infinite',
+            'float-gentle': 'floatGentle 6s ease-in-out infinite',
+          },
+        },
+      },
+    };
+  </script>
+</head>
+
+<body class="bg-obsidian-950 text-alabaster-100 font-sans antialiased selection:bg-moissanite-400/25 selection:text-moissanite-300 overflow-x-hidden">
+
+  <!-- ===================================================================== -->
+  <!-- FLOATING MONOGRAPH NAVIGATION INSTRUMENT                              -->
+  <!-- ===================================================================== -->
+  <header class="fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-obsidian-950/75 backdrop-blur-xl border-b border-alabaster-100/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-18">
+        <!-- Brand Emblem & Title -->
+        <a href="#top" class="flex items-center gap-3 group focus:outline-none">
+          <div class="w-9 h-9 rounded-xl bg-obsidian-850 border border-alabaster-100/15 flex items-center justify-center shadow-lg shadow-moissanite-500/10 group-hover:border-moissanite-400/50 transition-colors">
+            <!-- Custom SVG: Funicular Arch + Epistemic Weft Emblem -->
+            <svg viewBox="0 0 36 36" class="w-6 h-6" fill="none" aria-hidden="true">
+              <path d="M5 27 C10 8, 26 8, 31 27" stroke="#D4A86A" stroke-width="1.8" stroke-linecap="round" />
+              <path d="M9 27 C13 14, 23 14, 27 27" stroke="#78D4C8" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="2 2.5" />
+              <line x1="6" y1="21" x2="30" y2="21" stroke="#78D4C8" stroke-width="1" stroke-opacity="0.55" />
+              <circle cx="18" cy="12.5" r="2.2" fill="#63C29B" />
+              <circle cx="10.5" cy="21" r="1.4" fill="#D4A86A" />
+              <circle cx="25.5" cy="21" r="1.4" fill="#D4A86A" />
+            </svg>
+          </div>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-sm font-semibold tracking-[0.22em] text-alabaster-50">OPTIFAB</span>
+              <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono tracking-wider uppercase bg-moissanite-900/70 text-moissanite-300 border border-moissanite-400/25">
+                v0.4 · Thesis Horizon
+              </span>
+            </div>
+            <span class="text-[11px] text-alabaster-400 tracking-wide hidden sm:block">Epistemic-Physical Convergence Monograph</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden lg:flex items-center gap-1" aria-label="Primary">
+          <a href="#premise" class="px-3.5 py-2 rounded-lg text-xs font-medium tracking-wider uppercase text-alabaster-200 hover:text-moissanite-300 hover:bg-alabaster-100/5 transition-colors">Premise</a>
+          <a href="#convergence" class="px-3.5 py-2 rounded-lg text-xs font-medium tracking-wider uppercase text-alabaster-200 hover:text-moissanite-300 hover:bg-alabaster-100/5 transition-colors">Convergence</a>
+          <a href="#simulator" class="px-3.5 py-2 rounded-lg text-xs font-medium tracking-wider uppercase text-alabaster-200 hover:text-moissanite-300 hover:bg-alabaster-100/5 transition-colors">Living Unit</a>
+          <a href="#monograph" class="px-3.5 py-2 rounded-lg text-xs font-medium tracking-wider uppercase text-alabaster-200 hover:text-moissanite-300 hover:bg-alabaster-100/5 transition-colors">Whitepaper</a>
+          <a href="#atlas" class="px-3.5 py-2 rounded-lg text-xs font-medium tracking-wider uppercase text-alabaster-200 hover:text-moissanite-300 hover:bg-alabaster-100/5 transition-colors">Corpus Atlas</a>
+          <a href="#horizon" class="px-3.5 py-2 rounded-lg text-xs font-medium tracking-wider uppercase text-alabaster-200 hover:text-moissanite-300 hover:bg-alabaster-100/5 transition-colors">Horizon</a>
+        </nav>
+
+        <!-- Action Buttons & Mobile Menu Trigger -->
+        <div class="flex items-center gap-2">
+          <button id="open-cite-btn" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono tracking-wider uppercase bg-alabaster-100/5 hover:bg-travertine-400/15 text-travertine-300 border border-travertine-400/30 transition-all">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+            </svg>
+            <span class="hidden sm:inline">Manifest &amp; Cite</span>
+            <span class="sm:hidden">Cite</span>
+          </button>
+
+          <button id="mobile-menu-btn" type="button" aria-label="Toggle navigation menu" class="lg:hidden p-2.5 rounded-xl bg-alabaster-100/5 border border-alabaster-100/10 text-alabaster-100 hover:border-moissanite-400/40 transition-colors">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Navigation -->
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-alabaster-100/10 bg-obsidian-900/95 backdrop-blur-xl px-4 py-4 space-y-1">
+      <a href="#premise" class="mobile-nav-link block px-4 py-3 rounded-xl text-xs font-mono uppercase tracking-widest text-alabaster-200 hover:bg-alabaster-100/5 hover:text-moissanite-300">01 · Core Premise</a>
+      <a href="#convergence" class="mobile-nav-link block px-4 py-3 rounded-xl text-xs font-mono uppercase tracking-widest text-alabaster-200 hover:bg-alabaster-100/5 hover:text-moissanite-300">02 · Convergence Graph</a>
+      <a href="#simulator" class="mobile-nav-link block px-4 py-3 rounded-xl text-xs font-mono uppercase tracking-widest text-alabaster-200 hover:bg-alabaster-100/5 hover:text-moissanite-300">03 · Symbiotic Living Unit</a>
+      <a href="#monograph" class="mobile-nav-link block px-4 py-3 rounded-xl text-xs font-mono uppercase tracking-widest text-alabaster-200 hover:bg-alabaster-100/5 hover:text-moissanite-300">04 · Whitepaper Monograph</a>
+      <a href="#atlas" class="mobile-nav-link block px-4 py-3 rounded-xl text-xs font-mono uppercase tracking-widest text-alabaster-200 hover:bg-alabaster-100/5 hover:text-moissanite-300">05 · Corpus Provenance Atlas</a>
+      <a href="#horizon" class="mobile-nav-link block px-4 py-3 rounded-xl text-xs font-mono uppercase tracking-widest text-alabaster-200 hover:bg-alabaster-100/5 hover:text-moissanite-300">06 · Eventual Horizon</a>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- HERO: LIVING WEFT × FUNICULAR GENERATIVE LOOM                         -->
+  <!-- ===================================================================== -->
+  <section id="top" class="relative min-h-screen flex flex-col justify-between pt-24 pb-10 overflow-hidden border-b border-alabaster-100/10">
+    <!-- Interactive Generative Canvas Background -->
+    <div class="absolute inset-0 z-0">
+      <canvas id="hero-weave-canvas" class="w-full h-full block"></canvas>
+      <!-- Radial & bottom vignettes for effortless typographic legibility -->
+      <div class="absolute inset-0 bg-gradient-to-b from-obsidian-950/75 via-obsidian-950/35 to-obsidian-950 pointer-events-none"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-obsidian-950/85 via-transparent to-obsidian-950/70 pointer-events-none"></div>
+    </div>
+
+    <!-- Live Architectural Telemetry Corner Pill -->
+    <div class="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4 flex flex-wrap items-center justify-between gap-3">
+      <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-obsidian-900/80 backdrop-blur-md border border-alabaster-100/15 text-[11px] font-mono tracking-widest uppercase text-alabaster-200">
+        <span class="w-2 h-2 rounded-full bg-symbiosis-400 animate-pulse-slow"></span>
+        <span>Overarching R&amp;D Magnum Opus · Eventual Vision</span>
+      </div>
+
+      <div class="hidden md:flex items-center gap-4 px-4 py-1.5 rounded-full bg-obsidian-900/75 backdrop-blur-md border border-alabaster-100/10 text-[11px] font-mono text-alabaster-400">
+        <span class="text-moissanite-300">WEFT: INVARIANT</span>
+        <span class="text-alabaster-500">/</span>
+        <span class="text-travertine-300">MATTER: FUNICULAR</span>
+        <span class="text-alabaster-500">/</span>
+        <span class="text-symbiosis-400">PLANTGATE: LEAN 4 PROVEN</span>
+      </div>
+    </div>
+
+    <!-- Hero Monumental Monograph Title -->
+    <div class="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 my-auto py-12 sm:py-16">
+      <div class="max-w-4xl">
+        <p class="font-mono text-xs sm:text-sm tracking-[0.26em] uppercase text-travertine-300/90 mb-5">
+          Thesis Monograph · Synthesis of Knowledge, Proof &amp; Physical Form
+        </p>
+
+        <h1 class="font-serif text-5xl sm:text-7xl lg:text-[5.5rem] font-normal leading-[0.98] tracking-tight text-alabaster-50">
+          Data and Matter,<br />
+          <span class="italic text-transparent bg-clip-text bg-gradient-to-r from-travertine-300 via-alabaster-50 to-moissanite-300">
+            Weaved Into One Living Proof.
+          </span>
+        </h1>
+
+        <p class="mt-7 text-base sm:text-lg lg:text-xl text-alabaster-200/85 font-light leading-relaxed max-w-2xl">
+          <strong class="font-medium text-alabaster-50">OPTIFAB</strong> is our long-horizon dream and overarching organizational magnum opus—a convergence of epistemic capture where formal mathematics, exact rational verification, funicular compression architecture, and bio-thermal dynamics fuse into a single symbiotic, evolving ecosystem.
+        </p>
+
+        <!-- Primary Action Row -->
+        <div class="mt-9 flex flex-wrap items-center gap-4">
+          <a href="#convergence" class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-alabaster-50 text-obsidian-950 font-medium text-sm tracking-wide hover:bg-moissanite-300 transition-all shadow-xl shadow-moissanite-500/15">
+            <span>Explore Convergence Graph</span>
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+
+          <a href="#simulator" class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-obsidian-900/80 backdrop-blur-md text-alabaster-100 border border-alabaster-100/20 hover:border-travertine-400/60 hover:text-travertine-300 font-medium text-sm tracking-wide transition-all">
+            <svg class="w-4 h-4 text-travertine-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Enter Symbiotic Unit Lab</span>
+          </a>
+
+          <span class="hidden sm:inline-flex items-center gap-2 text-xs font-mono text-alabaster-400 ml-1">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-moissanite-400"></span>
+            Move cursor or touch field to bend tension lattice
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Provenance Metrics Ribbon -->
+    <div class="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-6 border-t border-alabaster-100/10">
+        <div class="p-4 rounded-2xl bg-obsidian-900/70 backdrop-blur-md border border-alabaster-100/10">
+          <div class="text-[11px] font-mono uppercase tracking-widest text-alabaster-400">Unified Corpus</div>
+          <div class="mt-1 flex items-baseline gap-2">
+            <span class="font-serif text-3xl text-alabaster-50">108</span>
+            <span class="text-xs font-mono text-moissanite-300">1.11 MB verified</span>
+          </div>
+          <p class="mt-1 text-xs text-alabaster-400">Proofs, certificates, studies &amp; ledgers</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-obsidian-900/70 backdrop-blur-md border border-alabaster-100/10">
+          <div class="text-[11px] font-mono uppercase tracking-widest text-alabaster-400">Formal Barrier</div>
+          <div class="mt-1 flex items-baseline gap-2">
+            <span class="font-serif text-3xl text-alabaster-50">PlantGate</span>
+            <span class="text-xs font-mono text-symbiosis-400">Lean 4</span>
+          </div>
+          <p class="mt-1 text-xs text-alabaster-400">Machine-checked structural admission</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-obsidian-900/70 backdrop-blur-md border border-alabaster-100/10">
+          <div class="text-[11px] font-mono uppercase tracking-widest text-alabaster-400">Arithmetic Core</div>
+          <div class="mt-1 flex items-baseline gap-2">
+            <span class="font-serif text-3xl text-alabaster-50">Exact &#x211A;</span>
+            <span class="text-xs font-mono text-travertine-300">Zero Float Drift</span>
+          </div>
+          <p class="mt-1 text-xs text-alabaster-400">Farkas, Sylvester inertia &amp; intervals</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-obsidian-900/70 backdrop-blur-md border border-alabaster-100/10">
+          <div class="text-[11px] font-mono uppercase tracking-widest text-alabaster-400">Metabolic Closure</div>
+          <div class="mt-1 flex items-baseline gap-2">
+            <span class="font-serif text-3xl text-alabaster-50">Schur + Bio</span>
+            <span class="text-xs font-mono text-metrology-400">Audited</span>
+          </div>
+          <p class="mt-1 text-xs text-alabaster-400">Metrology bounds &amp; thermal contraction</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECTION I: CORE PREMISE — THE THREE PILLARS OF EPISTEMIC SYNTHESIS    -->
+  <!-- ===================================================================== -->
+  <section id="premise" class="py-20 sm:py-28 relative border-b border-alabaster-100/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Section Heading -->
+      <div class="grid lg:grid-cols-12 gap-8 items-end mb-14">
+        <div class="lg:col-span-7">
+          <div class="font-mono text-xs uppercase tracking-[0.25em] text-moissanite-400 mb-3">I · The Architectural Thesis</div>
+          <h2 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-alabaster-50 leading-[1.05]">
+            Not a blueprint drawn on paper—<br />
+            <span class="italic text-travertine-300">an epistemic loom made physical.</span>
+          </h2>
+        </div>
+        <div class="lg:col-span-5">
+          <p class="text-sm sm:text-base text-alabaster-200/80 leading-relaxed">
+            Every lab, discipline, and research thread across our organization has historically advanced along its own axis: formal invariants, physical geometry, exact numerical methods, metrology, and thermal systems. OPTIFAB asks a singular question: <em class="text-alabaster-50">what emerges when none of these remain separate layers, and every gram of matter carries the mathematical certificate of its own necessity?</em>
+          </p>
+        </div>
+      </div>
+
+      <!-- Three Interwoven Strata Cards -->
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Pillar 01: Epistemic Weft -->
+        <article class="group relative p-7 rounded-3xl bg-obsidian-900 border border-alabaster-100/10 hover:border-moissanite-400/45 transition-all duration-300 flex flex-col justify-between overflow-hidden">
+          <div class="absolute top-0 right-0 w-40 h-40 bg-moissanite-400/5 rounded-full blur-3xl -mr-14 -mt-14 group-hover:bg-moissanite-400/15 transition-colors"></div>
+          <div>
+            <div class="flex items-center justify-between mb-6">
+              <span class="font-mono text-xs tracking-widest uppercase text-moissanite-300">01 · Epistemic Weft</span>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-mono bg-moissanite-900/80 text-moissanite-300 border border-moissanite-400/25">Moissanite-Labs</span>
+            </div>
+            <h3 class="font-serif text-3xl text-alabaster-50 mb-3">Knowledge Captured as Load-Bearing Invariants</h3>
+            <p class="text-sm text-alabaster-200/75 leading-relaxed">
+              Instead of letting institutional learning decay in static reports, upstream invariants (<code class="font-mono text-xs text-moissanite-300">weft/invariants.py</code>) and state vectors (<code class="font-mono text-xs text-moissanite-300">vectors.json</code>) codify every discovery into continuous constraints woven across the design graph.
+            </p>
+          </div>
+          <div class="mt-7 pt-5 border-t border-alabaster-100/10 flex items-center justify-between text-xs font-mono text-alabaster-400">
+            <span>Artifact: weft/invariants.py</span>
+            <span class="text-moissanite-300">20.6 KB upstream</span>
+          </div>
+        </article>
+
+        <!-- Pillar 02: Hyperoptimized Physical Matter -->
+        <article class="group relative p-7 rounded-3xl bg-obsidian-900 border border-alabaster-100/10 hover:border-travertine-400/45 transition-all duration-300 flex flex-col justify-between overflow-hidden">
+          <div class="absolute top-0 right-0 w-40 h-40 bg-travertine-400/5 rounded-full blur-3xl -mr-14 -mt-14 group-hover:bg-travertine-400/15 transition-colors"></div>
+          <div>
+            <div class="flex items-center justify-between mb-6">
+              <span class="font-mono text-xs tracking-widest uppercase text-travertine-300">02 · Material Necessity</span>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-mono bg-travertine-900/80 text-travertine-300 border border-travertine-400/25">aska-physical</span>
+            </div>
+            <h3 class="font-serif text-3xl text-alabaster-50 mb-3">Funicular Geometry &amp; Passive Fluidic Form</h3>
+            <p class="text-sm text-alabaster-200/75 leading-relaxed">
+              Physical assemblies shed superfluous mass by aligning geometry with natural force trajectories: compression-pure <code class="font-mono text-xs text-travertine-300">funi-floors</code>, articulated <code class="font-mono text-xs text-travertine-300">funi-frame</code> ribs, and passive aerodynamic <code class="font-mono text-xs text-travertine-300">venturi-collars</code> certified at upstream provenance.
+            </p>
+          </div>
+          <div class="mt-7 pt-5 border-t border-alabaster-100/10 flex items-center justify-between text-xs font-mono text-alabaster-400">
+            <span>3 Physical Certificates</span>
+            <span class="text-travertine-300">14.4 KB pinned</span>
+          </div>
+        </article>
+
+        <!-- Pillar 03: Formal Symbiotic Loop -->
+        <article class="group relative p-7 rounded-3xl bg-obsidian-900 border border-alabaster-100/10 hover:border-symbiosis-400/45 transition-all duration-300 flex flex-col justify-between overflow-hidden">
+          <div class="absolute top-0 right-0 w-40 h-40 bg-symbiosis-400/5 rounded-full blur-3xl -mr-14 -mt-14 group-hover:bg-symbiosis-400/15 transition-colors"></div>
+          <div>
+            <div class="flex items-center justify-between mb-6">
+              <span class="font-mono text-xs tracking-widest uppercase text-symbiosis-400">03 · Symbiotic Closure</span>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-mono bg-symbiosis-900/80 text-symbiosis-400 border border-symbiosis-400/25">OPTIFAB Core</span>
+            </div>
+            <h3 class="font-serif text-3xl text-alabaster-50 mb-3">Machine-Verified Equilibrium in Motion</h3>
+            <p class="text-sm text-alabaster-200/75 leading-relaxed">
+              Exact rational algebra (<code class="font-mono text-xs text-symbiosis-400">optifab/q</code>), Lean 4 <code class="font-mono text-xs text-symbiosis-400">PlantGate</code> proofs, Schur metrology closure, and bio-thermal contraction audits close the feedback loop (<code class="font-mono text-xs text-symbiosis-400">loop.py</code>)—turning physical reality into an auditable, self-improving organism.
+            </p>
+          </div>
+          <div class="mt-7 pt-5 border-t border-alabaster-100/10 flex items-center justify-between text-xs font-mono text-alabaster-400">
+            <span>verify.py + PlantGate.lean</span>
+            <span class="text-symbiosis-400">Zero-Ambiguity</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECTION II: INTERACTIVE CONVERGENCE GRAPH (data/graph.json)           -->
+  <!-- ===================================================================== -->
+  <section id="convergence" class="py-20 sm:py-28 bg-obsidian-900/50 border-b border-alabaster-100/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header & Interactive Filter Controls -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+        <div>
+          <div class="font-mono text-xs uppercase tracking-[0.25em] text-travertine-300 mb-3">II · Epistemic-Material Topology</div>
+          <h2 class="font-serif text-4xl sm:text-5xl text-alabaster-50 leading-tight">
+            The Convergence Graph <span class="font-mono text-base sm:text-lg text-alabaster-400 font-normal align-middle ml-1">(graph.json)</span>
+          </h2>
+          <p class="mt-3 text-sm sm:text-base text-alabaster-200/75 max-w-2xl">
+            Inspect how upstream disciplines weave into exact mathematics, formal Lean 4 proofs, empirical closure studies, and immutable provenance ledgers. Select any node or trigger a live verification pulse.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" data-filter="all" class="graph-filter-btn px-3.5 py-2 rounded-xl text-xs font-mono uppercase tracking-wider bg-alabaster-50 text-obsidian-950 font-medium transition-all">All Strata</button>
+          <button type="button" data-filter="matter" class="graph-filter-btn px-3.5 py-2 rounded-xl text-xs font-mono uppercase tracking-wider bg-obsidian-850 text-travertine-300 border border-travertine-400/25 hover:border-travertine-400/60 transition-all">Matter</button>
+          <button type="button" data-filter="weft" class="graph-filter-btn px-3.5 py-2 rounded-xl text-xs font-mono uppercase tracking-wider bg-obsidian-850 text-moissanite-300 border border-moissanite-400/25 hover:border-moissanite-400/60 transition-all">Weft</button>
+          <button type="button" data-filter="formal" class="graph-filter-btn px-3.5 py-2 rounded-xl text-xs font-mono uppercase tracking-wider bg-obsidian-850 text-symbiosis-400 border border-symbiosis-400/25 hover:border-symbiosis-400/60 transition-all">Formal &amp; &#x211A;</button>
+          <button type="button" data-filter="closure" class="graph-filter-btn px-3.5 py-2 rounded-xl text-xs font-mono uppercase tracking-wider bg-obsidian-850 text-metrology-400 border border-metrology-400/25 hover:border-metrology-400/60 transition-all">Closure</button>
+        </div>
+      </div>
+
+      <!-- Main Graph Workspace: SVG Topology + Monograph Inspector -->
+      <div class="grid lg:grid-cols-12 gap-6 items-stretch">
+        <!-- Interactive SVG Topology Stage -->
+        <div class="lg:col-span-8 rounded-3xl bg-obsidian-950 border border-alabaster-100/10 p-4 sm:p-6 flex flex-col justify-between relative overflow-hidden">
+          <!-- Stage Top Bar -->
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-4 border-b border-alabaster-100/10">
+            <div class="flex items-center gap-3 text-[11px] font-mono text-alabaster-400">
+              <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-travertine-400"></span>Physical</span>
+              <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-moissanite-400"></span>Epistemic</span>
+              <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-symbiosis-400"></span>Formal/&#x211A;</span>
+              <span class="inline-flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-metrology-400"></span>Closure</span>
+            </div>
+
+            <button id="pulse-graph-btn" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-symbiosis-900/70 hover:bg-symbiosis-500/25 text-symbiosis-400 border border-symbiosis-400/40 text-xs font-mono tracking-wider uppercase transition-all">
+              <span class="w-2 h-2 rounded-full bg-symbiosis-400 animate-ping"></span>
+              <span>Trace Verification Pulse</span>
+            </button>
+          </div>
+
+          <!-- Responsive Interactive SVG Diagram -->
+          <div class="w-full overflow-x-auto">
+            <svg id="convergence-svg" viewBox="0 0 840 480" class="w-full min-w-[620px] h-auto select-none" role="img" aria-label="OPTIFAB Epistemic-Physical Convergence Graph">
+              <defs>
+                <filter id="glow-soft" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <linearGradient id="edge-grad-weave" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#D4A86A" stop-opacity="0.6" />
+                  <stop offset="50%" stop-color="#78D4C8" stop-opacity="0.85" />
+                  <stop offset="100%" stop-color="#63C29B" stop-opacity="0.7" />
+                </linearGradient>
+              </defs>
+
+              <!-- Subtle Architectural Column Guides -->
+              <g opacity="0.22" font-family="JetBrains Mono, monospace" font-size="9" fill="#9BA09E" letter-spacing="1.6">
+                <line x1="115" y1="26" x2="115" y2="462" stroke="#DCD6CB" stroke-dasharray="2 5" stroke-width="0.7" />
+                <text x="115" y="16" text-anchor="middle">UPSTREAM PROVENANCE</text>
+
+                <line x1="325" y1="26" x2="325" y2="462" stroke="#DCD6CB" stroke-dasharray="2 5" stroke-width="0.7" />
+                <text x="325" y="16" text-anchor="middle">SYNTHESIS &amp; Q-CORE</text>
+
+                <line x1="545" y1="26" x2="545" y2="462" stroke="#DCD6CB" stroke-dasharray="2 5" stroke-width="0.7" />
+                <text x="545" y="16" text-anchor="middle">FORMAL &amp; CLOSURE</text>
+
+                <line x1="740" y1="26" x2="740" y2="462" stroke="#DCD6CB" stroke-dasharray="2 5" stroke-width="0.7" />
+                <text x="740" y="16" text-anchor="middle">LIVING ECOSYSTEM</text>
+              </g>
+
+              <!-- Edges & Nodes Rendered Procedurally by JS -->
+              <g id="graph-edges"></g>
+              <g id="graph-pulses"></g>
+              <g id="graph-nodes"></g>
+            </svg>
+          </div>
+
+          <!-- Live Pulse Telemetry Strip -->
+          <div id="pulse-log" class="mt-4 pt-3 border-t border-alabaster-100/10 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-alabaster-400">
+            <span>Status: <strong class="text-moissanite-300 font-medium">All 12 epistemic-material nodes coupled &amp; pinned</strong></span>
+            <span id="pulse-stage-readout" class="text-alabaster-400">Click any node to inspect mathematical &amp; physical coupling</span>
+          </div>
+        </div>
+
+        <!-- Monograph Node Inspector Drawer -->
+        <aside id="node-inspector" class="lg:col-span-4 rounded-3xl bg-obsidian-950 border border-alabaster-100/10 p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-4">
+              <span id="insp-badge" class="px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-widest bg-symbiosis-900/80 text-symbiosis-400 border border-symbiosis-400/30">Formal Barrier</span>
+              <span id="insp-size" class="text-xs font-mono text-alabaster-400">50.4 KB Lean 4</span>
+            </div>
+
+            <h3 id="insp-title" class="font-serif text-3xl text-alabaster-50 leading-tight">PlantGate Formal Proofs</h3>
+            <div id="insp-path" class="mt-1.5 font-mono text-xs text-moissanite-300 break-all">formal/PlantGate/Proofs.lean</div>
+
+            <p id="insp-desc" class="mt-4 text-sm text-alabaster-200/80 leading-relaxed">
+              The sovereign admission threshold of the ecosystem. Before any structural configuration or epistemic update enters physical realization, Lean 4 theorems verify safety, boundedness, and invariant preservation without relying on heuristic trust.
+            </p>
+
+            <!-- Mathematical Invariant / Formal Principle Box -->
+            <div class="mt-5 p-4 rounded-2xl bg-obsidian-900 border border-alabaster-100/10">
+              <div class="text-[10px] font-mono uppercase tracking-widest text-alabaster-400 mb-1.5">Governing Principle</div>
+              <div id="insp-invariant" class="font-mono text-xs text-travertine-300 leading-relaxed">
+                ∀ state ∈ Unit, QCert(state) ∧ SchurBound(state) → PlantGate.Admit(state)
+              </div>
+            </div>
+
+            <!-- Coupled Upstream / Downstream Edges -->
+            <div class="mt-5 grid grid-cols-2 gap-3">
+              <div class="p-3.5 rounded-2xl bg-obsidian-900/70 border border-alabaster-100/10">
+                <div class="text-[10px] font-mono uppercase tracking-widest text-alabaster-400 mb-2">Receives From</div>
+                <div id="insp-inputs" class="flex flex-col gap-1.5 text-xs font-mono text-alabaster-200"></div>
+              </div>
+              <div class="p-3.5 rounded-2xl bg-obsidian-900/70 border border-alabaster-100/10">
+                <div class="text-[10px] font-mono uppercase tracking-widest text-alabaster-400 mb-2">Governs / Feeds</div>
+                <div id="insp-outputs" class="flex flex-col gap-1.5 text-xs font-mono text-alabaster-200"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-alabaster-100/10 flex items-center justify-between text-[11px] font-mono text-alabaster-400">
+            <span>Provenance: MANIFEST.json</span>
+            <span class="text-symbiosis-400">● Cryptographically Pinned</span>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECTION III: INTERACTIVE SYMBIOTIC LIVING UNIT LAB (unit.json × loop) -->
+  <!-- ===================================================================== -->
+  <section id="simulator" class="py-20 sm:py-28 border-b border-alabaster-100/10 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="grid lg:grid-cols-12 gap-6 items-end mb-10">
+        <div class="lg:col-span-7">
+          <div class="font-mono text-xs uppercase tracking-[0.25em] text-symbiosis-400 mb-3">III · Symbiotic Equilibrium Laboratory</div>
+          <h2 class="font-serif text-4xl sm:text-5xl text-alabaster-50 leading-tight">
+            Experience the Living Unit <span class="italic text-moissanite-300">in Real Time</span>
+          </h2>
+        </div>
+        <div class="lg:col-span-5">
+          <p class="text-sm text-alabaster-200/80 leading-relaxed">
+            Perturb physical load, passive Venturi airflow, thermal flux, and metrology uncertainty. Watch the funicular structure, airflow streamlines, Schur uncertainty ellipse, and <code class="font-mono text-xs text-symbiosis-400">PlantGate</code> exact-rational verdict respond instantaneously.
+          </p>
+        </div>
+      </div>
+
+      <!-- Preset Scenario Pills -->
+      <div class="flex flex-wrap items-center gap-2.5 mb-6">
+        <span class="text-xs font-mono uppercase tracking-widest text-alabaster-400 mr-1">Scenarios:</span>
+        <button type="button" data-preset="nominal" class="sim-preset-btn px-3.5 py-2 rounded-xl text-xs font-mono bg-symbiosis-900/70 text-symbiosis-400 border border-symbiosis-400/40 transition-all">Nominal Symbiosis</button>
+        <button type="button" data-preset="thermal" class="sim-preset-btn px-3.5 py-2 rounded-xl text-xs font-mono bg-obsidian-900 text-alabaster-200 border border-alabaster-100/15 hover:border-metrology-400/50 transition-all">Bio-Thermal Surge</button>
+        <button type="button" data-preset="load" class="sim-preset-btn px-3.5 py-2 rounded-xl text-xs font-mono bg-obsidian-900 text-alabaster-200 border border-alabaster-100/15 hover:border-travertine-400/50 transition-all">High Funicular Load</button>
+        <button type="button" data-preset="zoneb" class="sim-preset-btn px-3.5 py-2 rounded-xl text-xs font-mono bg-obsidian-900 text-alabaster-200 border border-alabaster-100/15 hover:border-rose-400/50 transition-all">Zone-B Boundary Breach</button>
+      </div>
+
+      <!-- Simulator Grid -->
+      <div class="grid lg:grid-cols-12 gap-6 items-stretch">
+        <!-- Left: Live Architectural Cross-Section & Phase-Space Canvas -->
+        <div class="lg:col-span-7 rounded-3xl bg-obsidian-900 border border-alabaster-100/10 p-4 sm:p-5 flex flex-col">
+          <!-- Verdict Header Bar -->
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-alabaster-100/10">
+            <div class="flex items-center gap-2.5">
+              <span id="sim-verdict-dot" class="w-2.5 h-2.5 rounded-full bg-symbiosis-400"></span>
+              <span id="sim-verdict-badge" class="font-mono text-xs font-semibold uppercase tracking-widest text-symbiosis-400">PLANTGATE: ADMITTED · CERTIFIED</span>
+            </div>
+            <span class="font-mono text-[11px] text-alabaster-400">Cross-Section: funi-frame + venturi-collar + schur-halo</span>
+          </div>
+
+          <!-- Dynamic Responsive Canvas Container -->
+          <div class="relative w-full h-[340px] sm:h-[410px] rounded-2xl bg-obsidian-950 border border-alabaster-100/10 overflow-hidden">
+            <canvas id="unit-sim-canvas" class="w-full h-full block"></canvas>
+            <!-- Subtle Legend Overlay -->
+            <div class="absolute bottom-3 left-3 right-3 flex flex-wrap items-center justify-between gap-2 pointer-events-none text-[10px] font-mono text-alabaster-400 bg-obsidian-950/75 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-alabaster-100/10">
+              <span><span class="text-travertine-300">■</span> Funicular Ribs</span>
+              <span><span class="text-moissanite-300">≈</span> Venturi Streamlines</span>
+              <span><span class="text-metrology-400">◯</span> Schur Metrology Radius</span>
+              <span><span class="text-symbiosis-400">◈</span> Epistemic Weft Nodes</span>
+            </div>
+          </div>
+
+          <!-- Autonomous Loop Proposal Feed -->
+          <div class="mt-4 p-4 rounded-2xl bg-obsidian-950 border border-alabaster-100/10 flex items-start gap-3">
+            <div class="mt-0.5 px-2 py-0.5 rounded-md bg-moissanite-900/80 text-moissanite-300 font-mono text-[10px] uppercase tracking-wider shrink-0">loop.py</div>
+            <p id="sim-loop-message" class="font-mono text-xs text-alabaster-200/90 leading-relaxed">
+              Equilibrium verified: passive Venturi convection offsets thermal gradient; funicular arch stays strictly inside compression kernel with positive-definite Schur closure.
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: Interactive Sliders & Exact Rational Telemetry -->
+        <div class="lg:col-span-5 rounded-3xl bg-obsidian-900 border border-alabaster-100/10 p-6 flex flex-col justify-between gap-6">
+          <!-- Parameter Sliders -->
+          <div class="space-y-5">
+            <div class="text-xs font-mono uppercase tracking-widest text-alabaster-400">Coupled Physical &amp; Epistemic Parameters</div>
+
+            <!-- Slider 1: Structural Load -->
+            <div>
+              <div class="flex items-center justify-between text-xs mb-2">
+                <label for="slider-load" class="font-medium text-alabaster-100">Funicular Axial Load <span class="font-mono text-travertine-300">(funi-frame)</span></label>
+                <span id="val-load" class="font-mono text-travertine-300">42 kN/m²</span>
+              </div>
+              <input id="slider-load" type="range" min="15" max="100" value="42" class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-obsidian-700 accent-travertine-400" />
+            </div>
+
+            <!-- Slider 2: Venturi Airflow -->
+            <div>
+              <div class="flex items-center justify-between text-xs mb-2">
+                <label for="slider-venturi" class="font-medium text-alabaster-100">Passive Venturi Flux <span class="font-mono text-moissanite-300">(venturi-collars)</span></label>
+                <span id="val-venturi" class="font-mono text-moissanite-300">68 Pa</span>
+              </div>
+              <input id="slider-venturi" type="range" min="10" max="100" value="68" class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-obsidian-700 accent-moissanite-400" />
+            </div>
+
+            <!-- Slider 3: Bio-Thermal Flux -->
+            <div>
+              <div class="flex items-center justify-between text-xs mb-2">
+                <label for="slider-thermal" class="font-medium text-alabaster-100">Cyclic Thermal Delta <span class="font-mono text-metrology-400">(bio-thermal)</span></label>
+                <span id="val-thermal" class="font-mono text-metrology-400">+18 °C</span>
+              </div>
+              <input id="slider-thermal" type="range" min="5" max="85" value="18" class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-obsidian-700 accent-metrology-400" />
+            </div>
+
+            <!-- Slider 4: Metrology Noise -->
+            <div>
+              <div class="flex items-center justify-between text-xs mb-2">
+                <label for="slider-noise" class="font-medium text-alabaster-100">Metrology Uncertainty <span class="font-mono text-symbiosis-400">(schur-closure)</span></label>
+                <span id="val-noise" class="font-mono text-symbiosis-400">0.22 ε</span>
+              </div>
+              <input id="slider-noise" type="range" min="5" max="95" value="22" class="w-full h-2 rounded-lg appearance-none cursor-pointer bg-obsidian-700 accent-symbiosis-400" />
+            </div>
+          </div>
+
+          <!-- Real-Time Mathematical Certificate Readouts -->
+          <div class="grid grid-cols-2 gap-3 pt-4 border-t border-alabaster-100/10">
+            <div class="p-3.5 rounded-2xl bg-obsidian-950 border border-alabaster-100/10">
+              <div class="text-[10px] font-mono uppercase tracking-wider text-alabaster-400">Farkas Margin (&#x211A;)</div>
+              <div id="metric-farkas" class="mt-1 font-mono text-lg text-travertine-300">+419 / 512</div>
+              <div class="text-[10px] font-mono text-alabaster-500 mt-0.5">optifab/q/farkas.py</div>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-obsidian-950 border border-alabaster-100/10">
+              <div class="text-[10px] font-mono uppercase tracking-wider text-alabaster-400">Sylvester Inertia</div>
+              <div id="metric-inertia" class="mt-1 font-mono text-lg text-symbiosis-400">(6+, 0-, 0&#x2080;)</div>
+              <div class="text-[10px] font-mono text-alabaster-500 mt-0.5">optifab/q/inertia.py</div>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-obsidian-950 border border-alabaster-100/10">
+              <div class="text-[10px] font-mono uppercase tracking-wider text-alabaster-400">Contraction Factor &#x03C1;</div>
+              <div id="metric-rho" class="mt-1 font-mono text-lg text-moissanite-300">0.714 &lt; 1</div>
+              <div class="text-[10px] font-mono text-alabaster-500 mt-0.5">cycle-thermal-audit</div>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-obsidian-950 border border-alabaster-100/10">
+              <div class="text-[10px] font-mono uppercase tracking-wider text-alabaster-400">Schur Closure Bound</div>
+              <div id="metric-schur" class="mt-1 font-mono text-lg text-metrology-400">&#x00B1;0.0044 mm</div>
+              <div class="text-[10px] font-mono text-alabaster-500 mt-0.5">interval.py [closed]</div>
+            </div>
+          </div>
+
+          <!-- Auto-Stabilize Button -->
+          <button id="sim-stabilize-btn" type="button" class="w-full py-3 px-4 rounded-2xl bg-alabaster-100/5 hover:bg-moissanite-400/15 border border-moissanite-400/35 text-moissanite-300 font-mono text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>Invoke Autonomous Symbiotic Re-Optimization</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECTION IV: THE WHITEPAPER MONOGRAPH READER (docs/*.md Synthesis)     -->
+  <!-- ===================================================================== -->
+  <section id="monograph" class="py-20 sm:py-28 bg-obsidian-900/40 border-b border-alabaster-100/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mb-12">
+        <div class="font-mono text-xs uppercase tracking-[0.25em] text-moissanite-300 mb-3">IV · The Whitepaper Monograph</div>
+        <h2 class="font-serif text-4xl sm:text-5xl text-alabaster-50 leading-tight">
+          Five Movements of the <span class="italic text-travertine-300">Magnum Opus</span>
+        </h2>
+        <p class="mt-3 text-sm sm:text-base text-alabaster-200/75 leading-relaxed">
+          Synthesized directly from the canonical documentation architecture (<code class="font-mono text-xs text-moissanite-300">VISION.md</code>, <code class="font-mono text-xs text-moissanite-300">CONVERGENCE.md</code>, <code class="font-mono text-xs text-moissanite-300">STRUCTURE.md</code>, <code class="font-mono text-xs text-moissanite-300">MODEL.md</code>, and <code class="font-mono text-xs text-moissanite-300">PROPOSALS.md</code>).
+        </p>
+      </div>
+
+      <!-- Monograph Interactive Reader Grid -->
+      <div class="grid lg:grid-cols-12 gap-8 items-start">
+        <!-- Chapter Navigation Rail -->
+        <aside class="lg:col-span-3 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 lg:sticky lg:top-24">
+          <button type="button" data-chapter="0" class="chapter-tab-btn shrink-0 text-left px-4 py-3.5 rounded-2xl border transition-all bg-obsidian-850 border-travertine-400/50 text-alabaster-50">
+            <div class="font-mono text-[10px] uppercase tracking-widest text-travertine-300">Movement I · VISION.md</div>
+            <div class="font-serif text-xl mt-0.5">The Eventual Dream</div>
+          </button>
+
+          <button type="button" data-chapter="1" class="chapter-tab-btn shrink-0 text-left px-4 py-3.5 rounded-2xl border transition-all bg-obsidian-950/60 border-alabaster-100/10 text-alabaster-400 hover:text-alabaster-100 hover:border-alabaster-100/25">
+            <div class="font-mono text-[10px] uppercase tracking-widest text-moissanite-300">Movement II · CONVERGENCE.md</div>
+            <div class="font-serif text-xl mt-0.5">Epistemic Capture</div>
+          </button>
+
+          <button type="button" data-chapter="2" class="chapter-tab-btn shrink-0 text-left px-4 py-3.5 rounded-2xl border transition-all bg-obsidian-950/60 border-alabaster-100/10 text-alabaster-400 hover:text-alabaster-100 hover:border-alabaster-100/25">
+            <div class="font-mono text-[10px] uppercase tracking-widest text-travertine-300">Movement III · STRUCTURE.md</div>
+            <div class="font-serif text-xl mt-0.5">Funicular &amp; Venturi Form</div>
+          </button>
+
+          <button type="button" data-chapter="3" class="chapter-tab-btn shrink-0 text-left px-4 py-3.5 rounded-2xl border transition-all bg-obsidian-950/60 border-alabaster-100/10 text-alabaster-400 hover:text-alabaster-100 hover:border-alabaster-100/25">
+            <div class="font-mono text-[10px] uppercase tracking-widest text-symbiosis-400">Movement IV · MODEL.md</div>
+            <div class="font-serif text-xl mt-0.5">Exact &#x211A; &amp; PlantGate</div>
+          </button>
+
+          <button type="button" data-chapter="4" class="chapter-tab-btn shrink-0 text-left px-4 py-3.5 rounded-2xl border transition-all bg-obsidian-950/60 border-alabaster-100/10 text-alabaster-400 hover:text-alabaster-100 hover:border-alabaster-100/25">
+            <div class="font-mono text-[10px] uppercase tracking-widest text-metrology-400">Movement V · PROPOSALS.md</div>
+            <div class="font-serif text-xl mt-0.5">Symbiotic Evolution</div>
+          </button>
+        </aside>
+
+        <!-- Chapter Editorial Manuscript Pane -->
+        <article class="lg:col-span-6 rounded-3xl bg-obsidian-950 border border-alabaster-100/10 p-6 sm:p-10 shadow-2xl">
+          <div class="flex flex-wrap items-center justify-between gap-2 pb-5 mb-6 border-b border-alabaster-100/10">
+            <span id="ch-source" class="font-mono text-xs text-moissanite-300">docs/VISION.md · 12,556 bytes</span>
+            <span id="ch-index" class="font-mono text-[11px] uppercase tracking-widest text-alabaster-400">Chapter 01 / 05</span>
+          </div>
+
+          <h3 id="ch-title" class="font-serif text-3xl sm:text-4xl text-alabaster-50 leading-tight mb-5">
+            The Eventual Dream: Architecture as a Formally Verified Organism
+          </h3>
+
+          <div id="ch-body" class="space-y-5 text-sm sm:text-base text-alabaster-200/85 leading-relaxed font-light">
+            <!-- Dynamically populated by JS -->
+          </div>
+
+          <!-- Formal Equation / Axiom Callout -->
+          <div class="mt-7 p-5 rounded-2xl bg-obsidian-900 border-l-2 border-travertine-400">
+            <div id="ch-axiom-label" class="font-mono text-[10px] uppercase tracking-widest text-travertine-300 mb-2">Foundational Axiom</div>
+            <div id="ch-axiom" class="font-mono text-xs sm:text-sm text-alabaster-100 leading-relaxed"></div>
+          </div>
+
+          <!-- Chapter Prev / Next Navigation -->
+          <div class="mt-8 pt-6 border-t border-alabaster-100/10 flex items-center justify-between gap-4">
+            <button id="ch-prev-btn" type="button" class="px-4 py-2.5 rounded-xl bg-obsidian-900 border border-alabaster-100/15 hover:border-alabaster-100/35 text-xs font-mono uppercase tracking-wider text-alabaster-200 transition-colors">
+              &larr; Previous Movement
+            </button>
+            <button id="ch-next-btn" type="button" class="px-4 py-2.5 rounded-xl bg-alabaster-50 text-obsidian-950 hover:bg-moissanite-300 text-xs font-mono font-medium uppercase tracking-wider transition-colors">
+              Next Movement &rarr;
+            </button>
+          </div>
+        </article>
+
+        <!-- Tufte-Style Marginalia & Provenance Notes -->
+        <aside class="lg:col-span-3 space-y-4 lg:sticky lg:top-24">
+          <div class="p-5 rounded-3xl bg-obsidian-950 border border-alabaster-100/10">
+            <div class="font-mono text-[10px] uppercase tracking-widest text-travertine-300 mb-2">Editorial Marginalia</div>
+            <p id="ch-marginalia-1" class="text-xs text-alabaster-200/75 leading-relaxed italic font-serif text-base"></p>
+          </div>
+
+          <div class="p-5 rounded-3xl bg-obsidian-950 border border-alabaster-100/10">
+            <div class="font-mono text-[10px] uppercase tracking-widest text-moissanite-300 mb-3">Coupled Artifacts</div>
+            <ul id="ch-artifacts" class="space-y-2 font-mono text-xs text-alabaster-200"></ul>
+          </div>
+
+          <div class="p-5 rounded-3xl bg-gradient-to-br from-obsidian-900 to-obsidian-950 border border-symbiosis-400/25">
+            <div class="font-mono text-[10px] uppercase tracking-widest text-symbiosis-400 mb-1.5">Epistemic Status</div>
+            <p id="ch-status" class="text-xs text-alabaster-200/80 leading-relaxed"></p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECTION V: CORPUS PROVENANCE ATLAS (optifab-main Cartography)         -->
+  <!-- ===================================================================== -->
+  <section id="atlas" class="py-20 sm:py-28 border-b border-alabaster-100/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header + Search Bar -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+        <div>
+          <div class="font-mono text-xs uppercase tracking-[0.25em] text-travertine-300 mb-3">V · Provenance Cartography</div>
+          <h2 class="font-serif text-4xl sm:text-5xl text-alabaster-50 leading-tight">
+            The <span class="font-mono text-3xl sm:text-4xl text-moissanite-300">optifab-main</span> Corpus Atlas
+          </h2>
+          <p class="mt-3 text-sm sm:text-base text-alabaster-200/75 max-w-2xl">
+            Every claim in our thesis traces back to a concrete, verifiable artifact across 108 entries (1,114,187 bytes) spanning docs, upstream certificates, Lean 4 proofs, exact rational engines, and golden verification vectors.
+          </p>
+        </div>
+
+        <div class="w-full lg:w-80">
+          <label for="atlas-search" class="sr-only">Filter artifacts</label>
+          <div class="relative">
+            <input id="atlas-search" type="text" placeholder="Filter by file, proof, or domain..." class="w-full pl-10 pr-4 py-3 rounded-2xl bg-obsidian-900 border border-alabaster-100/15 focus:border-moissanite-400/60 focus:outline-none text-xs font-mono text-alabaster-100 placeholder:text-alabaster-500" />
+            <svg class="w-4 h-4 text-alabaster-400 absolute left-3.5 top-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Domain Filter Pills -->
+      <div class="flex flex-wrap gap-2 mb-7">
+        <button type="button" data-domain="all" class="atlas-domain-btn px-3.5 py-2 rounded-xl text-xs font-mono uppercase tracking-wider bg-alabaster-50 text-obsidian-950 font-medium transition-all">All Pillars</button>
+        <button type="button" data-domain="docs" class="atlas-domain-btn px-3.5 py-2 rounded-xl text-xs font-mono uppercase tracking-wider bg-obsidian-900 text-alabaster-200 border border-alabaster-100/15 hover:border-alabaster-100/35 transition-all">Thesis Docs</button>
+        <button type="button" data-domain="upstream" class="atlas-domain-btn px-3.5 py-2 rounded-xl text-xs font-mono uppercase tracking-wider bg-obsidian-900 text-travertine-300 border border-travertine-400/20 hover:border-travertine-400/50 transition-all">Upstream Matter &amp; Weft</button>
+        <button type="button" data-domain="formal" class="atlas-domain-btn px-3.5 py-2 rounded-xl text-xs font-mono uppercase tracking-wider bg-obsidian-900 text-symbiosis-400 border border-symbiosis-400/20 hover:border-symbiosis-400/50 transition-all">Lean 4 Formal</button>
+        <button type="button" data-domain="qcore" class="atlas-domain-btn px-3.5 py-2 rounded-xl text-xs font-mono uppercase tracking-wider bg-obsidian-900 text-moissanite-300 border border-moissanite-400/20 hover:border-moissanite-400/50 transition-all">Exact &#x211A;-Core</button>
+        <button type="button" data-domain="studies" class="atlas-domain-btn px-3.5 py-2 rounded-xl text-xs font-mono uppercase tracking-wider bg-obsidian-900 text-metrology-400 border border-metrology-400/20 hover:border-metrology-400/50 transition-all">Closure Studies</button>
+        <button type="button" data-domain="ledgers" class="atlas-domain-btn px-3.5 py-2 rounded-xl text-xs font-mono uppercase tracking-wider bg-obsidian-900 text-alabaster-200 border border-alabaster-100/15 hover:border-alabaster-100/35 transition-all">Ledgers &amp; Golden</button>
+      </div>
+
+      <!-- Artifact Cards Grid (Hydrated via JS) -->
+      <div id="atlas-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      <div id="atlas-empty" class="hidden text-center py-12 rounded-3xl bg-obsidian-900 border border-alabaster-100/10 font-mono text-sm text-alabaster-400">
+        No corpus artifacts match your filter query.
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- SECTION VI: THE EVENTUAL HORIZON — FROM PROVEN CORE TO DREAM          -->
+  <!-- ===================================================================== -->
+  <section id="horizon" class="py-20 sm:py-28 bg-gradient-to-b from-obsidian-900/50 to-obsidian-950 border-b border-alabaster-100/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mb-14">
+        <div class="font-mono text-xs uppercase tracking-[0.25em] text-symbiosis-400 mb-3">VI · Trajectory Toward the Eventual Dream</div>
+        <h2 class="font-serif text-4xl sm:text-5xl lg:text-6xl text-alabaster-50 leading-tight">
+          Grounded in Formal Proofs.<br />
+          <span class="italic text-moissanite-300">Aimed at Living Architecture.</span>
+        </h2>
+        <p class="mt-4 text-sm sm:text-base text-alabaster-200/80 leading-relaxed">
+          We distinguish sharply between what is mathematically verified in our repository today and the long-arc aspiration we are steadily weaving toward. Every milestone closes one more gap between pure knowledge and self-sustaining physical form.
+        </p>
+      </div>
+
+      <!-- 4-Epoch Evolutionary Timeline -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- Epoch I -->
+        <div class="p-6 rounded-3xl bg-obsidian-950 border border-alabaster-100/15 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="font-mono text-xs text-alabaster-400">EPOCH I · v0.3.0</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-symbiosis-900/80 text-symbiosis-400 border border-symbiosis-400/30">Archived</span>
+            </div>
+            <h3 class="font-serif text-2xl text-alabaster-50 mb-2">Provenance &amp; Early Ledgers</h3>
+            <p class="text-xs sm:text-sm text-alabaster-200/75 leading-relaxed">
+              Unified upstream repositories (<code class="font-mono text-[11px] text-travertine-300">aska-physical</code>, <code class="font-mono text-[11px] text-moissanite-300">Moissanite-Labs</code>) into pinned manifests, initial model runs, and captured foundational failure lessons in <code class="font-mono text-[11px]">results/v0.3.0/</code>.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-alabaster-100/10 font-mono text-[11px] text-symbiosis-400">✓ Upstream pinning complete</div>
+        </div>
+
+        <!-- Epoch II -->
+        <div class="p-6 rounded-3xl bg-obsidian-900 border border-moissanite-400/45 shadow-xl shadow-moissanite-500/5 flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-travertine-400 via-moissanite-400 to-symbiosis-400"></div>
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="font-mono text-xs text-moissanite-300">EPOCH II · v0.4 NOW</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-moissanite-900/90 text-moissanite-300 border border-moissanite-400/40">Active Core</span>
+            </div>
+            <h3 class="font-serif text-2xl text-alabaster-50 mb-2">Exact &#x211A; &amp; Lean 4 Closure</h3>
+            <p class="text-xs sm:text-sm text-alabaster-200/80 leading-relaxed">
+              Hardened exact rational linear algebra, Farkas duality, Sylvester inertia, NaN &amp; Zone-B guards, Lean 4 <code class="font-mono text-[11px] text-symbiosis-400">PlantGate</code> proofs, Schur metrology closure, and bio-thermal contraction audits.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-alabaster-100/10 font-mono text-[11px] text-moissanite-300">● 101 KB verify.py + golden tests</div>
+        </div>
+
+        <!-- Epoch III -->
+        <div class="p-6 rounded-3xl bg-obsidian-950 border border-alabaster-100/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="font-mono text-xs text-travertine-300">EPOCH III · NEAR HORIZON</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-travertine-900/70 text-travertine-300 border border-travertine-400/30">Synthesis</span>
+            </div>
+            <h3 class="font-serif text-2xl text-alabaster-50 mb-2">The Fabricated Symbiotic Unit</h3>
+            <p class="text-xs sm:text-sm text-alabaster-200/75 leading-relaxed">
+              Physical instantiation of <code class="font-mono text-[11px] text-travertine-300">unit.json</code>—a compression-pure funicular habitat with passive Venturi collars continuously reporting live sensor telemetry back into <code class="font-mono text-[11px]">loop.py</code>.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-alabaster-100/10 font-mono text-[11px] text-travertine-300">◌ Physical-digital twin closure</div>
+        </div>
+
+        <!-- Epoch IV -->
+        <div class="p-6 rounded-3xl bg-obsidian-950 border border-alabaster-100/10 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="font-mono text-xs text-metrology-400">EPOCH IV · EVENTUAL DREAM</span>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-obsidian-800 text-alabaster-200 border border-alabaster-100/20">Magnum Opus</span>
+            </div>
+            <h3 class="font-serif text-2xl text-alabaster-50 mb-2">Self-Evolving Ecosystem</h3>
+            <p class="text-xs sm:text-sm text-alabaster-200/75 leading-relaxed">
+              Multi-unit, hyperoptimized living infrastructure where every structural rib, fluidic membrane, thermal cycle, and organizational discovery co-evolves under continuous, machine-verified epistemic capture.
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-alabaster-100/10 font-mono text-[11px] text-alabaster-400">∞ Data &amp; matter in permanent symbiosis</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- FOOTER & MONOGRAPH COLOPHON                                           -->
+  <!-- ===================================================================== -->
+  <footer class="py-14 bg-obsidian-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-12 gap-8 pb-10 border-b border-alabaster-100/10">
+        <div class="md:col-span-6">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="font-mono text-base font-semibold tracking-[0.24em] text-alabaster-50">OPTIFAB</span>
+            <span class="text-xs font-mono text-alabaster-500">·</span>
+            <span class="text-xs font-mono text-moissanite-300">Magnum Opus Research Vision</span>
+          </div>
+          <p class="text-sm text-alabaster-400 leading-relaxed max-w-lg">
+            A cross-disciplinary synthesis uniting upstream physical mechanics, epistemic weft invariants, formal Lean 4 verification, exact rational mathematics, and closed-loop metabolic audits into one enduring architectural horizon.
+          </p>
+        </div>
+
+        <div class="md:col-span-3">
+          <div class="font-mono text-[11px] uppercase tracking-widest text-alabaster-400 mb-3">Upstream Foundations</div>
+          <ul class="space-y-2 text-xs font-mono text-alabaster-200/80">
+            <li>Moissanite-Labs / weft</li>
+            <li>aska-physical / funi-floors</li>
+            <li>aska-physical / funi-frame</li>
+            <li>aska-physical / venturi-collars</li>
+          </ul>
+        </div>
+
+        <div class="md:col-span-3">
+          <div class="font-mono text-[11px] uppercase tracking-widest text-alabaster-400 mb-3">Verification Anchors</div>
+          <ul class="space-y-2 text-xs font-mono text-alabaster-200/80">
+            <li>formal/PlantGate/Proofs.lean</li>
+            <li>optifab/q/{farkas,inertia,interval}</li>
+            <li>studies/schur-metrology-closure</li>
+            <li>studies/cycle-thermal-contraction</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-alabaster-500">
+        <div>Corpus Manifest: optifab-main · 108 entries · Dual-licensed (LICENSE &amp; LICENSE-docs)</div>
+        <div class="flex items-center gap-4">
+          <button id="footer-cite-btn" type="button" class="text-travertine-300 hover:text-travertine-400 transition-colors">Copy Thesis Citation</button>
+          <a href="#top" class="text-alabaster-400 hover:text-alabaster-100 transition-colors">Return to Apex &uarr;</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL: MANIFEST & CITATION EXPORT                                     -->
+  <!-- ===================================================================== -->
+  <div id="cite-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-obsidian-950/85 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="cite-modal-title">
+    <div class="w-full max-w-2xl rounded-3xl bg-obsidian-900 border border-alabaster-100/15 shadow-2xl overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-5 border-b border-alabaster-100/10">
+        <div>
+          <div class="font-mono text-[10px] uppercase tracking-widest text-travertine-300">Epistemic Provenance Export</div>
+          <h3 id="cite-modal-title" class="font-serif text-2xl text-alabaster-50 mt-0.5">Cite &amp; Reference OPTIFAB</h3>
+        </div>
+        <button id="close-cite-btn" type="button" aria-label="Close modal" class="p-2 rounded-xl bg-obsidian-850 border border-alabaster-100/10 text-alabaster-300 hover:text-alabaster-50">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-6">
+        <div class="flex flex-wrap gap-2 mb-4">
+          <button type="button" data-cite-tab="bibtex" class="cite-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-mono bg-alabaster-50 text-obsidian-950 font-medium">BibTeX</button>
+          <button type="button" data-cite-tab="thesis" class="cite-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-mono bg-obsidian-850 text-alabaster-300 border border-alabaster-100/10">Thesis Summary</button>
+          <button type="button" data-cite-tab="manifest" class="cite-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-mono bg-obsidian-850 text-alabaster-300 border border-alabaster-100/10">Corpus JSON</button>
+        </div>
+
+        <pre id="cite-output" class="p-4 rounded-2xl bg-obsidian-950 border border-alabaster-100/10 font-mono text-xs text-moissanite-300 overflow-x-auto leading-relaxed whitespace-pre-wrap"></pre>
+
+        <div class="mt-5 flex items-center justify-end gap-3">
+          <button id="copy-cite-btn" type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-travertine-400 hover:bg-travertine-300 text-obsidian-950 font-mono text-xs font-semibold uppercase tracking-wider transition-colors">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <span>Copy to Clipboard</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- NON-INTRUSIVE TOAST NOTIFICATION (Replaces alert)                     -->
+  <!-- ===================================================================== -->
+  <div id="toast-banner" class="fixed bottom-5 right-5 z-50 pointer-events-none opacity-0 translate-y-3 transition-all duration-300">
+    <div class="px-4 py-3 rounded-2xl bg-obsidian-900/95 backdrop-blur-md border border-moissanite-400/40 shadow-2xl flex items-center gap-2.5">
+      <span class="w-2 h-2 rounded-full bg-symbiosis-400"></span>
+      <span id="toast-text" class="font-mono text-xs text-alabaster-100">Copied to clipboard</span>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- INTERACTIVE SYSTEMS & GENERATIVE ART ENGINE                           -->
+  <!-- ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* ------------------------------------------------------------------- */
+      /* UTILITY: TOAST NOTIFICATION & IFRAME-SAFE CLIPBOARD                 */
+      /* ------------------------------------------------------------------- */
+      let toastTimer = null;
+      function showToast(message) {
+        const banner = document.getElementById('toast-banner');
+        const text = document.getElementById('toast-text');
+        if (!banner || !text) return;
+        text.textContent = message;
+        banner.classList.remove('opacity-0', 'translate-y-3');
+        banner.classList.add('opacity-100', 'translate-y-0');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          banner.classList.add('opacity-0', 'translate-y-3');
+          banner.classList.remove('opacity-100', 'translate-y-0');
+        }, 2800);
+      }
+
+      function copyTextSafe(str) {
+        try {
+          const textarea = document.createElement('textarea');
+          textarea.value = str;
+          textarea.setAttribute('readonly', '');
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+          showToast('Copied epistemic provenance record to clipboard');
+        } catch (err) {
+          showToast('Unable to copy automatically — please select and copy manually');
+        }
+      }
+
+      /* ------------------------------------------------------------------- */
+      /* MOBILE NAVIGATION TOGGLE                                            */
+      /* ------------------------------------------------------------------- */
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', () => {
+          mobileMenu.classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-nav-link').forEach((link) => {
+          link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+      }
+
+      /* ------------------------------------------------------------------- */
+      /* 1. HERO CANVAS: WEFT × FUNICULAR INTERACTIVE GENERATIVE LOOM        */
+      /* ------------------------------------------------------------------- */
+      function initHeroWeaveCanvas() {
+        const canvas = document.getElementById('hero-weave-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        let width = 0;
+        let height = 0;
+        let dpr = 1;
+        let isVisible = true;
+        let time = 0;
+
+        // Pointer influence smoothed for organic physical tension response
+        const pointer = { x: 0.65, y: 0.45, targetX: 0.65, targetY: 0.45, active: false };
+
+        // Proof pulses traveling along funicular ribs and weft filaments
+        const pulses = Array.from({ length: 14 }, (_, i) => ({
+          rib: i % 9,
+          t: Math.random(),
+          speed: 0.0018 + Math.random() * 0.0024,
+          isWeft: i % 2 === 0,
+        }));
+
+        function resize() {
+          const rect = canvas.parentElement.getBoundingClientRect();
+          dpr = Math.min(window.devicePixelRatio || 1, 2);
+          width = Math.max(320, rect.width);
+          height = Math.max(480, rect.height);
+          canvas.width = Math.floor(width * dpr);
+          canvas.height = Math.floor(height * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        function updatePointer(clientX, clientY) {
+          const rect = canvas.getBoundingClientRect();
+          pointer.targetX = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+          pointer.targetY = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+          pointer.active = true;
+        }
+
+        window.addEventListener('mousemove', (e) => updatePointer(e.clientX, e.clientY), { passive: true });
+        canvas.addEventListener('touchmove', (e) => {
+          if (e.touches && e.touches[0]) {
+            updatePointer(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        }, { passive: true });
+
+        // Pause rendering when hero is scrolled out of viewport
+        if ('IntersectionObserver' in window) {
+          const observer = new IntersectionObserver((entries) => {
+            isVisible = entries[0] ? entries[0].isIntersecting : true;
+          }, { threshold: 0.05 });
+          observer.observe(canvas);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Compute 3D-projected point on a breathing hyperbolic/funicular weave shell
+        function projectSurface(u, v, t) {
+          // u in [-1, 1] across span, v in [-1, 1] along depth
+          const cx = width * (width < 768 ? 0.52 : 0.64);
+          const cy = height * 0.56;
+          const span = Math.min(width * 0.52, 620);
+
+          // Gentle rotation driven by time + subtle cursor tilt
+          const yaw = Math.sin(t * 0.14) * 0.22 + (pointer.x - 0.5) * 0.38;
+          const pitch = 0.42 + (pointer.y - 0.5) * 0.22;
+
+          // Funicular catenary arch + subtle harmonic weft ripple
+          const r2 = u * u + v * v * 0.85;
+          const archHeight = (1.18 - r2 * 0.72) * 0.92;
+          const ripple = Math.sin(u * 4.2 + t * 0.9) * Math.cos(v * 3.4 - t * 0.7) * 0.055;
+
+          // Local cursor gravitational/epistemic indentation
+          const du = u - (pointer.x - 0.58) * 2.2;
+          const dv = v - (pointer.y - 0.52) * 2.2;
+          const dist2 = du * du + dv * dv;
+          const warp = Math.exp(-dist2 * 3.2) * 0.14 * Math.sin(t * 1.4);
+
+          let x3 = u;
+          let y3 = archHeight + ripple + warp - 0.35;
+          let z3 = v;
+
+          // Rotate around Y (yaw)
+          const cosY = Math.cos(yaw);
+          const sinY = Math.sin(yaw);
+          const rx = x3 * cosY - z3 * sinY;
+          const rz = x3 * sinY + z3 * cosY;
+
+          // Rotate around X (pitch)
+          const cosP = Math.cos(pitch);
+          const sinP = Math.sin(pitch);
+          const ry = y3 * cosP - rz * sinP;
+          const fz = y3 * sinP + rz * cosP;
+
+          const perspective = 2.65 / (2.65 + fz * 0.62);
+          return {
+            x: cx + rx * span * perspective,
+            y: cy - ry * span * 0.78 * perspective,
+            z: fz,
+            p: perspective,
+          };
+        }
+
+        function render() {
+          requestAnimationFrame(render);
+          if (!isVisible) return;
+
+          try {
+            time += 0.012;
+            pointer.x += (pointer.targetX - pointer.x) * 0.04;
+            pointer.y += (pointer.targetY - pointer.y) * 0.04;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Subtle ambient mineral aura behind structure
+            const auraX = width * (width < 768 ? 0.5 : 0.65);
+            const auraY = height * 0.48;
+            const grad = ctx.createRadialGradient(auraX, auraY, 20, auraX, auraY, Math.max(width, height) * 0.55);
+            grad.addColorStop(0, 'rgba(120, 212, 200, 0.10)');
+            grad.addColorStop(0.45, 'rgba(212, 168, 106, 0.055)');
+            grad.addColorStop(1, 'rgba(5, 7, 9, 0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, width, height);
+
+            const ribCount = 11;
+            const weftCount = 13;
+            const steps = 34;
+
+            // 1. Draw Epistemic Weft Filaments (Moissanite Cyan)
+            for (let j = 0; j < weftCount; j++) {
+              const v = -1 + (2 * j) / (weftCount - 1);
+              ctx.beginPath();
+              for (let s = 0; s <= steps; s++) {
+                const u = -1 + (2 * s) / steps;
+                const pt = projectSurface(u, v, time);
+                if (s === 0) ctx.moveTo(pt.x, pt.y);
+                else ctx.lineTo(pt.x, pt.y);
+              }
+              const centerEmphasis = 1 - Math.abs(v) * 0.55;
+              ctx.strokeStyle = `rgba(120, 212, 200, ${(0.11 + centerEmphasis * 0.22).toFixed(3)})`;
+              ctx.lineWidth = 0.8 + centerEmphasis * 0.65;
+              ctx.stroke();
+            }
+
+            // 2. Draw Funicular Compression Ribs (Travertine Gold)
+            for (let i = 0; i < ribCount; i++) {
+              const u = -1 + (2 * i) / (ribCount - 1);
+              ctx.beginPath();
+              for (let s = 0; s <= steps; s++) {
+                const v = -1 + (2 * s) / steps;
+                const pt = projectSurface(u, v, time);
+                if (s === 0) ctx.moveTo(pt.x, pt.y);
+                else ctx.lineTo(pt.x, pt.y);
+              }
+              const centerEmphasis = 1 - Math.abs(u) * 0.5;
+              ctx.strokeStyle = `rgba(212, 168, 106, ${(0.14 + centerEmphasis * 0.34).toFixed(3)})`;
+              ctx.lineWidth = 0.9 + centerEmphasis * 1.1;
+              ctx.stroke();
+            }
+
+            // 3. Draw Symbiotic Intersection Nodes (Selective Harmonic Lattice)
+            for (let i = 1; i < ribCount - 1; i += 2) {
+              const u = -1 + (2 * i) / (ribCount - 1);
+              for (let j = 1; j < weftCount - 1; j += 2) {
+                const v = -1 + (2 * j) / (weftCount - 1);
+                const pt = projectSurface(u, v, time);
+                const glow = 0.35 + 0.45 * Math.sin(time * 1.7 + i * 0.9 + j * 0.6);
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, 1.4 + pt.p * 0.9, 0, Math.PI * 2);
+                ctx.fillStyle = (i + j) % 4 === 0
+                  ? `rgba(99, 194, 155, ${glow.toFixed(2)})`
+                  : `rgba(241, 237, 230, ${(glow * 0.65).toFixed(2)})`;
+                ctx.fill();
+              }
+            }
+
+            // 4. Draw Live Proof Pulses Traveling Along the Weave
+            pulses.forEach((p) => {
+              p.t += p.speed;
+              if (p.t > 1) p.t = 0;
+              const coordA = -1 + 2 * p.t;
+              const coordB = -0.8 + (1.6 * p.rib) / 8;
+              const pt = p.isWeft
+                ? projectSurface(coordA, coordB, time)
+                : projectSurface(coordB, coordA, time);
+
+              ctx.beginPath();
+              ctx.arc(pt.x, pt.y, 2.5 * pt.p, 0, Math.PI * 2);
+              ctx.fillStyle = p.isWeft ? 'rgba(120, 212, 200, 0.95)' : 'rgba(232, 201, 150, 0.95)';
+              ctx.fill();
+
+              ctx.beginPath();
+              ctx.arc(pt.x, pt.y, 7.5 * pt.p, 0, Math.PI * 2);
+              ctx.fillStyle = p.isWeft ? 'rgba(120, 212, 200, 0.18)' : 'rgba(212, 168, 106, 0.18)';
+              ctx.fill();
+            });
+          } catch (err) {
+            // Silently recover from transient canvas errors
+          }
+        }
+
+        render();
+      }
+
+      /* ------------------------------------------------------------------- */
+      /* 2. INTERACTIVE CONVERGENCE GRAPH (data/graph.json)                  */
+      /* ------------------------------------------------------------------- */
+      const GRAPH_NODES = [
+        {
+          id: 'weft',
+          label: 'Moissanite Weft',
+          short: 'weft/invariants.py',
+          group: 'weft',
+          x: 115, y: 95,
+          badge: 'Epistemic Weft',
+          size: '20.6 KB upstream',
+          path: 'data/upstream/Moissanite-Labs/weft/{invariants.py, vectors.json}',
+          desc: 'Captures organizational invariants and state-space vectors from Moissanite-Labs. Provides the informational warp and weft that binds every physical parameter to formal meaning.',
+          invariant: '∀ v ∈ Weft.Vectors, InvariantSet(v) == True (canonical hash pinned)',
+        },
+        {
+          id: 'funi-floors',
+          label: 'Funicular Floors',
+          short: 'funi-floors',
+          group: 'matter',
+          x: 115, y: 205,
+          badge: 'Physical Matter',
+          size: '4.4 KB cert',
+          path: 'data/upstream/aska-physical/funi-floors/certificate.json',
+          desc: 'Compression-optimized vault floor assemblies from aska-physical. Eliminates bending tension waste by routing gravity along pure funicular load shells.',
+          invariant: 'σ_tension(floor) ≤ 0 ∧ CompressionKernel(load) ⊂ ShellGeometry',
+        },
+        {
+          id: 'funi-frame',
+          label: 'Funicular Frame',
+          short: 'funi-frame',
+          group: 'matter',
+          x: 115, y: 315,
+          badge: 'Physical Matter',
+          size: '7.9 KB cert',
+          path: 'data/upstream/aska-physical/funi-frame/certificate.json',
+          desc: 'Primary load-bearing rib topology certified upstream by aska-physical. Forms the skeletal equilibrium envelope of each repeating OPTIFAB unit.',
+          invariant: 'K_frame(q) ≻ 0 (stiffness positive-definite under nominal & peak vectors)',
+        },
+        {
+          id: 'venturi',
+          label: 'Venturi Collars',
+          short: 'venturi-collars',
+          group: 'matter',
+          x: 115, y: 420,
+          badge: 'Physical Fluidics',
+          size: '2.1 KB cert',
+          path: 'data/upstream/aska-physical/venturi-collars/certificate.json',
+          desc: 'Passive aerodynamic throat geometries that induce convective pressure differentials without motors, driving continuous thermal dissipation across the habitat.',
+          invariant: 'ΔP_venturi(v_wind) ≥ Q_thermal_rejection(T_core) (passive regime)',
+        },
+        {
+          id: 'unit',
+          label: 'Unit & Pins',
+          short: 'unit.json / pins',
+          group: 'weft',
+          x: 325, y: 155,
+          badge: 'Canonical Synthesis',
+          size: '72.4 KB data',
+          path: 'data/{unit.json, graph.json, pins.json, sources.json}',
+          desc: 'Weaves upstream matter certificates and weft vectors into a single canonical architectural unit definition with pinned bounds and immutable dependency provenance.',
+          invariant: 'Unit = Synthesis(Weft ⊗ FuniFloors ⊗ FuniFrame ⊗ Venturi) | Pins',
+        },
+        {
+          id: 'qcore',
+          label: 'Exact Q-Core',
+          short: 'optifab/q/*',
+          group: 'formal',
+          x: 325, y: 345,
+          badge: 'Exact Rational Math',
+          size: '43.4 KB Python',
+          path: 'optifab/q/{canon.py, farkas.py, inertia.py, interval.py, linalg.py}',
+          desc: 'Eliminates IEEE-754 floating-point ambiguity. Computes exact rational linear algebra, Farkas feasibility/infeasibility witnesses, Sylvester inertia signatures, and outward-rounded interval enclosures.',
+          invariant: '∀ op ∈ QCore, Error_roundoff(op) = 0 ∧ Interval(x) ∋ x_exact',
+        },
+        {
+          id: 'plantgate',
+          label: 'Lean 4 PlantGate',
+          short: 'PlantGate.lean',
+          group: 'formal',
+          x: 545, y: 115,
+          badge: 'Formal Barrier',
+          size: '69.1 KB Lean 4',
+          path: 'formal/{PlantGate.lean, PlantGate/Spec.lean, PlantGate/Proofs.lean}',
+          desc: 'The machine-checked admission gate written in Lean 4. Proves that no physical fabrication command or parameter update can pass unless all safety, stability, and arithmetic certificates compose soundly.',
+          invariant: 'theorem gate_sound : QCert s → SchurClosed s → BioContract s → Safe s',
+        },
+        {
+          id: 'schur',
+          label: 'Schur Metrology',
+          short: 'schur-closure',
+          group: 'closure',
+          x: 545, y: 245,
+          badge: 'Metrology Study',
+          size: '174.0 KB study',
+          path: 'studies/schur-metrology-closure/optifab_schur_metrology_audit.py',
+          desc: 'Proves Schur complement closure across coupled physical measurements and structural states, guaranteeing that real-world fabrication tolerances never destabilize the global manifold.',
+          invariant: 'M / A = D − C A⁻¹ B ≻ 0  (Schur complement positive-definite)',
+        },
+        {
+          id: 'biothermal',
+          label: 'Bio-Thermal Audit',
+          short: 'thermal-contraction',
+          group: 'closure',
+          x: 545, y: 375,
+          badge: 'Metabolic Study',
+          size: '66.2 KB study',
+          path: 'studies/cycle-thermal-contraction-audit/optifab_bio_thermal_audit.py',
+          desc: 'Audits cyclic thermal contraction across living environmental shifts. Proves exponential return to equilibrium when thermal disturbances are coupled with passive Venturi dissipation.',
+          invariant: '‖δT(t + τ)‖ ≤ ρ · ‖δT(t)‖   with contraction rate  ρ < 1',
+        },
+        {
+          id: 'verifier',
+          label: 'Master Verifier',
+          short: 'verify.py',
+          group: 'formal',
+          x: 740, y: 155,
+          badge: 'Verification Engine',
+          size: '111.3 KB engine',
+          path: 'verify.py & verify_guards.py (NaN + Zone-B hardening)',
+          desc: 'The 101 KB orchestration engine that binds Lean 4 outputs, exact Q-Core checks, golden Farkas/Schur regression vectors, and Zone-B edge hardening into one deterministic audit.',
+          invariant: 'Exit(0) ⇔ AllGuards(NoNaN, ZoneB, GoldenVectors, PlantGate) = PASS',
+        },
+        {
+          id: 'loop',
+          label: 'Symbiotic Loop',
+          short: 'loop.py / propose',
+          group: 'closure',
+          x: 740, y: 290,
+          badge: 'Evolutionary Cycle',
+          size: '19.7 KB cycle',
+          path: 'loop.py & tools/propose.py',
+          desc: 'Closes the epistemic-material feedback loop: ingests empirical lessons and metrology residuals, synthesizes improved architectural proposals, and re-submits them through PlantGate.',
+          invariant: 'Unit_{k+1} = PlantGate(Propose(Unit_k, Ledger_k, Lessons_k))',
+        },
+        {
+          id: 'ledger',
+          label: 'Provenance Ledger',
+          short: 'certificate & ledger',
+          group: 'closure',
+          x: 740, y: 415,
+          badge: 'Immutable Memory',
+          size: '132.4 KB results',
+          path: 'results/{certificate.json, formal.json, ledger.json, model_lessons.md}',
+          desc: 'The permanent epistemic memory of the organization—archiving every verified certificate, model run, and distilled lesson so future iterations begin at a strictly higher floor of knowledge.',
+          invariant: 'Ledger_{k+1} = Append(Ledger_k, SHA256(Cert_k), Lessons_k)',
+        },
+      ];
+
+      const GRAPH_EDGES = [
+        ['weft', 'unit'],
+        ['funi-floors', 'unit'],
+        ['funi-frame', 'unit'],
+        ['venturi', 'unit'],
+        ['funi-frame', 'qcore'],
+        ['venturi', 'biothermal'],
+        ['unit', 'qcore'],
+        ['unit', 'plantgate'],
+        ['qcore', 'plantgate'],
+        ['qcore', 'schur'],
+        ['qcore', 'biothermal'],
+        ['plantgate', 'verifier'],
+        ['schur', 'verifier'],
+        ['biothermal', 'verifier'],
+        ['verifier', 'loop'],
+        ['verifier', 'ledger'],
+        ['loop', 'ledger'],
+        ['ledger', 'unit'],
+      ];
+
+      const GROUP_COLORS = {
+        matter: { stroke: '#D4A86A', fill: '#231A0E', text: '#E8C996', badgeBg: 'bg-travertine-900/80 text-travertine-300 border-travertine-400/35' },
+        weft: { stroke: '#78D4C8', fill: '#0E2422', text: '#A5E8DF', badgeBg: 'bg-moissanite-900/80 text-moissanite-300 border-moissanite-400/35' },
+        formal: { stroke: '#63C29B', fill: '#0E231B', text: '#63C29B', badgeBg: 'bg-symbiosis-900/80 text-symbiosis-400 border-symbiosis-400/35' },
+        closure: { stroke: '#E5945B', fill: '#26170E', text: '#E5945B', badgeBg: 'bg-obsidian-850 text-metrology-400 border-metrology-400/35' },
+      };
+
+      function initConvergenceGraph() {
+        const edgesLayer = document.getElementById('graph-edges');
+        const nodesLayer = document.getElementById('graph-nodes');
+        const pulsesLayer = document.getElementById('graph-pulses');
+        if (!edgesLayer || !nodesLayer || !pulsesLayer) return;
+
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const nodeMap = Object.fromEntries(GRAPH_NODES.map((n) => [n.id, n]));
+        let selectedId = 'plantgate';
+        let activeFilter = 'all';
+
+        function createEl(tag, attrs = {}) {
+          const el = document.createElementNS(svgNS, tag);
+          Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+          return el;
+        }
+
+        function computeEdgePath(src, dst) {
+          // Special curved feedback arc from ledger back to unit
+          if (src.id === 'ledger' && dst.id === 'unit') {
+            return `M ${src.x} ${src.y + 20} C ${src.x - 110} ${src.y + 68}, ${dst.x + 80} ${dst.y + 315}, ${dst.x} ${dst.y + 22}`;
+          }
+          const dx = (dst.x - src.x) * 0.52;
+          return `M ${src.x} ${src.y} C ${src.x + dx} ${src.y}, ${dst.x - dx} ${dst.y}, ${dst.x} ${dst.y}`;
+        }
+
+        function updateInspector(id) {
+          const node = nodeMap[id];
+          if (!node) return;
+          selectedId = id;
+          const colors = GROUP_COLORS[node.group];
+
+          const badgeEl = document.getElementById('insp-badge');
+          badgeEl.textContent = node.badge;
+          badgeEl.className = `px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-widest border ${colors.badgeBg}`;
+
+          document.getElementById('insp-size').textContent = node.size;
+          document.getElementById('insp-title').textContent = node.label;
+          document.getElementById('insp-path').textContent = node.path;
+          document.getElementById('insp-desc').textContent = node.desc;
+          document.getElementById('insp-invariant').textContent = node.invariant;
+
+          const inputs = GRAPH_EDGES.filter(([, dst]) => dst === id).map(([src]) => nodeMap[src]);
+          const outputs = GRAPH_EDGES.filter(([src]) => src === id).map(([, dst]) => nodeMap[dst]);
+
+          const inEl = document.getElementById('insp-inputs');
+          const outEl = document.getElementById('insp-outputs');
+          inEl.innerHTML = inputs.length
+            ? inputs.map((n) => `<button type="button" data-jump="${n.id}" class="text-left hover:text-moissanite-300 transition-colors">← ${n.label}</button>`).join('')
+            : '<span class="text-alabaster-500">Root Provenance</span>';
+          outEl.innerHTML = outputs.length
+            ? outputs.map((n) => `<button type="button" data-jump="${n.id}" class="text-left hover:text-travertine-300 transition-colors">→ ${n.label}</button>`).join('')
+            : '<span class="text-alabaster-500">Terminal Archive</span>';
+
+          inEl.querySelectorAll('[data-jump]').forEach((btn) => {
+            btn.addEventListener('click', () => updateInspector(btn.dataset.jump));
+          });
+          outEl.querySelectorAll('[data-jump]').forEach((btn) => {
+            btn.addEventListener('click', () => updateInspector(btn.dataset.jump));
+          });
+
+          renderGraph();
+        }
+
+        function renderGraph() {
+          edgesLayer.innerHTML = '';
+          nodesLayer.innerHTML = '';
+
+          // Determine connected neighborhood of selected node
+          const neighborSet = new Set([selectedId]);
+          GRAPH_EDGES.forEach(([s, d]) => {
+            if (s === selectedId) neighborSet.add(d);
+            if (d === selectedId) neighborSet.add(s);
+          });
+
+          // Render edges
+          GRAPH_EDGES.forEach(([srcId, dstId]) => {
+            const src = nodeMap[srcId];
+            const dst = nodeMap[dstId];
+            const isConnected = srcId === selectedId || dstId === selectedId;
+            const filterMatch = activeFilter === 'all' || src.group === activeFilter || dst.group === activeFilter;
+            const isFeedback = srcId === 'ledger' && dstId === 'unit';
+
+            const path = createEl('path', {
+              d: computeEdgePath(src, dst),
+              fill: 'none',
+              stroke: isConnected ? 'url(#edge-grad-weave)' : (isFeedback ? '#E5945B' : '#9BA09E'),
+              'stroke-width': isConnected ? '2.2' : '1.1',
+              'stroke-opacity': !filterMatch ? '0.08' : (isConnected ? '0.95' : '0.25'),
+              'stroke-dasharray': isFeedback || isConnected ? '5 4' : 'none',
+              class: isConnected ? 'animate-dash-flow' : '',
+            });
+            edgesLayer.appendChild(path);
+          });
+
+          // Render nodes
+          GRAPH_NODES.forEach((node) => {
+            const colors = GROUP_COLORS[node.group];
+            const isSelected = node.id === selectedId;
+            const isNeighbor = neighborSet.has(node.id);
+            const filterMatch = activeFilter === 'all' || node.group === activeFilter;
+
+            const g = createEl('g', {
+              transform: `translate(${node.x}, ${node.y})`,
+              class: 'cursor-pointer transition-opacity duration-200',
+              opacity: !filterMatch ? '0.22' : (isNeighbor ? '1' : '0.68'),
+            });
+
+            // Outer selection halo
+            if (isSelected) {
+              g.appendChild(createEl('rect', {
+                x: -76, y: -26, width: 152, height: 52, rx: 14,
+                fill: 'none',
+                stroke: colors.stroke,
+                'stroke-width': '1.6',
+                'stroke-opacity': '0.55',
+                filter: 'url(#glow-soft)',
+              }));
+            }
+
+            // Main node capsule
+            g.appendChild(createEl('rect', {
+              x: -70, y: -21, width: 140, height: 42, rx: 11,
+              fill: colors.fill,
+              stroke: colors.stroke,
+              'stroke-width': isSelected ? '2' : '1.1',
+              'stroke-opacity': isSelected ? '1' : '0.6',
+            }));
+
+            // Status pip
+            g.appendChild(createEl('circle', {
+              cx: -55, cy: -5, r: 3.2,
+              fill: colors.stroke,
+            }));
+
+            // Primary title
+            const title = createEl('text', {
+              x: -44, y: -1,
+              fill: '#FAF8F5',
+              'font-family': 'Inter, sans-serif',
+              'font-size': '11',
+              'font-weight': '600',
+            });
+            title.textContent = node.label;
+            g.appendChild(title);
+
+            // Artifact sub-label
+            const sub = createEl('text', {
+              x: -44, y: 12,
+              fill: colors.text,
+              'font-family': 'JetBrains Mono, monospace',
+              'font-size': '8.5',
+              opacity: '0.88',
+            });
+            sub.textContent = node.short;
+            g.appendChild(sub);
+
+            g.addEventListener('click', () => updateInspector(node.id));
+            nodesLayer.appendChild(g);
+          });
+        }
+
+        // Filter buttons
+        document.querySelectorAll('.graph-filter-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            activeFilter = btn.dataset.filter;
+            document.querySelectorAll('.graph-filter-btn').forEach((b) => {
+              b.classList.remove('bg-alabaster-50', 'text-obsidian-950', 'font-medium');
+              if (b.dataset.filter === 'all') {
+                b.classList.add('bg-obsidian-850', 'text-alabaster-200', 'border', 'border-alabaster-100/15');
+              }
+            });
+            btn.classList.remove('bg-obsidian-850');
+            btn.classList.add('bg-alabaster-50', 'text-obsidian-950', 'font-medium');
+            renderGraph();
+          });
+        });
+
+        // Verification Pulse Wave Animation across the Convergence Graph
+        let pulseRunning = false;
+        const pulseBtn = document.getElementById('pulse-graph-btn');
+        const stageReadout = document.getElementById('pulse-stage-readout');
+
+        if (pulseBtn) {
+          pulseBtn.addEventListener('click', () => {
+            if (pulseRunning) return;
+            pulseRunning = true;
+            pulsesLayer.innerHTML = '';
+
+            const stages = [
+              { label: 'Stage 1/4: Loading pinned upstream certs (Moissanite Weft + aska-physical)...', edges: [['weft', 'unit'], ['funi-floors', 'unit'], ['funi-frame', 'unit'], ['venturi', 'unit']] },
+              { label: 'Stage 2/4: Computing exact Q-Core Farkas, Inertia & Interval bounds...', edges: [['unit', 'qcore'], ['funi-frame', 'qcore'], ['unit', 'plantgate']] },
+              { label: 'Stage 3/4: Executing Lean 4 PlantGate, Schur Metrology & Bio-Thermal audits...', edges: [['qcore', 'plantgate'], ['qcore', 'schur'], ['qcore', 'biothermal'], ['venturi', 'biothermal']] },
+              { label: 'Stage 4/4: Closing verify.py -> loop.py -> Immutable Ledger (PASS ✓)', edges: [['plantgate', 'verifier'], ['schur', 'verifier'], ['biothermal', 'verifier'], ['verifier', 'loop'], ['verifier', 'ledger'], ['ledger', 'unit']] },
+            ];
+
+            let stageIdx = 0;
+            function runStage() {
+              if (stageIdx >= stages.length) {
+                pulseRunning = false;
+                if (stageReadout) stageReadout.textContent = 'Verification Pulse Complete · All 12 Nodes Certified';
+                showToast('Full epistemic-material verification pulse passed');
+                return;
+              }
+              const stage = stages[stageIdx];
+              if (stageReadout) stageReadout.textContent = stage.label;
+              pulsesLayer.innerHTML = '';
+
+              const pathEls = stage.edges.map(([s, d]) => {
+                const p = createEl('path', { d: computeEdgePath(nodeMap[s], nodeMap[d]), fill: 'none', stroke: 'none' });
+                pulsesLayer.appendChild(p);
+                const dot = createEl('circle', { r: 4.5, fill: '#63C29B', filter: 'url(#glow-soft)' });
+                pulsesLayer.appendChild(dot);
+                return { path: p, dot, len: p.getTotalLength() };
+              });
+
+              const start = performance.now();
+              const duration = 850;
+              function step(now) {
+                const t = Math.min(1, (now - start) / duration);
+                pathEls.forEach(({ path, dot, len }) => {
+                  const pt = path.getPointAtLength(len * t);
+                  dot.setAttribute('cx', pt.x);
+                  dot.setAttribute('cy', pt.y);
+                  dot.setAttribute('opacity', String(1 - t * 0.25));
+                });
+                if (t < 1) {
+                  requestAnimationFrame(step);
+                } else {
+                  stageIdx++;
+                  runStage();
+                }
+              }
+              requestAnimationFrame(step);
+            }
+
+            runStage();
+          });
+        }
+
+        updateInspector('plantgate');
+      }
+
+      /* ------------------------------------------------------------------- */
+      /* 3. INTERACTIVE SYMBIOTIC LIVING UNIT SIMULATOR                      */
+      /* ------------------------------------------------------------------- */
+      function initUnitSimulator() {
+        const canvas = document.getElementById('unit-sim-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const sliders = {
+          load: document.getElementById('slider-load'),
+          venturi: document.getElementById('slider-venturi'),
+          thermal: document.getElementById('slider-thermal'),
+          noise: document.getElementById('slider-noise'),
+        };
+
+        const state = {
+          load: 42,
+          venturi: 68,
+          thermal: 18,
+          noise: 22,
+          t: 0,
+          verdict: 'ADMITTED',
+          farkasMargin: 0.818,
+          rho: 0.714,
+          schurBound: 0.0044,
+          positiveDefinite: true,
+        };
+
+        // Streamline particles for passive Venturi flow
+        const particles = Array.from({ length: 34 }, () => ({
+          x: Math.random(),
+          y: 0.2 + Math.random() * 0.6,
+          speed: 0.004 + Math.random() * 0.005,
+        }));
+
+        let width = 0;
+        let height = 0;
+        let dpr = 1;
+        let isVisible = true;
+
+        function resize() {
+          const rect = canvas.parentElement.getBoundingClientRect();
+          dpr = Math.min(window.devicePixelRatio || 1, 2);
+          width = Math.max(280, rect.width);
+          height = Math.max(280, rect.height);
+          canvas.width = Math.floor(width * dpr);
+          canvas.height = Math.floor(height * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        if ('IntersectionObserver' in window) {
+          const observer = new IntersectionObserver((entries) => {
+            isVisible = entries[0] ? entries[0].isIntersecting : true;
+          }, { threshold: 0.05 });
+          observer.observe(canvas);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Format decimal as exact dyadic rational numerator/512 (honoring optifab/q)
+        function toExactRational(val) {
+          const denom = 512;
+          const num = Math.round(val * denom);
+          const sign = num >= 0 ? '+' : '';
+          return `${sign}${num} / ${denom}`;
+        }
+
+        function evaluatePhysics() {
+          state.load = Number(sliders.load.value);
+          state.venturi = Number(sliders.venturi.value);
+          state.thermal = Number(sliders.thermal.value);
+          state.noise = Number(sliders.noise.value);
+
+          document.getElementById('val-load').textContent = `${state.load} kN/m²`;
+          document.getElementById('val-venturi').textContent = `${state.venturi} Pa`;
+          document.getElementById('val-thermal').textContent = `+${state.thermal} °C`;
+          document.getElementById('val-noise').textContent = `${(state.noise / 100).toFixed(2)} ε`;
+
+          // Coupled physical-epistemic evaluation
+          const loadRatio = state.load / 100;
+          const venturiCooling = state.venturi / 100;
+          const thermalStress = state.thermal / 100;
+          const noiseRatio = state.noise / 100;
+
+          // Farkas feasibility margin: drops under high load + high noise + unmitigated thermal stress
+          state.farkasMargin = 1.18 - loadRatio * 0.72 - noiseRatio * 0.44 - Math.max(0, thermalStress - venturiCooling * 0.85) * 0.78;
+
+          // Bio-thermal contraction factor rho (< 1.0 implies exponential return to equilibrium)
+          state.rho = Math.max(0.32, 0.56 + thermalStress * 0.62 - venturiCooling * 0.34 + noiseRatio * 0.14);
+
+          // Schur metrology uncertainty radius (mm)
+          state.schurBound = 0.0018 + noiseRatio * 0.0165 + loadRatio * 0.0042;
+          state.positiveDefinite = state.farkasMargin > 0.02 && state.rho < 0.99 && state.schurBound < 0.0175;
+
+          const badge = document.getElementById('sim-verdict-badge');
+          const dot = document.getElementById('sim-verdict-dot');
+          const loopMsg = document.getElementById('sim-loop-message');
+
+          if (state.farkasMargin > 0.18 && state.rho < 0.92 && state.schurBound < 0.0145) {
+            state.verdict = 'ADMITTED';
+            badge.textContent = 'PLANTGATE: ADMITTED · FORMALLY CERTIFIED';
+            badge.className = 'font-mono text-xs font-semibold uppercase tracking-widest text-symbiosis-400';
+            dot.className = 'w-2.5 h-2.5 rounded-full bg-symbiosis-400';
+            loopMsg.textContent = 'Equilibrium verified: passive Venturi convection absorbs cyclic thermal delta; funicular ribs stay inside pure compression kernel with positive-definite Schur closure.';
+          } else if (state.positiveDefinite) {
+            state.verdict = 'ZONE_B';
+            badge.textContent = 'PLANTGATE: ZONE-B GUARDED · CONTRACTING';
+            badge.className = 'font-mono text-xs font-semibold uppercase tracking-widest text-metrology-400';
+            dot.className = 'w-2.5 h-2.5 rounded-full bg-metrology-400 animate-pulse';
+            loopMsg.textContent = 'Zone-B hardening engaged: approaching metrology or thermal boundary. loop.py recommends widening Venturi throat flux or tightening sensor calibration pins.';
+          } else {
+            state.verdict = 'REJECTED';
+            badge.textContent = 'PLANTGATE: REJECTED · FARKAS DUAL WITNESS';
+            badge.className = 'font-mono text-xs font-semibold uppercase tracking-widest text-rose-400';
+            dot.className = 'w-2.5 h-2.5 rounded-full bg-rose-400 animate-ping';
+            loopMsg.textContent = 'Formal barrier closed! Exact Q-Core emitted a Farkas infeasibility witness or non-contracting thermal eigenvalue (ρ ≥ 1). Actuation blocked until epistemic re-optimization.';
+          }
+
+          document.getElementById('metric-farkas').textContent = toExactRational(state.farkasMargin);
+          document.getElementById('metric-inertia').textContent = state.positiveDefinite
+            ? '(6+, 0-, 0₀)'
+            : (state.farkasMargin <= 0 ? '(4+, 2-, 0₀)' : '(5+, 1-, 0₀)');
+          document.getElementById('metric-rho').textContent = `${state.rho.toFixed(3)} ${state.rho < 1 ? '< 1' : '≥ 1'}`;
+          document.getElementById('metric-schur').textContent = `±${state.schurBound.toFixed(4)} mm`;
+        }
+
+        Object.values(sliders).forEach((sl) => {
+          if (sl) sl.addEventListener('input', evaluatePhysics);
+        });
+
+        // Presets
+        const PRESETS = {
+          nominal: { load: 42, venturi: 68, thermal: 18, noise: 22 },
+          thermal: { load: 48, venturi: 34, thermal: 72, noise: 26 },
+          load: { load: 86, venturi: 64, thermal: 28, noise: 34 },
+          zoneb: { load: 92, venturi: 22, thermal: 78, noise: 84 },
+        };
+
+        document.querySelectorAll('.sim-preset-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const p = PRESETS[btn.dataset.preset];
+            if (!p) return;
+            sliders.load.value = p.load;
+            sliders.venturi.value = p.venturi;
+            sliders.thermal.value = p.thermal;
+            sliders.noise.value = p.noise;
+            evaluatePhysics();
+          });
+        });
+
+        // Autonomous Symbiotic Re-Optimization animation
+        const stabBtn = document.getElementById('sim-stabilize-btn');
+        if (stabBtn) {
+          stabBtn.addEventListener('click', () => {
+            const target = { load: 44, venturi: 82, thermal: 20, noise: 16 };
+            let stepCount = 0;
+            const totalSteps = 22;
+            const startVals = {
+              load: Number(sliders.load.value),
+              venturi: Number(sliders.venturi.value),
+              thermal: Number(sliders.thermal.value),
+              noise: Number(sliders.noise.value),
+            };
+
+            function animStep() {
+              stepCount++;
+              const k = 1 - Math.pow(1 - stepCount / totalSteps, 3);
+              sliders.load.value = Math.round(startVals.load + (target.load - startVals.load) * k);
+              sliders.venturi.value = Math.round(startVals.venturi + (target.venturi - startVals.venturi) * k);
+              sliders.thermal.value = Math.round(startVals.thermal + (target.thermal - startVals.thermal) * k);
+              sliders.noise.value = Math.round(startVals.noise + (target.noise - startVals.noise) * k);
+              evaluatePhysics();
+              if (stepCount < totalSteps) requestAnimationFrame(animStep);
+              else showToast('Symbiotic equilibrium restored & re-certified by PlantGate');
+            }
+            requestAnimationFrame(animStep);
+          });
+        }
+
+        function drawUnit() {
+          requestAnimationFrame(drawUnit);
+          if (!isVisible) return;
+
+          try {
+            state.t += 0.025;
+            ctx.clearRect(0, 0, width, height);
+
+            const cx = width * 0.5;
+            const baseY = height * 0.80;
+            const span = Math.min(width * 0.72, 420);
+            const halfSpan = span * 0.5;
+
+            // Arch apex flexes slightly under axial load
+            const archHeight = Math.min(height * 0.52, 200) * (1 - (state.load - 40) * 0.0018);
+
+            // Subtle architectural metrology grid
+            ctx.strokeStyle = 'rgba(241, 237, 230, 0.045)';
+            ctx.lineWidth = 1;
+            const gridStep = 28;
+            for (let gx = cx % gridStep; gx < width; gx += gridStep) {
+              ctx.beginPath();
+              ctx.moveTo(gx, 0);
+              ctx.lineTo(gx, height);
+              ctx.stroke();
+            }
+            for (let gy = baseY % gridStep; gy < height; gy += gridStep) {
+              ctx.beginPath();
+              ctx.moveTo(0, gy);
+              ctx.lineTo(width, gy);
+              ctx.stroke();
+            }
+
+            // Thermal core glow proportional to thermal delta minus Venturi cooling
+            const netHeat = Math.max(0.06, Math.min(0.6, (state.thermal - state.venturi * 0.42) / 105));
+            const heatGrad = ctx.createRadialGradient(cx, baseY - archHeight * 0.42, 10, cx, baseY - archHeight * 0.42, span * 0.48);
+            heatGrad.addColorStop(0, state.verdict === 'REJECTED' ? `rgba(244, 63, 94, ${netHeat + 0.12})` : `rgba(229, 148, 91, ${netHeat})`);
+            heatGrad.addColorStop(0.65, 'rgba(120, 212, 200, 0.05)');
+            heatGrad.addColorStop(1, 'rgba(5, 7, 9, 0)');
+            ctx.fillStyle = heatGrad;
+            ctx.fillRect(0, 0, width, height);
+
+            // Ground datum baseline
+            ctx.strokeStyle = 'rgba(212, 168, 106, 0.35)';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(cx - halfSpan - 36, baseY);
+            ctx.lineTo(cx + halfSpan + 36, baseY);
+            ctx.stroke();
+
+            // Passive Venturi Collar Airflow Streamlines (Accelerating through top throat)
+            const flowSpeedMul = 0.5 + (state.venturi / 100) * 2.2;
+            particles.forEach((p) => {
+              p.x += p.speed * flowSpeedMul;
+              if (p.x > 1) p.x = 0;
+              const px = cx - halfSpan * 1.15 + p.x * span * 1.15;
+              const distCenter = Math.abs(px - cx) / (halfSpan * 1.15);
+              // Venturi constriction draws flow smoothly over and through upper collar
+              const funnelY = baseY - archHeight * (0.28 + p.y * 0.72) - Math.exp(-distCenter * distCenter * 4.5) * (18 + state.venturi * 0.22);
+
+              ctx.beginPath();
+              ctx.moveTo(px - 10 * flowSpeedMul, funnelY + Math.sin(state.t + p.x * 8) * 1.5);
+              ctx.lineTo(px, funnelY);
+              ctx.strokeStyle = `rgba(120, 212, 200, ${(0.22 + (state.venturi / 100) * 0.55).toFixed(2)})`;
+              ctx.lineWidth = 1.4;
+              ctx.stroke();
+            });
+
+            // Funicular Floor Vaults (2 stratified arched compression slabs)
+            [0.32, 0.62].forEach((level, idx) => {
+              const yLevel = baseY - archHeight * level;
+              const localHalf = halfSpan * Math.sqrt(Math.max(0.05, 1 - level * 0.88));
+              ctx.beginPath();
+              ctx.moveTo(cx - localHalf, yLevel);
+              ctx.quadraticCurveTo(cx, yLevel - 14 - idx * 3, cx + localHalf, yLevel);
+              ctx.strokeStyle = 'rgba(212, 168, 106, 0.75)';
+              ctx.lineWidth = 2.2;
+              ctx.stroke();
+
+              // Epistemic weft nodes along floor slab
+              for (let k = -2; k <= 2; k++) {
+                const nx = cx + (k / 2.4) * localHalf;
+                const ny = yLevel - (1 - (k / 2.4) * (k / 2.4)) * (7 + idx * 1.5);
+                ctx.beginPath();
+                ctx.arc(nx, ny, 2.5, 0, Math.PI * 2);
+                ctx.fillStyle = state.verdict === 'REJECTED' ? '#FB7185' : '#63C29B';
+                ctx.fill();
+              }
+            });
+
+            // Primary Funicular Compression Frame (Catenary/Parabolic Rib Shell)
+            const ribColor = state.verdict === 'REJECTED'
+              ? '#FB7185'
+              : (state.verdict === 'ZONE_B' ? '#E5945B' : '#D4A86A');
+
+            // Outer & inner shell ribs
+            [0, 10].forEach((offset, i) => {
+              ctx.beginPath();
+              for (let s = -24; s <= 24; s++) {
+                const u = s / 24;
+                const x = cx + u * (halfSpan - offset);
+                const y = baseY - (1 - u * u) * (archHeight - offset * 1.1);
+                if (s === -24) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+              }
+              ctx.strokeStyle = ribColor;
+              ctx.lineWidth = i === 0 ? 3 : 1.2;
+              ctx.stroke();
+            });
+
+            // Diagonal epistemic weft cross-bracing inside frame
+            ctx.strokeStyle = 'rgba(120, 212, 200, 0.28)';
+            ctx.lineWidth = 0.9;
+            for (let s = -18; s <= 18; s += 6) {
+              const u = s / 24;
+              const x1 = cx + u * halfSpan;
+              const y1 = baseY - (1 - u * u) * archHeight;
+              const x2 = cx + u * (halfSpan * 0.55);
+              const y2 = baseY;
+              ctx.beginPath();
+              ctx.moveTo(x1, y1);
+              ctx.lineTo(x2, y2);
+              ctx.stroke();
+            }
+
+            // Apex Venturi Collar Throat Geometry
+            const apexY = baseY - archHeight;
+            ctx.beginPath();
+            ctx.moveTo(cx - 32, apexY - 12);
+            ctx.quadraticCurveTo(cx, apexY + 6, cx + 32, apexY - 12);
+            ctx.moveTo(cx - 26, apexY - 22);
+            ctx.quadraticCurveTo(cx, apexY - 8, cx + 26, apexY - 22);
+            ctx.strokeStyle = '#78D4C8';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Schur Metrology Closure Uncertainty Ellipsoid at Core
+            const schurCenterY = baseY - archHeight * 0.48;
+            const rx = 18 + state.noise * 0.65 + Math.sin(state.t * 2.2) * (state.verdict === 'REJECTED' ? 4.5 : 1.5);
+            const ry = 12 + state.noise * 0.42 + state.load * 0.14;
+            ctx.save();
+            ctx.translate(cx, schurCenterY);
+            ctx.rotate(Math.sin(state.t * 0.6) * 0.14);
+            ctx.beginPath();
+            ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+            ctx.strokeStyle = state.verdict === 'REJECTED' ? 'rgba(251, 113, 133, 0.85)' : 'rgba(229, 148, 91, 0.85)';
+            ctx.setLineDash([4, 3]);
+            ctx.lineWidth = 1.6;
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = state.verdict === 'REJECTED' ? 'rgba(251, 113, 133, 0.12)' : 'rgba(229, 148, 91, 0.08)';
+            ctx.fill();
+
+            // Bio-Thermal Contraction Phase Ring (pulsing inward if rho < 1, outward if >= 1)
+            const phase = (state.t * 0.5) % 1;
+            const ringR = state.rho < 1 ? (rx * (1.25 - phase * 0.85)) : (rx * (0.45 + phase * 1.1));
+            ctx.beginPath();
+            ctx.arc(0, 0, Math.max(4, ringR), 0, Math.PI * 2);
+            ctx.strokeStyle = state.rho < 1
+              ? `rgba(99, 194, 155, ${(0.55 * (1 - phase)).toFixed(2)})`
+              : `rgba(251, 113, 133, ${(0.7 * (1 - phase)).toFixed(2)})`;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.restore();
+          } catch (err) {
+            // Gracefully handle resize transitions
+          }
+        }
+
+        evaluatePhysics();
+        drawUnit();
+      }
+
+      /* ------------------------------------------------------------------- */
+      /* 4. WHITEPAPER MONOGRAPH READER (docs/*.md Synthesis)                */
+      /* ------------------------------------------------------------------- */
+      const CHAPTERS = [
+        {
+          source: 'docs/VISION.md · 12,556 bytes',
+          index: 'Chapter 01 / 05',
+          title: 'The Eventual Dream: Architecture as a Formally Verified Organism',
+          paragraphs: [
+            'Most engineering organizations accumulate breakthroughs in fragments: a structural geometry here, an invariant solver there, a thermal audit archived once a sprint closes. OPTIFAB represents our deliberate refusal to let our collective intelligence remain fragmented.',
+            'Our eventual dream is a hyperoptimized physical-informational structure that operates as a symbiotic ecosystem. Every physical member is shaped by exact mechanics, every sensor residual updates the shared epistemic model, and no transition occurs without a machine-checked mathematical proof.',
+            'This is not merely a product roadmap—it is our magnum opus thesis: a demonstration that human creativity, formal verification, and natural physical law can converge into a single coherent vessel of institutional knowledge.'
+          ],
+          axiomLabel: 'Foundational Vision Axiom',
+          axiom: 'MagnumOpus := lim_{n → ∞} Symbiosis(EpistemicCapture_n ⊗ PhysicalForm_n)',
+          marginalia: '“A cathedral is built not only of stone, but of every geometric certainty its builders refused to compromise.”',
+          artifacts: ['docs/VISION.md', 'README.md', 'HANDOFF.md', 'data/unit.json'],
+          status: 'Long-horizon north star guiding all v0.4 formalization, upstream pinning, and empirical closure studies.',
+        },
+        {
+          source: 'docs/CONVERGENCE.md · 34,741 bytes',
+          index: 'Chapter 02 / 05',
+          title: 'Convergence of Epistemic Capture: Data Woven Into Matter',
+          paragraphs: [
+            'At 34.7 kilobytes, CONVERGENCE.md is the philosophical and architectural spine of OPTIFAB. It defines epistemic capture as the discipline of converting every experiment, failed hypothesis, and upstream constraint into a machine-readable, verifiable asset.',
+            'Through Moissanite-Labs/weft, invariants are no longer prose paragraphs buried in wiki pages—they become typed state vectors coupled directly to physical pins in data/graph.json and data/pins.json.',
+            'When data and matter are woven together in this way, the distinction between documentation and physical infrastructure dissolves. A lesson learned in results/model_lessons.md directly alters the admissible manifold of the next structural cycle.'
+          ],
+          axiomLabel: 'Epistemic Coupling Identity',
+          axiom: '∀ discovery d ∈ Org,  Capture(d) ∈ Graph(Invariants × Pins × Certificates)',
+          marginalia: '“Knowledge that cannot constrain future reality is merely folklore; epistemic capture turns insight into geometry.”',
+          artifacts: ['docs/CONVERGENCE.md', 'data/graph.json', 'data/upstream/Moissanite-Labs/weft/invariants.py', 'results/model_lessons.md'],
+          status: 'Active convergence architecture governing 108 tracked corpus artifacts across upstream and core modules.',
+        },
+        {
+          source: 'docs/STRUCTURE.md · 21,417 bytes',
+          index: 'Chapter 03 / 05',
+          title: 'Hyperoptimized Matter: Funicular Gravity & Passive Venturi Form',
+          paragraphs: [
+            'Hyperoptimization does not mean brute-force complexity; it means letting physics compute for free. Drawing from upstream aska-physical certificates, OPTIFAB replaces heavy, bending-dominated rectilinear framing with compression-pure funicular geometry.',
+            'funi-frame and funi-floors route gravitational loads along natural catenary trajectories, minimizing material volume while maximizing structural reserve. Meanwhile, venturi-collars sculpt the aerodynamic envelope so ambient pressure gradients passively ventilate and regulate internal thermal energy.',
+            'Because each physical subsystem arrives with its own cryptographic certificate.json, architectural beauty and structural optimality become auditable properties of the global graph.'
+          ],
+          axiomLabel: 'Material-Fluidic Necessity Condition',
+          axiom: 'Form* = argmin_{Ω} Mass(Ω)  s.t.  FunicularCompression(Ω) ∧ PassiveVenturi(Ω)',
+          marginalia: '“Nature never wastes energy fighting gravity with bending moments when an arch can carry the load in pure compression.”',
+          artifacts: ['docs/STRUCTURE.md', 'aska-physical/funi-frame/certificate.json', 'aska-physical/funi-floors/certificate.json', 'aska-physical/venturi-collars/certificate.json'],
+          status: 'Upstream physical certificates pinned and coupled into unit.json structural constraints.',
+        },
+        {
+          source: 'docs/MODEL.md & formal/SPEC.md · 47,824 bytes',
+          index: 'Chapter 04 / 05',
+          title: 'Zero-Ambiguity Exactness: The Q-Core & Lean 4 PlantGate',
+          paragraphs: [
+            'When an autonomous ecosystem governs real matter over decades, floating-point rounding drift and silent NaN propagation are existential hazards. OPTIFAB solves this at the foundation via optifab/q—an exact rational (ℚ) arithmetic kernel implementing canonical forms, Farkas duality witnesses, Sylvester inertia, and rigorous interval bounds.',
+            'Above this numerical bedrock stands PlantGate, formalized in Lean 4 (PlantGate/Spec.lean and PlantGate/Proofs.lean). No configuration can cross from digital proposal to physical realization without a formally verified admission certificate.',
+            'Complemented by test_nan_and_zoneb_hardening.py and golden Farkas/Schur regression vectors, the mathematical core turns safety from a probabilistic hope into a deductive theorem.'
+          ],
+          axiomLabel: 'PlantGate Soundness Theorem (Lean 4)',
+          axiom: 'theorem PlantGate.admit_safe (u : Unit) : FarkasQ u ∧ InertiaPD u ∧ IntervalClosed u → Admissible u',
+          marginalia: '“Floating-point heuristics whisper ‘probably safe.’ Exact rational Farkas certificates and Lean 4 proofs speak with finality.”',
+          artifacts: ['docs/MODEL.md', 'formal/PlantGate/Proofs.lean', 'optifab/q/farkas.py', 'optifab/q/interval.py', 'verify.py'],
+          status: 'Verified in CI workflows (verify.yml & bar.yml) with machine-checked Lean 4 proofs and golden test suites.',
+        },
+        {
+          source: 'docs/PROPOSALS.md & Studies · 250+ KB',
+          index: 'Chapter 05 / 05',
+          title: 'Symbiotic Evolution: Schur Metrology & Bio-Thermal Closure',
+          paragraphs: [
+            'Real matter breathes, expands, ages, and resists perfect measurement. Two landmark empirical-analytical studies anchor OPTIFAB in physical reality: schur-metrology-closure bounds coupled sensor uncertainty via Schur complements, while cycle-thermal-contraction-audit proves asymptotic thermal stability across environmental cycles.',
+            'Together with loop.py and tools/propose.py, these audits allow the ecosystem to evolve safely. Physical measurements flow into the ledger, trigger constrained proposals, pass through PlantGate, and gently refine the living structure.',
+            'PROPOSALS.md charts the open frontier beyond v0.4—inviting every researcher across our organization to weave new disciplines into a single, verifiable, self-improving whole.'
+          ],
+          axiomLabel: 'Closed-Loop Evolutionary Contraction',
+          axiom: '∀ k ≥ 0,  Dist(State_{k+1}, Equilibrium*) ≤ ρ · Dist(State_k, Equilibrium*),  ρ ∈ (0, 1)',
+          marginalia: '“The true triumph of a living system is not perfection at birth, but provably convergent adaptation across every cycle.”',
+          artifacts: ['docs/PROPOSALS.md', 'studies/schur-metrology-closure/', 'studies/cycle-thermal-contraction-audit/', 'loop.py', 'results/ledger.json'],
+          status: 'R5 oracle audits and certificates complete; open frontier proposals actively evolving toward physical fabrication.',
+        },
+      ];
+
+      function initMonographReader() {
+        let currentChapter = 0;
+        const tabBtns = document.querySelectorAll('.chapter-tab-btn');
+
+        function renderChapter(idx) {
+          currentChapter = (idx + CHAPTERS.length) % CHAPTERS.length;
+          const ch = CHAPTERS[currentChapter];
+
+          document.getElementById('ch-source').textContent = ch.source;
+          document.getElementById('ch-index').textContent = ch.index;
+          document.getElementById('ch-title').textContent = ch.title;
+          document.getElementById('ch-body').innerHTML = ch.paragraphs
+            .map((p) => `<p>${p}</p>`)
+            .join('');
+          document.getElementById('ch-axiom-label').textContent = ch.axiomLabel;
+          document.getElementById('ch-axiom').textContent = ch.axiom;
+          document.getElementById('ch-marginalia-1').textContent = ch.marginalia;
+          document.getElementById('ch-artifacts').innerHTML = ch.artifacts
+            .map((a) => `<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-moissanite-400 shrink-0"></span><span class="truncate">${a}</span></li>`)
+            .join('');
+          document.getElementById('ch-status').textContent = ch.status;
+
+          tabBtns.forEach((btn, i) => {
+            if (i === currentChapter) {
+              btn.className = 'chapter-tab-btn shrink-0 text-left px-4 py-3.5 rounded-2xl border transition-all bg-obsidian-850 border-travertine-400/55 text-alabaster-50 shadow-lg';
+            } else {
+              btn.className = 'chapter-tab-btn shrink-0 text-left px-4 py-3.5 rounded-2xl border transition-all bg-obsidian-950/60 border-alabaster-100/10 text-alabaster-400 hover:text-alabaster-100 hover:border-alabaster-100/25';
+            }
+          });
+        }
+
+        tabBtns.forEach((btn) => {
+          btn.addEventListener('click', () => renderChapter(Number(btn.dataset.chapter)));
+        });
+
+        document.getElementById('ch-prev-btn').addEventListener('click', () => renderChapter(currentChapter - 1));
+        document.getElementById('ch-next-btn').addEventListener('click', () => renderChapter(currentChapter + 1));
+
+        renderChapter(0);
+      }
+
+      /* ------------------------------------------------------------------- */
+      /* 5. CORPUS PROVENANCE ATLAS (optifab-main 108-entry highlights)      */
+      /* ------------------------------------------------------------------- */
+      const ATLAS_ITEMS = [
+        { name: 'CONVERGENCE.md', path: 'docs/CONVERGENCE.md', size: '34.7 KB', domain: 'docs', role: 'Core manifesto defining epistemic capture and cross-organizational convergence.' },
+        { name: 'MODEL.md', path: 'docs/MODEL.md', size: '32.8 KB', domain: 'docs', role: 'Complete coupled mathematical formulation of state variables, duals, and bounds.' },
+        { name: 'STRUCTURE.md', path: 'docs/STRUCTURE.md', size: '21.4 KB', domain: 'docs', role: 'Architectural mechanics of funicular compression shells and Venturi envelopes.' },
+        { name: 'VISION.md', path: 'docs/VISION.md', size: '12.6 KB', domain: 'docs', role: 'Long-horizon dream and guiding philosophy of the OPTIFAB magnum opus.' },
+        { name: 'PROPOSALS.md', path: 'docs/PROPOSALS.md', size: '10.4 KB', domain: 'docs', role: 'Open frontier research trajectories for multi-scale ecosystem evolution.' },
+        { name: 'HANDOFF.md', path: 'HANDOFF.md', size: '22.4 KB', domain: 'docs', role: 'Continuity protocol ensuring institutional knowledge transfers losslessly.' },
+        { name: 'Moissanite Weft Invariants', path: 'data/upstream/Moissanite-Labs/weft/invariants.py', size: '11.4 KB', domain: 'upstream', role: 'Executable epistemic invariants woven into global optimization constraints.' },
+        { name: 'Weft State Vectors', path: 'data/upstream/Moissanite-Labs/weft/vectors.json', size: '9.2 KB', domain: 'upstream', role: 'Canonical upstream vector corpus from Moissanite-Labs.' },
+        { name: 'Funicular Frame Certificate', path: 'data/upstream/aska-physical/funi-frame/certificate.json', size: '7.9 KB', domain: 'upstream', role: 'Certified structural equilibrium rib data from aska-physical.' },
+        { name: 'Funicular Floors Certificate', path: 'data/upstream/aska-physical/funi-floors/certificate.json', size: '4.4 KB', domain: 'upstream', role: 'Compression-pure vaulted floor plate certificate.' },
+        { name: 'Venturi Collars Certificate', path: 'data/upstream/aska-physical/venturi-collars/certificate.json', size: '2.1 KB', domain: 'upstream', role: 'Passive fluidic pressure-throat aerodynamic specification.' },
+        { name: 'Convergence Graph Data', path: 'data/graph.json', size: '38.9 KB', domain: 'upstream', role: 'Complete epistemic-material dependency graph binding pins and units.' },
+        { name: 'PlantGate/Proofs.lean', path: 'formal/PlantGate/Proofs.lean', size: '32.0 KB', domain: 'formal', role: 'Machine-checked Lean 4 soundness proofs for structural and control admission.' },
+        { name: 'PlantGate.lean', path: 'formal/PlantGate.lean', size: '18.4 KB', domain: 'formal', role: 'Top-level formal gate module and executable verification entrypoint.' },
+        { name: 'PlantGate/Spec.lean', path: 'formal/PlantGate/Spec.lean', size: '13.3 KB', domain: 'formal', role: 'Formal specification of admissible unit manifolds and safety axioms.' },
+        { name: 'verify.py', path: 'verify.py', size: '101.4 KB', domain: 'qcore', role: 'Master deterministic verification engine orchestrating all mathematical guards.' },
+        { name: 'optifab/q/interval.py', path: 'optifab/q/interval.py', size: '18.3 KB', domain: 'qcore', role: 'Rigorous exact rational interval arithmetic with outward-rounded enclosures.' },
+        { name: 'optifab/q/linalg.py', path: 'optifab/q/linalg.py', size: '10.5 KB', domain: 'qcore', role: 'Zero-roundoff exact linear algebra solvers over the rational field ℚ.' },
+        { name: 'optifab/q/farkas.py & inertia.py', path: 'optifab/q/{farkas.py, inertia.py}', size: '5.1 KB', domain: 'qcore', role: 'Farkas duality infeasibility certificates and Sylvester matrix inertia checks.' },
+        { name: 'Schur Metrology Oracle & Audit', path: 'studies/schur-metrology-closure/optifab_schur_metrology_oracle.py', size: '46.3 KB', domain: 'studies', role: 'Independent oracle and audit proving positive-definite Schur metrology closure.' },
+        { name: 'Bio-Thermal Contraction Audit', path: 'studies/cycle-thermal-contraction-audit/optifab_bio_thermal_audit.py', size: '36.0 KB', domain: 'studies', role: 'Audits cyclic thermal contraction stability across passive Venturi dynamics.' },
+        { name: 'Symbiotic Loop Engine', path: 'loop.py', size: '12.3 KB', domain: 'studies', role: 'Closed-loop evolutionary feedback cycle uniting proposals, verification, and memory.' },
+        { name: 'Immutable Provenance Ledger', path: 'results/ledger.json', size: '54.8 KB', domain: 'ledgers', role: 'Cryptographically linked chronological memory of verified system states.' },
+        { name: 'Master Certificate & Golden Vectors', path: 'results/certificate.json & tests/golden/', size: '47.2 KB', domain: 'ledgers', role: 'Signed global certificate alongside golden CX6 Farkas and S99 Schur witnesses.' },
+      ];
+
+      const DOMAIN_BADGES = {
+        docs: 'bg-alabaster-100/10 text-alabaster-200 border-alabaster-100/15',
+        upstream: 'bg-travertine-900/70 text-travertine-300 border-travertine-400/30',
+        formal: 'bg-symbiosis-900/70 text-symbiosis-400 border-symbiosis-400/30',
+        qcore: 'bg-moissanite-900/70 text-moissanite-300 border-moissanite-400/30',
+        studies: 'bg-obsidian-850 text-metrology-400 border-metrology-400/30',
+        ledgers: 'bg-obsidian-850 text-alabaster-200 border-alabaster-100/20',
+      };
+
+      function initCorpusAtlas() {
+        const grid = document.getElementById('atlas-grid');
+        const empty = document.getElementById('atlas-empty');
+        const search = document.getElementById('atlas-search');
+        let activeDomain = 'all';
+
+        function renderAtlas() {
+          const q = (search.value || '').trim().toLowerCase();
+          const filtered = ATLAS_ITEMS.filter((item) => {
+            const domainOk = activeDomain === 'all' || item.domain === activeDomain;
+            const textOk = !q || item.name.toLowerCase().includes(q) || item.path.toLowerCase().includes(q) || item.role.toLowerCase().includes(q);
+            return domainOk && textOk;
+          });
+
+          if (!filtered.length) {
+            grid.innerHTML = '';
+            empty.classList.remove('hidden');
+            return;
+          }
+
+          empty.classList.add('hidden');
+          grid.innerHTML = filtered.map((item) => `
+            <div class="group p-5 rounded-2xl bg-obsidian-900 border border-alabaster-100/10 hover:border-moissanite-400/40 transition-all flex flex-col justify-between gap-4">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-3">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider border ${DOMAIN_BADGES[item.domain]}">${item.domain}</span>
+                  <span class="font-mono text-[11px] text-alabaster-400">${item.size}</span>
+                </div>
+                <h3 class="font-serif text-2xl text-alabaster-50 group-hover:text-moissanite-300 transition-colors">${item.name}</h3>
+                <div class="mt-1 font-mono text-[11px] text-alabaster-400 break-all">${item.path}</div>
+                <p class="mt-3 text-xs text-alabaster-200/80 leading-relaxed">${item.role}</p>
+              </div>
+              <div class="pt-3 border-t border-alabaster-100/10 flex items-center justify-between text-[11px] font-mono">
+                <span class="text-alabaster-500">optifab-main</span>
+                <button type="button" data-copy-path="${item.path}" class="copy-path-btn text-travertine-300 hover:text-travertine-400 transition-colors">Copy Path</button>
+              </div>
+            </div>
+          `).join('');
+
+          grid.querySelectorAll('.copy-path-btn').forEach((btn) => {
+            btn.addEventListener('click', () => copyTextSafe(btn.dataset.copyPath));
+          });
+        }
+
+        document.querySelectorAll('.atlas-domain-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            activeDomain = btn.dataset.domain;
+            document.querySelectorAll('.atlas-domain-btn').forEach((b) => {
+              b.classList.remove('bg-alabaster-50', 'text-obsidian-950', 'font-medium');
+              if (b.dataset.domain === 'all') {
+                b.classList.add('bg-obsidian-900', 'text-alabaster-200', 'border', 'border-alabaster-100/15');
+              }
+            });
+            btn.classList.remove('bg-obsidian-900');
+            btn.classList.add('bg-alabaster-50', 'text-obsidian-950', 'font-medium');
+            renderAtlas();
+          });
+        });
+
+        search.addEventListener('input', renderAtlas);
+        renderAtlas();
+      }
+
+      /* ------------------------------------------------------------------- */
+      /* 6. CITATION & MANIFEST MODAL                                        */
+      /* ------------------------------------------------------------------- */
+      const CITE_TEMPLATES = {
+        bibtex: `@techreport{optifab2026convergence,
+  title       = {OPTIFAB: Convergence of Epistemic Capture and Symbiotic Physical Architecture},
+  author      = {{Overarching Research Organization} and {Moissanite-Labs} and {aska-physical}},
+  year        = {2026},
+  version     = {v0.4-horizon},
+  institution = {OPTIFAB Synthesis Collective},
+  note        = {108-artifact verified corpus: Lean 4 PlantGate, Exact Q-Core, Schur Metrology Closure, Bio-Thermal Contraction Audit}
+}`,
+        thesis: `OPTIFAB — The Convergence Monograph (v0.4 Horizon Thesis).
+A cross-disciplinary R&D magnum opus uniting Moissanite-Labs epistemic weft invariants, aska-physical funicular compression and passive Venturi structures, Lean 4 formal PlantGate proofs, exact rational Q-Core verification, and closed-loop Schur metrology & bio-thermal contraction studies into a symbiotic, evolving ecosystem.`,
+        manifest: JSON.stringify({
+          corpus: 'optifab-main',
+          entries: 108,
+          total_bytes: 1114187,
+          upstream_sources: [
+            'Moissanite-Labs/weft',
+            'aska-physical/funi-floors',
+            'aska-physical/funi-frame',
+            'aska-physical/venturi-collars'
+          ],
+          formal_gate: 'formal/PlantGate/{Spec.lean, Proofs.lean}',
+          exact_core: 'optifab/q/{canon, farkas, inertia, interval, linalg}',
+          closure_studies: [
+            'studies/schur-metrology-closure',
+            'studies/cycle-thermal-contraction-audit'
+          ]
+        }, null, 2),
+      };
+
+      function initCiteModal() {
+        const modal = document.getElementById('cite-modal');
+        const output = document.getElementById('cite-output');
+        const openBtn = document.getElementById('open-cite-btn');
+        const footerBtn = document.getElementById('footer-cite-btn');
+        const closeBtn = document.getElementById('close-cite-btn');
+        const copyBtn = document.getElementById('copy-cite-btn');
+        let currentTab = 'bibtex';
+
+        function setTab(tab) {
+          currentTab = tab;
+          output.textContent = CITE_TEMPLATES[tab];
+          document.querySelectorAll('.cite-tab-btn').forEach((b) => {
+            if (b.dataset.citeTab === tab) {
+              b.className = 'cite-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-mono bg-alabaster-50 text-obsidian-950 font-medium';
+            } else {
+              b.className = 'cite-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-mono bg-obsidian-850 text-alabaster-300 border border-alabaster-100/10 hover:border-alabaster-100/30';
+            }
+          });
+        }
+
+        function openModal() {
+          setTab(currentTab);
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+        }
+
+        function closeModal() {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+
+        if (openBtn) openBtn.addEventListener('click', openModal);
+        if (footerBtn) footerBtn.addEventListener('click', openModal);
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+        if (modal) {
+          modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+          });
+        }
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+        });
+
+        document.querySelectorAll('.cite-tab-btn').forEach((btn) => {
+          btn.addEventListener('click', () => setTab(btn.dataset.citeTab));
+        });
+
+        if (copyBtn) {
+          copyBtn.addEventListener('click', () => copyTextSafe(CITE_TEMPLATES[currentTab]));
+        }
+      }
+
+      /* ------------------------------------------------------------------- */
+      /* BOOTSTRAP ALL INTERACTIVE MODULES ON WINDOW LOAD                    */
+      /* ------------------------------------------------------------------- */
+      window.addEventListener('load', () => {
+        initHeroWeaveCanvas();
+        initConvergenceGraph();
+        initUnitSimulator();
+        initMonographReader();
+        initCorpusAtlas();
+        initCiteModal();
+      });
+    })();
+  </script>
+</body>
+</html>
